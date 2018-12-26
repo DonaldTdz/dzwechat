@@ -1,0 +1,45 @@
+{
+  "name": "ngx-weui",
+  "version": "0.0.0-PLACEHOLDER",
+  "description": "weui for angular",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cipchk/ngx-weui.git"
+  },
+  "keywords": [
+    "angular",
+    "ui",
+    "framework",
+    "frontend",
+    "ngx-weui",
+    "ng2-weui",
+    "ngx weui",
+    "ng2 weui",
+    "angular weui",
+    "angular2 weui",
+    "angular4 weui",
+    "weui"
+  ],
+  "author": "cipchk <cipchk>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cipchk/ngx-weui/issues"
+  },
+  "homepage": "https://github.com/cipchk/ngx-weui#readme",
+  "dependencies": {
+    "weui": "^1.1.3"
+  },
+  "peerDependencies": {
+    "@angular/animations": "^7.0.0",
+    "@angular/common": "^7.0.0",
+    "@angular/core": "^7.0.0",
+    "@angular/forms": "^7.0.0",
+    "typescript": "~3.1.1"
+  },
+  "schematics": "./schematics/collection.json",
+  "ng-update": {
+    "migrations": "./schematics/migration.json",
+    "packageGroup": ["ngx-weui"]
+  },
+  "sideEffects": false
+}

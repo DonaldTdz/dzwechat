@@ -1,0 +1,24 @@
+# Dependency directory
+# https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
+/node_modules
+npm-debug.log
+package-lock.json
+yarn.lock
+
+# misc
+/coverage
+
+# ignore build and dist for now
+src/app/routes/components/meta.ts
+src/app/routes/components/examples.ts
+src/app/routes/docs/meta.ts
+.tmp
+__gen_components/
+dist/
+publish/
+
+# ignore inline compiling
+/logs
+
+# AoT generated files
+factories
