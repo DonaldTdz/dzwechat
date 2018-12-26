@@ -7,12 +7,14 @@ namespace hc.dzwechat.EntityFrameworkCore
     {
         public static void Configure(DbContextOptionsBuilder<dzwechatDbContext> builder, string connectionString)
         {
-            builder.UseSqlServer(connectionString);
+            //builder.UseSqlServer(connectionString);
+            builder.UseMySql(connectionString);
         }
 
         public static void Configure(DbContextOptionsBuilder<dzwechatDbContext> builder, DbConnection connection)
         {
-            builder.UseSqlServer(connection);
+            //builder.UseSqlServer(connection);
+            builder.UseMySql(connection);
         }
     }
 }
