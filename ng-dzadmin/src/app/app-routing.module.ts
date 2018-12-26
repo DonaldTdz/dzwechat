@@ -4,16 +4,12 @@ import { AppRouteGuard } from '@shared/auth/auth-route-guard';
 import { HomeComponent } from '@app/home/home.component';
 import { LayoutDefaultComponent } from '../layout/default/layout-default.component';
 
-import { AboutComponent } from '@app/about/about.component';
-import { TenantsComponent } from '@app/tenants/tenants.component';
-import { RolesComponent } from '@app/roles/roles.component';
-import { UsersComponent } from '@app/users/users.component';
-
 const routes: Routes = [
   {
     path: '',
     component: LayoutDefaultComponent,
     canActivate: [AppRouteGuard],
+    canActivateChild: [AppRouteGuard],
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       {
@@ -22,26 +18,25 @@ const routes: Routes = [
         canActivate: [AppRouteGuard],
       },
       {
-        path: 'tenants',
-        component: TenantsComponent,
-        canActivate: [AppRouteGuard],
+        path: 'system',
+        loadChildren: './system/system.module#SystemModule',
+        data: { preload: true },
       },
       {
-        path: 'roles',
-        component: RolesComponent,
-        canActivate: [AppRouteGuard],
+        path: 'infoComponent',
+        loadChildren: './information/info.module#InfoModule',
+        data: { preload: true },
       },
       {
-        path: 'users',
-        component: UsersComponent,
-        canActivate: [AppRouteGuard],
+        path: 'wechat',
+        loadChildren: './wechat/wechat.module#WechatModule',
+        data: { preload: true },
       },
       {
-        path: 'about',
-        component: AboutComponent,
-        canActivate: [AppRouteGuard],
+        path: 'mall',
+        loadChildren: './mall/mall.module#MallModule',
+        data: { preload: true },
       },
-
     ],
   },
 ];

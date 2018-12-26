@@ -18,7 +18,7 @@ export class AppConsts {
   };
 
   static readonly localization = {
-    defaultLocalizationSourceName: 'YoyoCmsTemplate',
+    defaultLocalizationSourceName: 'DZWechat',
   };
 
   static readonly authorization = {

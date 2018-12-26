@@ -18,9 +18,6 @@ import { AppMenus } from '@shared/AppMenus';
 export class AppPreBootstrap {
     static run(injector: Injector, callback: () => void): void {
         let httpClient = injector.get(HttpClient);
-
-        console.log("由52ABP模板构建,详情请访问 https://www.52abp.com");
-
         AppPreBootstrap.getApplicationConfig(httpClient, () => {
             AppPreBootstrap.getUserConfiguration(injector, httpClient, callback);
         });

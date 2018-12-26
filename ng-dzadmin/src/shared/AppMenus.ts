@@ -5,8 +5,8 @@ export class AppMenus {
     // new
     static Menus: Menu[] = [
         {
-            text: "",// 无本地化显示字符
-            i18n: "HomePage",// 本地化主键(ABP本地化)
+            text: "主页",// 无本地化显示字符
+            //i18n: "HomePage",// 本地化主键(ABP本地化)
             acl: "",// 权限
             icon: { type: "icon", value: "home" },// 图标
             link: "/app/home", // url 地址
@@ -14,32 +14,58 @@ export class AppMenus {
             // ...还有更多选项，请查看 Menu成员
         },
         {
-            text: "",
-            i18n: "Tenants",
-            acl: "Pages.Tenants",
-            icon: { type: "icon", value: "team" },
-            link: "/app/tenants",
+            text: "微信配置",
+            icon: { type: "icon", value: "wechat" },
+            link: "/app/wechat/config",
         },
         {
-            text: "",
-            i18n: "Roles",
-            acl: "Pages.Roles",
+            text: "资讯管理",
             icon: { type: "icon", value: "safety" },
-            link: "/app/roles",
-
+            link: "/app/infoComponent/info",
         },
         {
-            text: "",
-            i18n: "Users",
-            acl: "Pages.Users",
+            text: "积分商城",
             icon: { type: "icon", value: "user" },
-            link: "/app/users",
+            link: "/app/mall",
+            group: true,
+            children: [
+                {
+                    text: "会员管理",
+                    link: "/app/mall/member",
+                },
+                {
+                    text: "VIP管理",
+                    link: "/app/mall/vip",
+                },
+                {
+                    text: "直营店",
+                    link: "/app/mall/shop",
+                },
+                {
+                    text: "商品管理",
+                    link: "/app/mall/goods",
+                },
+                {
+                    text: "订单管理",
+                    link: "/app/mall/order",
+                },
+            ]
         },
         {
-            text: "",
-            i18n: "About",
-            icon: { type: "icon", value: "info-circle" },
-            link: "/app/about",
+            text: "系统管理",
+            icon: { type: "icon", value: "setting" },
+            link: "/app/system",
+            group: true,
+            children: [
+                {
+                    text: "用户管理",
+                    link: "/app/system/users",
+                },
+                {
+                    text: "角色管理",
+                    link: "/app/system/roles",
+                },
+            ]
         },
     ];
     // old

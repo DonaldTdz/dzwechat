@@ -4,12 +4,12 @@ $OutputEncoding = [Text.UTF8Encoding]::UTF8
 # company name placeholder 
 $oldCompanyName="hc"
 # your company name
-$newCompanyName="YourCompanyName"
+$newCompanyName="HC"
 
 # project name placeholder
 $oldProjectName="dzwechat"
 # your project name
-$newProjectName="YourProjectName"
+$newProjectName="DZWechat"
 
 # file type
 $fileType="FileInfo"
