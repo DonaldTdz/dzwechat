@@ -21,7 +21,7 @@ export class AccountComponent extends AppComponentBase {
   currentYear: number;
 
   links = [
-    {
+    /*{
       title: 'ABP',
       href: '',
     },
@@ -32,7 +32,7 @@ export class AccountComponent extends AppComponentBase {
     {
       title: '条款',
       href: '',
-    },
+    },*/
   ];
 
   public constructor(injector: Injector, private _loginService: LoginService) {

@@ -1,16 +1,17 @@
 <div class="container">
 
   <div class="top">
-    
+
     <div class="head">
       <a [routerLink]="['/']">
-        <img class="logo" src="/assets/images/logos/logo-txt-color-shield.svg">
+        <img class="logo" src="/assets/images/logos/logo.png">
+        <span class="title">达州微信平台</span>
       </a>
     </div>
 
-    <p class="desc">您现在使用的是免费开源版本；欢迎到
+    <!-- <p class="desc">您现在使用的是免费开源版本；欢迎到
       <a href="http://www.52abp.com/" target="_blank">52ABP.COM</a>了解更多的框架信息
-    </p>
+    </p>-->
 
     <div *ngIf="showTenantChange()">
       <tenant-change></tenant-change>
@@ -21,13 +22,12 @@
   <router-outlet></router-outlet>
 
   <br>
-  <account-languages></account-languages>
+  <!--<account-languages></account-languages>-->
 
   <global-footer [links]="links">
     Copyright
     <i class="anticon anticon-copyright"></i> {{currentYear}}
-    <b>Version </b>{{versionText}}
-    <a href="http://www.52abp.com/" target="_blank">52ABP.COM</a>出品
+    <a href="http://sc.tobacco.com.cn/nportal/portal/s/DZ" target="_blank">达州烟草</a>
   </global-footer>
 
 </div>

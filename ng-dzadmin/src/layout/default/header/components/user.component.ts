@@ -10,17 +10,12 @@ import { AppAuthService } from '@shared/auth/app-auth.service';
   template: `
   <nz-dropdown nzPlacement="bottomRight">
     <div class="alain-default__nav-item d-flex align-items-center px-sm" nz-dropdown>
-      <nz-avatar  nzSize="small" class="mr-sm"></nz-avatar>
-      
+      <nz-avatar  nzSize="small" class="mr-sm"  [nzSrc]="'/assets/avatar.jpg'" ></nz-avatar>
     </div>
     <div nz-menu class="width-sm">
-      <div nz-menu-item [nzDisabled]="true">
-        <i nz-icon type="user" class="mr-sm"></i>
-        {{l("UserCenter")}}
-      </div>
-      <div nz-menu-item [nzDisabled]="true">
-        <i nz-icon type="setting" class="mr-sm"></i>
-        {{l("Setting")}}
+      <div nz-menu-item (click)="chanagepwd()">
+        <i nz-icon type="lock" class="mr-sm"></i>
+        修改密码
       </div>
       <li nz-menu-divider></li>
       <div nz-menu-item (click)="logout()">
@@ -42,6 +37,10 @@ export class HeaderUserComponent extends AppComponentBase {
 
   logout(): void {
     this._authService.logout();
+  }
+
+  chanagepwd(): void {
+
   }
 }
 

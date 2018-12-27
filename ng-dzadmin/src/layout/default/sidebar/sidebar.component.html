@@ -1,21 +1,21 @@
 <div class="alain-default__aside-inner">
   <div class="alain-default__header-logo">
     <a [routerLink]="['/']" class="alain-default__header-logo-link">
-      <img class="alain-default__header-logo-expanded" src="/assets/images/logos/logo-txt-white-shield.svg" alt="{{settings.app.name}}"
-        style="max-height:40px;" />
-      <img class="alain-default__header-logo-collapsed" src="/assets/images/logos/logo-white-shield.svg" alt="{{settings.app.name}}"
-        style="max-height:30px;" />
+      <img class="alain-default__header-logo-expanded" src="/assets/images/logos/logo2.png" alt="{{settings.app.name}}"
+        style="width:40px;" />
+      <img class="alain-default__header-logo-collapsed" src="/assets/images/logos/logo2.png" alt="{{settings.app.name}}"
+        style="width:40px;" />
+      <span class="alain-default__header-logo-expanded title">达州烟草</span>
     </a>
   </div>
   <nz-dropdown nzTrigger="click" class="alain-default__aside-user">
     <div nz-dropdown class="user-block-dropdown">
-      <div class="sidebar-nav-user-avatar">
-        <nz-avatar nzSize="large" nzIcon="anticon anticon-user"></nz-avatar>
+      <div class="sidebar-nav-user-avatar" style="margin-right:10px;">
+        <nz-avatar nzSize="large" [nzSrc]="'/assets/avatar.jpg'" nzIcon="anticon anticon-user"></nz-avatar>
       </div>
-
       <div class="alain-default__aside-user-info">
         <strong>{{shownLoginName}}</strong>
-        <p class="text-truncate mb0">{{emailAddress}}</p>
+        <!--<p class="text-truncate mb0">{{emailAddress}}</p>-->
       </div>
     </div>
     <ul nz-menu>

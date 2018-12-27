@@ -14,6 +14,7 @@ import { PermissionService } from '@shared/auth/permission.service';
 import { ALAIN_I18N_TOKEN, MenuService } from '@delon/theme';
 import { LocalizationService } from '@shared/i18n/localization.service';
 import { AppMenus } from '@shared/AppMenus';
+import { SettingsService } from '@delon/theme';
 
 export class AppPreBootstrap {
     static run(injector: Injector, callback: () => void): void {
@@ -68,10 +69,8 @@ export class AppPreBootstrap {
         let url = AppConsts.remoteServiceBaseUrl + '/AbpUserConfiguration/GetAll';
         httpClient.get(url).subscribe((response: any) => {
             let result = response.result;
-
             // 填充数据
             _.merge(abp, result);
-
 
             // 时区
             abp.clock.provider = this.getCurrentClockProvider(result.clock.provider);
@@ -83,10 +82,8 @@ export class AppPreBootstrap {
                 (window as any).moment.tz.setDefault(abp.timing.timeZoneInfo.iana.timeZoneId);
             }
 
-
             // 注册语言,NG-Zorro的DataPicker要使用
             registerLocaleData(zh);
-
 
             // 权限
             const permissionService = injector.get(PermissionService);
@@ -97,7 +94,9 @@ export class AppPreBootstrap {
             // 写入菜单
             const menuService = injector.get(MenuService);
             menuService.add(AppMenus.Menus);
-
+            //设置
+            const settings = injector.get(SettingsService);
+            settings.setLayout('fixed', true);
 
             callback();
         });
