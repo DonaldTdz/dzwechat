@@ -42,7 +42,6 @@ import { DirectivesModule } from './directives/directives.module';
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
-
     AlainThemeModule.forChild(),
     DelonABCModule,
     DelonACLModule,

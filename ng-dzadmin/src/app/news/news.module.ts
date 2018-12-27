@@ -5,8 +5,8 @@ import { LayoutModule } from '@layout/layout.module';
 import { SharedModule } from '@shared/shared.module';
 import { HttpClientModule } from '@angular/common/http';
 
-import { InfoComponent } from './info/info.component';
-import { InfoRoutingModule } from './info-routing.module';
+import { NewsComponent } from './news/news.component';
+import { NewsRoutingModule } from './news-routing.module';
 
 @NgModule({
     imports: [
@@ -14,16 +14,16 @@ import { InfoRoutingModule } from './info-routing.module';
         FormsModule,
         ReactiveFormsModule,
         HttpClientModule,
-        InfoRoutingModule,
+        NewsRoutingModule,
         LayoutModule,
         SharedModule,
     ],
     declarations: [
-        InfoComponent
+        NewsComponent
     ],
     entryComponents: [
-        InfoComponent
+        NewsComponent
     ],
     // providers: [LocalizationService, MenuService],
 })
-export class InfoModule { }
+export class NewsModule { }

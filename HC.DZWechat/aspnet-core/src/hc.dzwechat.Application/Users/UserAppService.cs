@@ -157,6 +157,25 @@ namespace HC.DZWechat.Users
         {
             identityResult.CheckErrors(LocalizationManager);
         }
+
+        public async Task<bool> PostUpdatePasswordAsync(string password)
+        {
+            var userId = AbpSession.GetUserId();
+            var user = _userManager.GetUserByIdAsync(userId).Result;
+            user.Password = _passwordHasher.HashPassword(user, password);
+            await _userManager.UpdateAsync(user);
+            return true;
+        }
+
+
+        public async Task<bool> CheckOldPasswordAsync(string oldPassword)
+        {
+            var userId = AbpSession.GetUserId();
+            var entity = await _userManager.GetUserByIdAsync(userId);
+            var compareResult = _passwordHasher.VerifyHashedPassword(entity, entity.Password, oldPassword);
+            var result = compareResult == PasswordVerificationResult.Success ? true : false;
+            return result;
+        }
     }
 }
 

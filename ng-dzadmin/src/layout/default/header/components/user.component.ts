@@ -1,8 +1,9 @@
-import { Component, Inject, Injector } from '@angular/core';
+import { Component, Inject, Injector, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { SettingsService } from '@delon/theme';
 import { AppComponentBase } from '@shared/component-base';
 import { AppAuthService } from '@shared/auth/app-auth.service';
+import { ChangePasswordComponent } from '@layout/default/change-password/change-password.component';
 // import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
 
 @Component({
@@ -24,9 +25,12 @@ import { AppAuthService } from '@shared/auth/app-auth.service';
       </div>
     </div>
   </nz-dropdown>
+  <change-password-modal #changePasswordModal (modalSave)="callBack()"></change-password-modal>
   `,
 })
 export class HeaderUserComponent extends AppComponentBase {
+
+  @ViewChild('changePasswordModal') changePasswordModal: ChangePasswordComponent;
 
   constructor(
     injector: Injector,
@@ -40,7 +44,10 @@ export class HeaderUserComponent extends AppComponentBase {
   }
 
   chanagepwd(): void {
+    this.changePasswordModal.show();
+  }
 
+  callBack(): void {
   }
 }
 

@@ -23,8 +23,8 @@ const routes: Routes = [
         data: { preload: true },
       },
       {
-        path: 'infoComponent',
-        loadChildren: './information/info.module#InfoModule',
+        path: 'news',
+        loadChildren: './news/news.module#NewsModule',
         data: { preload: true },
       },
       {

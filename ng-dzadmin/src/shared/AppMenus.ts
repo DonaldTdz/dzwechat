@@ -20,12 +20,12 @@ export class AppMenus {
         },
         {
             text: "资讯管理",
-            icon: { type: "icon", value: "safety" },
-            link: "/app/infoComponent/info",
+            icon: { type: "icon", value: "laptop" },
+            link: "/app/news/news",
         },
         {
             text: "积分商城",
-            icon: { type: "icon", value: "user" },
+            icon: { type: "icon", value: "shopping" },
             link: "/app/mall",
             group: true,
             children: [

@@ -11,6 +11,10 @@ namespace HC.DZWechat.Users
         Task<ListResultDto<RoleDto>> GetRoles();
 
         Task ChangeLanguage(ChangeUserLanguageDto input);
+
+        Task<bool> PostUpdatePasswordAsync(string password);
+
+        Task<bool> CheckOldPasswordAsync(string oldPassword);
     }
 }
 

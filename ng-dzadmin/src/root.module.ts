@@ -27,6 +27,7 @@ import { ICONS } from './style-icons';
 
 import { AbpModule } from '@abp/abp.module';
 import { LocalizationService } from '@shared/i18n/localization.service';
+import { ServicesModule } from 'services/services.module';
 
 
 export function appInitializerFactory(injector: Injector) {
@@ -96,6 +97,7 @@ const I18NSERVICE_PROVIDES = [
         // 引入DelonMdule
         DelonModule.forRoot(),
         ServiceProxyModule,
+        ServicesModule,
         RootRoutingModule,
         HttpClientModule,
         /** 导入 ng-zorro-antd 模块 **/
