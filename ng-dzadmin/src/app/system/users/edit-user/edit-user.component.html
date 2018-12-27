@@ -11,7 +11,7 @@
         <!-- 用户账号 -->
         <nz-form-item>
           <nz-form-control nzHasFeedback>
-            <input nz-input name="userName" #userName="ngModel" [(ngModel)]="user.userName" [placeholder]="l('UserName')"
+            <input nz-input name="userName" #userName="ngModel" [(ngModel)]="user.userName" [placeholder]="'用户账号'"
               required>
             <nz-form-explain *ngIf="userName.control.dirty&&userName.control.errors">
               <ng-container *ngIf="userName.control.hasError('required')">{{l('CanNotNull')}}</ng-container>
@@ -21,24 +21,13 @@
 
         <!-- 名 / 姓名 -->
         <nz-form-item>
-          <nz-col [nzSpan]="12">
-            <nz-form-control nzHasFeedback>
-              <input nz-input name="name" #name="ngModel" [(ngModel)]="user.name" [placeholder]="l('name')"
-                autocomplete="name" required>
-              <nz-form-explain *ngIf="name.control.dirty&&name.control.errors">
-                <ng-container *ngIf="name.control.hasError('required')">{{l('CanNotNull')}}</ng-container>
-              </nz-form-explain>
-            </nz-form-control>
-          </nz-col>
-          <nz-col [nzSpan]="12">
-            <nz-form-control nzHasFeedback>
-              <input nz-input name="surname" #surname="ngModel" [(ngModel)]="user.surname" [placeholder]="l('Surname')"
-                required>
-              <nz-form-explain *ngIf="surname.control.dirty&&surname.control.errors">
-                <ng-container *ngIf="surname.control.hasError('required')">{{l('CanNotNull')}}</ng-container>
-              </nz-form-explain>
-            </nz-form-control>
-          </nz-col>
+          <nz-form-control nzHasFeedback>
+            <input nz-input name="name" #name="ngModel" [(ngModel)]="user.name" [placeholder]="'用户姓名'" autocomplete="name"
+              required>
+            <nz-form-explain *ngIf="name.control.dirty&&name.control.errors">
+              <ng-container *ngIf="name.control.hasError('required')">{{l('CanNotNull')}}</ng-container>
+            </nz-form-explain>
+          </nz-form-control>
         </nz-form-item>
 
         <!-- 邮箱 -->
@@ -48,7 +37,7 @@
               autocomplete="email" required email>
             <nz-form-explain *ngIf="emailAddress.control.dirty&&emailAddress.control.errors">
               <ng-container *ngIf="emailAddress.control.hasError('required')">{{l('CanNotNull')}}</ng-container>
-              <ng-container *ngIf="emailAddress.control.hasError('email')">{{l('NotEmail')}}</ng-container>
+              <ng-container *ngIf="emailAddress.control.hasError('email')">邮箱格式不对</ng-container>
             </nz-form-explain>
           </nz-form-control>
         </nz-form-item>
@@ -73,7 +62,7 @@
         {{l("Cancel")}}
       </button>
       <button nz-button [nzType]="'primary'" type="submit" [disabled]="!validateForm.valid||saving">
-        {{l("Save")}}
+        保存
       </button>
     </div>
 

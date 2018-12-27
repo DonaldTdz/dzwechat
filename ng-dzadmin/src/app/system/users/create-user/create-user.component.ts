@@ -11,10 +11,8 @@ export class CreateUserComponent extends ModalComponentBase implements OnInit {
 
   user: CreateUserDto = new CreateUserDto();
   roles: RoleDto[] = null;
-
   roleList = [];
-
-  confirmPassword: string = '';
+  confirmPasswordInput: string = '';
 
   constructor(
     injector: Injector,
@@ -26,6 +24,8 @@ export class CreateUserComponent extends ModalComponentBase implements OnInit {
   ngOnInit() {
     this.fetchData();
   }
+
+
 
   fetchData(): void {
     this._userService.getRoles()
@@ -49,6 +49,7 @@ export class CreateUserComponent extends ModalComponentBase implements OnInit {
       }
     });
     this.user.roleNames = tmpRoleNames;
+    this.user.surname = this.user.name;
 
     this._userService.create(this.user)
       .finally(() => { this.saving = false; })
@@ -57,5 +58,6 @@ export class CreateUserComponent extends ModalComponentBase implements OnInit {
         this.success();
       });
   }
+
 
 }

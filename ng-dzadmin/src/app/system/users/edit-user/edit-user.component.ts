@@ -60,6 +60,7 @@ export class EditUserComponent extends ModalComponentBase implements OnInit {
       }
     });
     this.user.roleNames = tmpRoleNames;
+    this.user.surname = this.user.name;
 
     this._userService.update(this.user)
       .finally(() => { this.saving = false; })

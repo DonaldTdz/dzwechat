@@ -92,7 +92,11 @@
     <text name="DefaultPasswordIs">默认密码为：{0}</text>
     <text name="DeleteTenantConfirm">确认删除该租户？</text>
     <text name="EditTenant">编辑租户</text>
-    
+    <text name="CanNotNull">不能为空</text>
+    <text name="SavedSuccessfully">保存成功</text>
+    <text name="MinLength">长度未达到最小限制</text>
+    <text name="MaxLength">长度已超过最大限制</text>
+    <text name="MessageConfirmOperation">确认</text>
     
   </texts>
 </localizationDictionary>

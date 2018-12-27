@@ -39,11 +39,12 @@ export class UsersComponent extends PagedListingComponentBase<UserDto> {
 
   protected delete(entity: UserDto): void {
     this.message.confirm(
-      "Delete user '" + entity.fullName + "'?",
+      "删除用户 '" + entity.name + "'?",
+      '信息确认',
       (result: boolean) => {
         if (result) {
           this._userService.delete(entity.id).subscribe(() => {
-            this.notify.info('Deleted User: ' + entity.fullName);
+            this.notify.info('已删除用户: ' + entity.name);
             this.refresh();
           });
         }
@@ -52,6 +53,11 @@ export class UsersComponent extends PagedListingComponentBase<UserDto> {
   }
 
   create(): void {
+    this.message.confirm('test', ((result: boolean) => {
+      console.log('result:' + result);
+
+    }));
+    return;
     this.modalHelper
       .open(CreateUserComponent, {}, 'md', {
         nzMask: true

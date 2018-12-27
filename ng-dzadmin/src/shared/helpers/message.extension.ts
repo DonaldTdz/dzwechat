@@ -136,10 +136,7 @@ export class MessageExtension {
             });
         } else {
             (<any>abp).nzModal.confirm({
-                nzTitle: abp.localization.localize(
-                    'MessageConfirmOperation',
-                    abp.localization.defaultSourceName,
-                ),
+                nzTitle: '信息确认',
                 nzContent: message,
                 nzOnOk() {
                     if (titleOrCallBack) titleOrCallBack(true);
