@@ -11,6 +11,12 @@
     <RootNamespace>HC.DZWechat</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Senparc.Weixin" Version="6.2.1" />
+    <PackageReference Include="Senparc.Weixin.MP" Version="16.5.2.1" />
+    <PackageReference Include="Senparc.Weixin.Open" Version="4.2.1" />
+    <PackageReference Include="Senparc.Weixin.WxOpen" Version="3.2.2.1" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\HC.DZWechat.Core\HC.DZWechat.Core.csproj" />
   </ItemGroup>
 </Project>
