@@ -31,7 +31,6 @@ export class CreateUserComponent extends ModalComponentBase implements OnInit {
     this._userService.getRoles()
       .subscribe((result) => {
         this.roles = result.items;
-
         this.roles.forEach((item) => {
           this.roleList.push({
             label: item.displayName, value: item.name, checked: true

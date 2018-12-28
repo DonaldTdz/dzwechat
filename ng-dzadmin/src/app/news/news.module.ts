@@ -7,6 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { NewsComponent } from './news/news.component';
 import { NewsRoutingModule } from './news-routing.module';
+import { NewsService } from 'services';
 
 @NgModule({
     imports: [
@@ -24,6 +25,6 @@ import { NewsRoutingModule } from './news-routing.module';
     entryComponents: [
         NewsComponent
     ],
-    // providers: [LocalizationService, MenuService],
+    providers: [NewsService],
 })
 export class NewsModule { }

@@ -53,11 +53,6 @@ export class UsersComponent extends PagedListingComponentBase<UserDto> {
   }
 
   create(): void {
-    this.message.confirm('test', ((result: boolean) => {
-      console.log('result:' + result);
-
-    }));
-    return;
     this.modalHelper
       .open(CreateUserComponent, {}, 'md', {
         nzMask: true
