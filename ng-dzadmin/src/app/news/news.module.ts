@@ -8,7 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NewsComponent } from './news/news.component';
 import { NewsRoutingModule } from './news-routing.module';
 import { NewsService } from 'services';
-
+import { NewsDetailComponent } from './news/news-detail/news-detail.component';
 @NgModule({
     imports: [
         CommonModule,
@@ -20,10 +20,12 @@ import { NewsService } from 'services';
         SharedModule,
     ],
     declarations: [
-        NewsComponent
+        NewsComponent,
+        NewsDetailComponent
     ],
     entryComponents: [
-        NewsComponent
+        NewsComponent,
+        NewsDetailComponent
     ],
     providers: [NewsService],
 })

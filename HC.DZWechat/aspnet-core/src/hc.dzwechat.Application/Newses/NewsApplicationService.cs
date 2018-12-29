@@ -21,8 +21,7 @@ using Abp.Linq.Extensions;
 using HC.DZWechat.Newses;
 using HC.DZWechat.Newses.Dtos;
 using HC.DZWechat.Newses.DomainService;
-
-
+using static HC.DZWechat.DZEnums.DZEnums;
 
 namespace HC.DZWechat.Newses
 {
@@ -54,7 +53,6 @@ namespace HC.DZWechat.Newses
         ///</summary>
         /// <param name="input"></param>
         /// <returns></returns>
-		 
         public async Task<PagedResultDto<NewsListDto>> GetPaged(GetNewssInput input)
 		{
 
@@ -79,10 +77,10 @@ namespace HC.DZWechat.Newses
 		/// <summary>
 		/// 通过指定id获取NewsListDto信息
 		/// </summary>
-		 
 		public async Task<NewsListDto> GetById(EntityDto<Guid> input)
 		{
-			var entity = await _entityRepository.GetAsync(input.Id);
+            //var entity = await _entityRepository.GetAsync(input.Id);
+            var entity = await _entityRepository.GetAll().Where(n => n.Id == input.Id).FirstOrDefaultAsync();
 
 		    return entity.MapTo<NewsListDto>();
 		}
@@ -92,7 +90,6 @@ namespace HC.DZWechat.Newses
 		/// </summary>
 		/// <param name="input"></param>
 		/// <returns></returns>
-		
 		public async Task<GetNewsForEditOutput> GetForEdit(NullableIdDto<Guid> input)
 		{
 			var output = new GetNewsForEditOutput();
@@ -121,7 +118,6 @@ NewsEditDto editDto;
 		/// </summary>
 		/// <param name="input"></param>
 		/// <returns></returns>
-		
 		public async Task CreateOrUpdate(CreateOrUpdateNewsInput input)
 		{
 
@@ -139,7 +135,6 @@ NewsEditDto editDto;
 		/// <summary>
 		/// 新增News
 		/// </summary>
-		
 		protected virtual async Task<NewsEditDto> Create(NewsEditDto input)
 		{
 			//TODO:新增前的逻辑判断，是否允许新增
@@ -155,7 +150,6 @@ NewsEditDto editDto;
 		/// <summary>
 		/// 编辑News
 		/// </summary>
-		
 		protected virtual async Task Update(NewsEditDto input)
 		{
 			//TODO:更新前的逻辑判断，是否允许更新
@@ -174,7 +168,6 @@ NewsEditDto editDto;
 		/// </summary>
 		/// <param name="input"></param>
 		/// <returns></returns>
-		
 		public async Task Delete(EntityDto<Guid> input)
 		{
 			//TODO:删除前的逻辑判断，是否允许删除
@@ -183,30 +176,38 @@ NewsEditDto editDto;
 
 
 
-		/// <summary>
-		/// 批量删除News的方法
-		/// </summary>
-		
-		public async Task BatchDelete(List<Guid> input)
+        /// <summary>
+        /// 批量删除News的方法
+        /// </summary>
+        public async Task BatchDelete(List<Guid> input)
 		{
 			// TODO:批量删除前的逻辑判断，是否允许删除
 			await _entityRepository.DeleteAsync(s => input.Contains(s.Id));
 		}
 
 
-		/// <summary>
-		/// 导出News为excel表,等待开发。
-		/// </summary>
-		/// <returns></returns>
-		//public async Task<FileDto> GetToExcel()
-		//{
-		//	var users = await UserManager.Users.ToListAsync();
-		//	var userListDtos = ObjectMapper.Map<List<UserListDto>>(users);
-		//	await FillRoleNames(userListDtos);
-		//	return _userListExcelExporter.ExportToFile(userListDtos);
-		//}
+        /// <summary>
+        /// 导出News为excel表,等待开发。
+        /// </summary>
+        /// <returns></returns>
+        //public async Task<FileDto> GetToExcel()
+        //{
+        //	var users = await UserManager.Users.ToListAsync();
+        //	var userListDtos = ObjectMapper.Map<List<UserListDto>>(users);
+        //	await FillRoleNames(userListDtos);
+        //	return _userListExcelExporter.ExportToFile(userListDtos);
+        //}
+        
+       
+        public async Task<NewsListDto> GetByIdAndType(Guid? id, NewsType newsType)
+        {
+            //var entity = await _entityRepository.GetAsync(input.Id);
+            var entity = await _entityRepository.GetAll().Where(n => n.Id == id && n.Type==int.Parse(newsType.ToString())).FirstOrDefaultAsync(); 
+            return entity.MapTo<NewsListDto>();
+        }
 
     }
+
 }
 
 

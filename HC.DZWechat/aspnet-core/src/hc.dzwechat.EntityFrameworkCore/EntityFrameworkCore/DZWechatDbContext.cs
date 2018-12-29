@@ -3,6 +3,7 @@ using Abp.Zero.EntityFrameworkCore;
 using HC.DZWechat.Authorization.Roles;
 using HC.DZWechat.Authorization.Users;
 using HC.DZWechat.MultiTenancy;
+using HC.DZWechat.Newses;
 using HC.DZWechat.WechatMessages;
 using HC.DZWechat.WechatSubscribes;
 
@@ -15,7 +16,9 @@ namespace HC.DZWechat.EntityFrameworkCore
         public DZWechatDbContext(DbContextOptions<DZWechatDbContext> options)
             : base(options)
         {
+
         }
+        public virtual DbSet<News> News { get; set; }
 
         public virtual DbSet<WechatMessage> WechatMessages { get; set; }
 
