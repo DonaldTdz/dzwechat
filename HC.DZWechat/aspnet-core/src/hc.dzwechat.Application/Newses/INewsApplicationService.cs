@@ -20,6 +20,7 @@ using Abp.Application.Services.Dto;
 
 using HC.DZWechat.Newses.Dtos;
 using HC.DZWechat.Newses;
+using static HC.DZWechat.DZEnums.DZEnums;
 
 namespace HC.DZWechat.Newses
 {
@@ -72,11 +73,15 @@ namespace HC.DZWechat.Newses
         Task BatchDelete(List<Guid> input);
 
 
-		/// <summary>
+        /// <summary>
         /// 导出News为excel表
         /// </summary>
         /// <returns></returns>
-		//Task<FileDto> GetToExcel();
+        //Task<FileDto> GetToExcel();
+
+
+            
+        Task<NewsListDto> GetByIdAndType(Guid? id, NewsType newsType);
 
     }
 }
