@@ -17,8 +17,6 @@ namespace HC.DZWechat.WechatMessages
         /// <summary>
         /// 当上下文过期，被移除时触发的时间
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         void CustomMessageContext_MessageContextRemoved(object sender, WeixinContextRemovedEventArgs<IRequestMessageBase, IResponseMessageBase> e)
         {
             /* 注意，这个事件不是实时触发的（当然你也可以专门写一个线程监控）

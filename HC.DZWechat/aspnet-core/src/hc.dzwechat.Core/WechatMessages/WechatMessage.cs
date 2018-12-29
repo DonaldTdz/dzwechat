@@ -1,5 +1,6 @@
 ﻿using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using HC.DZWechat.WechatSubscribes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -26,14 +27,33 @@ namespace HC.DZWechat.WechatMessages
         /// 消息类型（枚举 文字消息、图文消息）
         /// </summary>
         [Required]
-        public virtual int MsgType { get; set; }
+        public virtual MsgTypeEnum MsgType { get; set; }
         /// <summary>
         /// 回复内容
         /// </summary>
-        [StringLength(50)]
+        [StringLength(200)]
         [Required]
         public virtual string Content { get; set; }
-        
+        /// <summary>
+        /// 标题
+        /// </summary>
+        public virtual string Title { get; set; }
+
+        /// <summary>
+        /// 描述
+        /// </summary>
+        public virtual string Desc { get; set; }
+
+        /// <summary>
+        /// 图片链接
+        /// </summary>
+        public virtual string PicLink { get; set; }
+
+        /// <summary>
+        /// 文章连接
+        /// </summary>
+        public virtual string Url { get; set; }
+
     }
 
 }

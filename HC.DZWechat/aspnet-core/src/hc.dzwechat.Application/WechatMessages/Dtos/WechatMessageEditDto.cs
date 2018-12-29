@@ -3,6 +3,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using Abp.Domain.Entities.Auditing;
 using HC.DZWechat.WechatMessages;
+using HC.DZWechat.WechatSubscribes;
 
 namespace  HC.DZWechat.WechatMessages.Dtos
 {
@@ -36,7 +37,7 @@ namespace  HC.DZWechat.WechatMessages.Dtos
 		/// MsgType
 		/// </summary>
 		[Required(ErrorMessage="MsgType不能为空")]
-		public int MsgType { get; set; }
+		public MsgTypeEnum MsgType { get; set; }
 
 
 
