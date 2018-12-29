@@ -1,1 +1,61 @@
 <page-header [title]="'商品管理'"></page-header>
+
+<nz-card>
+    <div nz-row>
+        <div nz-col nzSpan="6">
+            <category></category>
+        </div>
+        <div nz-col nzSpan="18">
+            <div nz-row class="mb-md">
+                <div nz-col nzSpan="18" style="padding-right:10px;">
+                    <nz-input-group nzSearch [nzSuffix]="suffixButton">
+                        <input type="text" [(ngModel)]="keyWord" nz-input placeholder="商品条码或名称">
+                    </nz-input-group>
+                    <ng-template #suffixButton>
+                        <button nz-button nzType="primary" [nzLoading]="isTableLoading" (click)="refreshData()" nzSearch>搜索</button>
+                    </ng-template>
+                </div>
+                <div nz-col nzSpan="6" style="text-align:right;">
+                    <button nz-button (click)="resetSearch()" nzShape="circle" nz-tooltip nzPlacement="top" nzTitle="刷新">
+                                <i class="anticon anticon-reload"></i>
+                            </button>
+                    <button nz-button (click)="createGoods()" nzShape="circle" nzType="primary" nz-tooltip nzPlacement="top" nzTitle="新增">
+                                <i class="anticon anticon-plus"></i>
+                            </button>
+                </div>
+            </div>
+            <ng-template #totalTemplate let-total>共 {{totalItems}} 条</ng-template>
+            <nz-table #nzTable [nzData]="dataList" [nzFrontPagination]="false" [nzTotal]="totalItems" [nzShowTotal]="totalTemplate" [(nzPageIndex)]="pageNumber" [(nzPageSize)]="pageSize" [nzLoading]="isTableLoading" [nzShowSizeChanger]="true" (nzPageIndexChange)="refresh()"
+                (nzPageSizeChange)="refresh()">
+                <thead>
+                    <tr>
+                        <th>商品条码</th>
+                        <th>商品规格</th>
+                        <th>商品单位</th>
+                        <th>兑换方式</th>
+                        <th>商品分类</th>
+                        <th>库存</th>
+                        <th>兑换积分</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of nzTable.data">
+                        <td>{{data.barCode}}</td>
+                        <td>{{data.specification}}</td>
+                        <td>{{data.unit}}</td>
+                        <td>{{data.exchangeCode}}</td>
+                        <td>{{data.categoryName}}</td>
+                        <td>{{data.stock}}</td>
+                        <td>{{data.integral}}</td>
+                        <td>{{data.isAction}}</td>
+                        <td>
+                            <a (click)="goDetail(data.id)">详情</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </div>
+    </div>
+</nz-card>

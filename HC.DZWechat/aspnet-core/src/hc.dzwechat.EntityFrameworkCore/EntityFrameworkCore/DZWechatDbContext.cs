@@ -6,6 +6,10 @@ using HC.DZWechat.MultiTenancy;
 using HC.DZWechat.Newses;
 using HC.DZWechat.WechatMessages;
 using HC.DZWechat.WechatSubscribes;
+using HC.DZWechat.WechatUsers;
+using HC.DZWechat.IntegralDetails;
+using HC.DZWechat.Orders;
+using HC.DZWechat.Goods;
 
 namespace HC.DZWechat.EntityFrameworkCore
 {
@@ -23,6 +27,11 @@ namespace HC.DZWechat.EntityFrameworkCore
         public virtual DbSet<WechatMessage> WechatMessages { get; set; }
 
         public virtual DbSet<WechatSubscribe> WechatSubscribes { get; set; }
+        public virtual DbSet<WechatUser> WechatUsers { get; set; }
+        public virtual DbSet<IntegralDetail> IntegralDetails { get; set; }
+        public virtual DbSet<Order> Orders { get; set; }
+        public virtual DbSet<Good> Goods { get; set; }
+        
     }
 }
 
