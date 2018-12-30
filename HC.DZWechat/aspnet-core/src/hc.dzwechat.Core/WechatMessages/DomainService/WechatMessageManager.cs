@@ -74,7 +74,7 @@ namespace HC.DZWechat.WechatMessages
                         break;
                 }
             }
-            //被动回复图文消息
+            //回复图文消息
             var msgs = await _wechatmessageRepository.GetAll().ToListAsync();
             foreach (var msg in msgs)
             {
@@ -82,18 +82,40 @@ namespace HC.DZWechat.WechatMessages
                 {
                     case MsgTypeEnum.文字消息:
                         {
-                            messages.KeyWords[msg.KeyWord] = msg.Content;
+                            //关键字
+                            if (msg.TriggerType == TriggerTypeEnum.关键字)
+                            {
+                                messages.KeyWords[msg.KeyWord] = msg.Content;
+                            }
+                            else//事件
+                            {
+                                messages.EventKeies[msg.KeyWord] = msg.Content;
+                            }
                         }
                         break;
                     case MsgTypeEnum.图文消息:
                         {
-                            messages.KeyWordsPic[msg.KeyWord] = new Article()
+                            //关键字
+                            if (msg.TriggerType == TriggerTypeEnum.关键字)
                             {
-                                Title = msg.Title,
-                                Description = msg.Desc,
-                                PicUrl = msg.PicLink,
-                                Url = msg.Url
-                            };
+                                messages.KeyWordsPic[msg.KeyWord] = new Article()
+                                {
+                                    Title = msg.Title,
+                                    Description = msg.Desc,
+                                    PicUrl = msg.PicLink,
+                                    Url = msg.Url
+                                };
+                            }
+                            else//事件
+                            { 
+                                messages.EventKeiesPic[msg.KeyWord] = new Article()
+                                {
+                                    Title = msg.Title,
+                                    Description = msg.Desc,
+                                    PicUrl = msg.PicLink,
+                                    Url = msg.Url
+                                };
+                            }
                         }
                         break;
                 }
