@@ -1,65 +1,121 @@
 <!--component html goes here -->
-<page-header [title]="title"></page-header>
-<form nz-form #validateForm="ngForm" (ngSubmit)="save()" *ngIf="user">
-    <nz-tabset>
-        <nz-tab [nzTitle]="l('UserDetails')">
-            <!-- 标题 -->
-            <nz-form-item>
-                <nz-form-control nzHasFeedback>
-                    <input nz-input name="userName" #userName="ngModel" [(ngModel)]="news.title" [placeholder]="'标题'" required>
-                    <nz-form-explain *ngIf="userName.control.dirty&&userName.control.errors">
-                        <ng-container *ngIf="userName.control.hasError('required')">{{l('CanNotNull')}}</ng-container>
-                    </nz-form-explain>
-                </nz-form-control>
-            </nz-form-item>
+<!-- <page-header [title]="title"></page-header> -->
+<form nz-form #validateForm="ngForm" (ngSubmit)="save(false)" *ngIf="news">
+    <!-- 发布状态 -->
+    <nz-form-item>
+        <nz-form-label [nzSm]="5" [nzXs]="24" nzFor="pushStatusName">发布状态</nz-form-label>
+        <nz-form-control [nzSm]="15" nzHasFeedback>
+            {{news.pushStatusName}}
+        </nz-form-control>
+    </nz-form-item>
 
-            <!-- 作者 -->
-            <nz-form-item>
-                <nz-form-control nzHasFeedback>
-                    <input nz-input name="author" #name="ngModel" [(ngModel)]="news.author" [placeholder]="'作者'" autocomplete="author" required>
-                    <nz-form-explain *ngIf="name.control.dirty&&name.control.errors">
-                        <ng-container *ngIf="name.control.hasError('required')">{{l('CanNotNull')}}</ng-container>
-                    </nz-form-explain>
-                </nz-form-control>
-            </nz-form-item>
+    <!-- 发布时间 -->
+    <nz-form-item nz-row>
+        <nz-form-label nz-col [nzSm]="5" [nzXs]="24" nzFor="pushTime">发布时间</nz-form-label>
+        <nz-form-control nz-col [nzSm]="15" nzHasFeedback>
+            {{news.pushTime}}
+        </nz-form-control>
+    </nz-form-item>
 
-            <!-- 类型 -->
-            <nz-form-item>
-                <nz-form-control nzHasFeedback>
-                    <input nz-input name="emailAddress" #emailAddress="ngModel" [(ngModel)]="news.emailAddress" [placeholder]="l('EmailAddress')"
-                        autocomplete="email" required email>
-                    <nz-form-explain *ngIf="emailAddress.control.dirty&&emailAddress.control.errors">
-                        <ng-container *ngIf="emailAddress.control.hasError('required')">{{l('CanNotNull')}}</ng-container>
-                        <ng-container *ngIf="emailAddress.control.hasError('email')">邮箱格式不对</ng-container>
-                    </nz-form-explain>
-                </nz-form-control>
-            </nz-form-item>
-
-            <!-- 激活 -->
-            <nz-form-item>
-                <label nz-checkbox name="isActive" [(ngModel)]="news.isActive">{{l('IsActive')}}</label>
-            </nz-form-item>
-        </nz-tab>
+    <!-- 标题 -->
+    <nz-form-item nz-row>
+        <nz-form-label nz-col [nzSm]="5" [nzXs]="24" nzRequired nzFor="title">标题</nz-form-label>
+        <nz-form-control nz-col [nzSm]="15" nzHasFeedback>
+            <input nz-input name="title" #title="ngModel" [(ngModel)]="news.title" [placeholder]="'标题'" required>
+            <nz-form-explain *ngIf="title.control.dirty&&title.control.errors">
+                <ng-container *ngIf="title.control.hasError('required')">{{l('CanNotNull')}}</ng-container>
+            </nz-form-explain>
+        </nz-form-control>
+    </nz-form-item>
 
 
-        <nz-tab [nzTitle]="l('UserRoles')">
-            <nz-checkbox-group name="roles" [(ngModel)]="roleList"></nz-checkbox-group>
-        </nz-tab>
+    <!-- 作者 -->
+    <nz-form-item nz-row>
+        <nz-form-label nz-col [nzSm]="5" [nzXs]="24" nzRequired nzFor="author">作者</nz-form-label>
+        <nz-form-control nz-col [nzSm]="15" nzHasFeedback>
+            <input nz-input name="author" #author="ngModel" [(ngModel)]="news.author" [placeholder]="'作者'" autocomplete="author"
+                required>
+            <nz-form-explain *ngIf="author.control.dirty&&author.control.errors">
+                <ng-container *ngIf="author.control.hasError('required')">{{l('CanNotNull')}}</ng-container>
+            </nz-form-explain>
+        </nz-form-control>
+    </nz-form-item>
 
-    </nz-tabset>
+    <!-- 资讯分类 -->
+    <nz-form-item nz-row>
+        <nz-form-label nz-col [nzSm]="5" [nzXs]="24" nzFor="type">资讯分类{{news.type}}</nz-form-label>
+        <nz-form-control nz-col [nzSm]="15" nzHasFeedback>
+            <nz-select name="type" #type="ngModel" [(ngModel)]="news.type" autocomplete="type">
+                <nz-option *ngFor="let i of newsTypes" [nzLabel]="i.text" [nzValue]="i.value">
+                </nz-option>
+            </nz-select>
+        </nz-form-control>
+    </nz-form-item>
+
+    <!-- 封面图片 -->
+    <nz-form-item>
+        <nz-form-label [nzSm]="5" [nzXs]="24" nzRequired nzFor="coverPhoto">封面图片</nz-form-label>
+        <nz-form-control [nzSm]="15">
+            <nz-upload class="avatar-uploader" nzAction="{{actionUrl}}" [nzName]="'image'" [nzShowUploadList]="false"
+                (nzChange)="handleChange($event)">
+                <i *ngIf="!news.coverPhoto" class="anticon anticon-plus avatar-uploader-trigger"></i>
+                <img *ngIf="news.coverPhoto" [src]="news.showCoverPhoto" class="avatar" [width]="200" [height]="200">
+            </nz-upload>
+            <!-- <nz-form-explain *ngIf="emailAddress.control.dirty&&emailAddress.control.errors">
+                <ng-container *ngIf="emailAddress.control.hasError('required')">{{l('CanNotNull')}}</ng-container>
+            </nz-form-explain> -->
+        </nz-form-control>
+    </nz-form-item>
+    <!-- 连接类型 -->
+    <nz-form-item nz-row>
+        <nz-form-label [nzSm]="5" [nzXs]="24" nzFor="linkType">连接类型</nz-form-label>
+        <nz-form-control [nzSm]="15" nzHasFeedback>
+            <nz-radio-group name="linkType" [(ngModel)]="news.linkType" autocomplete="linkType">
+                <label nz-radio [nzValue]="o.value" *ngFor="let o of linkTypes">
+                    <span>{{o.text}}</span>
+                </label>
+            </nz-radio-group>
+        </nz-form-control>
+    </nz-form-item>
+    <!--连接地址 -->
+    <nz-form-item nz-row>
+        <nz-form-label [nzSm]="5" [nzXs]="24" nzFor="linkAddress">连接地址</nz-form-label>
+        <nz-form-control [nzSm]="15" nzHasFeedback>
+            <input nz-input name="linkAddress" #linkAddress="ngModel" [(ngModel)]="news.linkAddress" [placeholder]="'连接地址'"
+                autocomplete="linkAddress">
+            <!-- <nz-form-explain *ngIf="linkAddress.control.dirty&&type.control.errors">
+                <ng-container *ngIf="linkAddress.control.hasError('required')">{{l('CanNotNull')}}</ng-container>
+            </nz-form-explain> -->
+        </nz-form-control>
+    </nz-form-item>
 
 
     <!-- 功能按钮 -->
-    <div class="modal-footer">
-        <button nz-button type="button" [disabled]="saving" (click)="close()">
-            {{l("Cancel")}}
+    <footer-toolbar errorCollect>
+        <button nz-button type="button" [disabled]="saving" (click)="return()">
+            {{l("返回")}}
+        </button>
+        <button nz-button *ngIf="isDelete" [nzType]="'danger'" (click)="delete(deleteContent)" [nzSize]="'large'"
+            [nzLoading]="isConfirmLoading">
+            {{l("删除")}}
+        </button>
+        <button nz-button *ngIf="isPush" [nzType]="'primary'" type="button" (click)="push()">
+            {{l("发布")}}
         </button>
         <button nz-button [nzType]="'primary'" type="submit" [disabled]="!validateForm.valid||saving">
-            保存
+            {{l("保存")}}
         </button>
-        <button nz-button [nzType]="'primary'" type="button">
-            返回
-        </button>
-    </div>
-
+    </footer-toolbar>
+    <!-- <button nz-button [nzType]="'default'" (click)="return()" [nzSize]="'large'">
+        {{l("返回")}}
+    </button>
+    <button nz-button *ngIf="isDelete" [nzType]="'danger'" (click)="delete(deleteContent)" [nzSize]="'large'" [nzLoading]="isConfirmLoading">
+        {{l("删除")}}
+    </button>
+    <button nz-button *ngIf="isPush" [nzType]="'primary'" (click)="push()" [nzSize]="'large'" [nzLoading]="isConfirmLoading">
+        {{l("发布")}}
+    </button>
+    <button nz-button [nzType]="'primary'" (click)="save()" [nzSize]="'large'" [nzLoading]="isConfirmLoading">
+        {{l("保存")}}
+    </button> -->
 </form>

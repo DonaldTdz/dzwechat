@@ -37,26 +37,30 @@ namespace HC.DZWechat.WechatMessages
         /// </summary>
         public override IResponseMessageBase OnEvent_ClickRequest(RequestMessageEvent_Click requestMessage)
         {
-            IResponseMessageBase reponseMessage = null;
-            //菜单点击，需要跟创建菜单时的Key匹配
-            switch (requestMessage.EventKey)
+            //1、文字消息
+            foreach (var eventKey in Messages.EventKeies)
             {
-                case "dev":
-                    {
-                        //这个过程实际已经在OnTextOrEventRequest中完成，这里不会执行到。
-                        var strongResponseMessage = CreateResponseMessage<ResponseMessageText>();
-                        strongResponseMessage.Content = "功能在开发中，敬请期待...";
-                        reponseMessage = strongResponseMessage;
-                    }
-                    break; 
-                default: //默认key没有处理
-                    {
-                        //不回复任何信息
-                        return new SuccessResponseMessage();
-                    }
+                if (requestMessage.EventKey == eventKey.Key)
+                {
+                    var strongResponseMessage = CreateResponseMessage<ResponseMessageText>();
+                    strongResponseMessage.Content = eventKey.Value;
+                    return strongResponseMessage;
+                }
+            }
+            //2、图文消息
+            foreach (var eventKeyPic in Messages.EventKeiesPic)
+            {
+                if (requestMessage.EventKey == eventKeyPic.Key)
+                {
+                    var strongResponseMessage = CreateResponseMessage<ResponseMessageNews>();
+                    strongResponseMessage.ArticleCount = 1;
+                    strongResponseMessage.Articles.Add(eventKeyPic.Value);
+                    return strongResponseMessage;
+                }
             }
 
-            return reponseMessage;
+            //不回复任何信息
+            return new SuccessResponseMessage();
         }
 
         /// <summary>

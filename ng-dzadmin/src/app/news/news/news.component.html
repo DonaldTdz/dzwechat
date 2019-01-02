@@ -1,14 +1,12 @@
 <page-header [title]="'资讯配置'"></page-header>
 <nz-card [nzExtra]="extraTpl">
     <div nz-row>
-        <div nz-col [nzSpan]="4">
-
+        <div nz-col [nzSm]="4" [nzSpan]="4">
             <ul nz-menu [nzMode]="'inline'">
                 <li *ngFor="let item of newsType" nz-menu-item [nzSelected]="item.selected" (click)="checkChangeLeaf(item)">{{item.text}}</li>
             </ul>
-
         </div>
-        <div nz-col [nzSpan]="20">
+        <div nz-col [nzSm]="20" [nzSpan]="20">
             <ng-template #extraTpl>
                 <button nz-button (click)="refresh()" nzShape="circle">
                     <i class="anticon anticon-reload"></i>
@@ -18,42 +16,52 @@
                 </button>
             </ng-template>
 
-            <nz-table #ajaxTable nzShowSizeChanger [nzData]="dataList" [nzTotal]="totalItems" [(nzPageIndex)]="pageNumber" [(nzPageSize)]="pageSize"
-                [nzLoading]="isTableLoading" (nzPageIndexChange)="refresh()" (nzPageSizeChange)="refresh()" [nzFrontPagination]="false">
+            <nz-table #ajaxTable nzShowSizeChanger [nzData]="dataList" [nzTotal]="totalItems" [(nzPageIndex)]="pageNumber"
+                [(nzPageSize)]="pageSize" [nzLoading]="isTableLoading" (nzPageIndexChange)="refresh()"
+                (nzPageSizeChange)="refresh()" [nzFrontPagination]="false">
                 <thead>
                     <tr>
+                        <th>封面图片</th>
                         <th>标题</th>
                         <th>作者</th>
-                        <th>咨讯分类</th>
-                        <th>封面图片</th>
-                        <th>内容介绍</th>
+                        <!-- <th>咨讯分类</th>
+                        <th>内容介绍</th> -->
                         <th>发布状态</th>
                         <th>发布时间</th>
-                        <th>连接类型</th>
-                        <th>连接地址</th>
+                        <!-- <th>连接类型</th>
+                        <th>连接地址</th> -->
                         <th>创建时间</th>
+                        <th>操作</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let item of ajaxTable.data">
+                        <td>
+                            <nz-avatar [nzSrc]="(item.showCoverPhoto)" style="width:80px;height: 80px;" (click)="handlePreview(item.showCoverPhoto)"
+                                [nzSize]="'large'" [nzShape]="'square'"></nz-avatar>
+                        </td>
                         <td>{{item.title}}</td>
                         <td>{{item.author}}</td>
-                        <td>{{item.type}}</td>
-                        <td>{{item.coverPhoto}}</td>
-                        <td>{{item.content}}</td>
-                        <td>{{item.pushStatus}}</td>
+                        <!-- <td>{{item.typeName}}</td>
+                        <td>{{item.content}}</td> -->
+                        <td>{{item.pushStatusName}}</td>
                         <td>{{item.pushTime}}</td>
-                        <td>{{item.linkType}}</td>
-                        <td>{{item.linkAddress}}</td>
+                        <!-- <td>{{item.linkTypeName}}</td>
+                        <td>{{item.linkAddress}}</td> -->
                         <td>{{item.creationTime| _date: 'YYYY-MM-DD'}}</td>
                         <td>
-                            <a (click)="edit(item)">编辑</a>
-                            <nz-divider nzType="vertical"></nz-divider>
-                            <a (click)="delete(item)">删除</a>
+                            <a (click)="edit(item)">详情</a>
+                            <!-- <nz-divider nzType="vertical"></nz-divider> -->
+                            <!-- <a (click)="delete(item)">删除</a> -->
                         </td>
                     </tr>
                 </tbody>
             </nz-table>
         </div>
+        <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null" (nzOnCancel)="previewVisible=false">
+            <ng-template #modalContent>
+                <img [src]="(previewImage)" [ngStyle]="{ 'width': '100%' }" />
+            </ng-template>
+        </nz-modal>
     </div>
 </nz-card>

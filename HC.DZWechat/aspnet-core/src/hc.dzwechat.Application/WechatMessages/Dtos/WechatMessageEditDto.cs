@@ -39,12 +39,12 @@ namespace  HC.DZWechat.WechatMessages.Dtos
 		[Required(ErrorMessage="MsgType不能为空")]
 		public MsgTypeEnum MsgType { get; set; }
 
+        public TriggerTypeEnum TriggerType { get; set; }
 
-
-		/// <summary>
-		/// Content
-		/// </summary>
-		[Required(ErrorMessage="Content不能为空")]
+        /// <summary>
+        /// Content
+        /// </summary>
+        [Required(ErrorMessage="Content不能为空")]
 		public string Content { get; set; }
 
 

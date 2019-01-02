@@ -11,6 +11,8 @@ namespace HC.DZWechat.WechatMessages
         {
             KeyWordsPic = new Dictionary<string, Article>();
             KeyWords = new Dictionary<string, string>();
+            EventKeiesPic = new Dictionary<string, Article>();
+            EventKeies = new Dictionary<string, string>();
         }
 
         #region 微信公众号关注 图文消息
@@ -20,10 +22,17 @@ namespace HC.DZWechat.WechatMessages
 
         #endregion
 
-        #region 被动回复 图文消息    
+        #region 关键字回复 图文消息    
 
         public virtual Dictionary<string, Article> KeyWordsPic { get; set; }
         public virtual Dictionary<string, string> KeyWords { get; set; }
+
+        #endregion
+
+        #region 点击事件回复 图文消息
+
+        public virtual Dictionary<string, Article> EventKeiesPic { get; set; }
+        public virtual Dictionary<string, string> EventKeies { get; set; }
 
         #endregion
     }

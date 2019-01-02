@@ -12,21 +12,23 @@
                         <input type="text" [(ngModel)]="keyWord" nz-input placeholder="商品条码或名称">
                     </nz-input-group>
                     <ng-template #suffixButton>
-                        <button nz-button nzType="primary" [nzLoading]="isTableLoading" (click)="refreshData()" nzSearch>搜索</button>
+                        <button nz-button nzType="primary" [nzLoading]="isTableLoading" (click)="refreshData()"
+                            nzSearch>搜索</button>
                     </ng-template>
                 </div>
                 <div nz-col nzSpan="6" style="text-align:right;">
                     <button nz-button (click)="resetSearch()" nzShape="circle" nz-tooltip nzPlacement="top" nzTitle="刷新">
-                                <i class="anticon anticon-reload"></i>
-                            </button>
-                    <button nz-button (click)="createGoods()" nzShape="circle" nzType="primary" nz-tooltip nzPlacement="top" nzTitle="新增">
-                                <i class="anticon anticon-plus"></i>
-                            </button>
+                        <i class="anticon anticon-reload"></i>
+                    </button>
+                    <button nz-button nzShape="circle" nzType="primary" nz-tooltip nzPlacement="top" nzTitle="新增">
+                        <i class="anticon anticon-plus"></i>
+                    </button>
                 </div>
             </div>
             <ng-template #totalTemplate let-total>共 {{totalItems}} 条</ng-template>
-            <nz-table #nzTable [nzData]="dataList" [nzFrontPagination]="false" [nzTotal]="totalItems" [nzShowTotal]="totalTemplate" [(nzPageIndex)]="pageNumber" [(nzPageSize)]="pageSize" [nzLoading]="isTableLoading" [nzShowSizeChanger]="true" (nzPageIndexChange)="refresh()"
-                (nzPageSizeChange)="refresh()">
+            <nz-table #nzTable [nzData]="dataList" [nzFrontPagination]="false" [nzTotal]="totalItems" [nzShowTotal]="totalTemplate"
+                [(nzPageIndex)]="pageNumber" [(nzPageSize)]="pageSize" [nzLoading]="isTableLoading" [nzShowSizeChanger]="true"
+                (nzPageIndexChange)="refresh()" (nzPageSizeChange)="refresh()">
                 <thead>
                     <tr>
                         <th>商品条码</th>

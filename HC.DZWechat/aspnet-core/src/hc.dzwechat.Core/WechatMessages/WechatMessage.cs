@@ -28,6 +28,12 @@ namespace HC.DZWechat.WechatMessages
         /// </summary>
         [Required]
         public virtual MsgTypeEnum MsgType { get; set; }
+
+        /// <summary>
+        /// 触发类型 （枚举 关键字、点击事件）
+        /// </summary>
+        public virtual TriggerTypeEnum TriggerType { get; set; }
+
         /// <summary>
         /// 回复内容
         /// </summary>
@@ -53,7 +59,15 @@ namespace HC.DZWechat.WechatMessages
         /// 文章连接
         /// </summary>
         public virtual string Url { get; set; }
+    }
 
+    /// <summary>
+    /// 触发类型
+    /// </summary>
+    public enum TriggerTypeEnum
+    {
+        关键字 = 1,
+        点击事件 = 2
     }
 
 }

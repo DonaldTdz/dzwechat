@@ -25,7 +25,7 @@ import { NewsDetailComponent } from './news/news-detail/news-detail.component';
     ],
     entryComponents: [
         NewsComponent,
-        NewsDetailComponent
+        // NewsDetailComponent
     ],
     providers: [NewsService],
 })

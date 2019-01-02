@@ -78,10 +78,16 @@ namespace HC.DZWechat.Newses
         /// </summary>
         /// <returns></returns>
         //Task<FileDto> GetToExcel();
-
-
+        
             
-        Task<NewsListDto> GetByIdAndType(Guid? id, NewsType newsType);
+        Task<NewsListDto> GetByIdAndType(EntityDto<Guid> id, NewsType newsType);
+
+        /// <summary>
+        /// 添加或者修改News的公共方法
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task<NewsEditDto> CreateOrUpdateDto(NewsEditDto input);
 
     }
 }
