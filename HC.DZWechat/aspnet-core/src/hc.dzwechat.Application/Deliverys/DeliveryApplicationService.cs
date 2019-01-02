@@ -18,30 +18,30 @@ using Abp.Application.Services.Dto;
 using Abp.Linq.Extensions;
 
 
-using HC.DZWechat.Categorys;
-using HC.DZWechat.Categorys.Dtos;
-using HC.DZWechat.Categorys.DomainService;
+using HC.DZWechat.Deliverys;
+using HC.DZWechat.Deliverys.Dtos;
+using HC.DZWechat.Deliverys.DomainService;
 
 
 
-namespace HC.DZWechat.Categorys
+namespace HC.DZWechat.Deliverys
 {
     /// <summary>
-    /// Category应用层服务的接口实现方法  
+    /// Delivery应用层服务的接口实现方法  
     ///</summary>
     [AbpAuthorize]
-    public class CategoryAppService : DZWechatAppServiceBase, ICategoryAppService
+    public class DeliveryAppService : DZWechatAppServiceBase, IDeliveryAppService
     {
-        private readonly IRepository<Category, Guid> _entityRepository;
+        private readonly IRepository<Delivery, Guid> _entityRepository;
 
-        private readonly ICategoryManager _entityManager;
+        private readonly IDeliveryManager _entityManager;
 
         /// <summary>
         /// 构造函数 
         ///</summary>
-        public CategoryAppService(
-        IRepository<Category, Guid> entityRepository
-        ,ICategoryManager entityManager
+        public DeliveryAppService(
+        IRepository<Delivery, Guid> entityRepository
+        ,IDeliveryManager entityManager
         )
         {
             _entityRepository = entityRepository; 
@@ -50,113 +50,104 @@ namespace HC.DZWechat.Categorys
 
 
         /// <summary>
-        /// 获取Category的分页列表信息
+        /// 获取Delivery的分页列表信息
         ///</summary>
         /// <param name="input"></param>
         /// <returns></returns>
 		 
-        public async Task<PagedResultDto<CategoryListDto>> GetPaged(GetCategorysInput input)
+        public async Task<List<DeliveryListDto>> GetNoPaged(GetDeliverysInput input)
 		{
 
-		    var query = _entityRepository.GetAll();
-			// TODO:根据传入的参数添加过滤条件
-            
-
-			var count = await query.CountAsync();
-
+		    var query = _entityRepository.GetAll().Where(v=>v.UnionId == input.UnionId);
 			var entityList = await query
-					.OrderBy(input.Sorting).AsNoTracking()
-					.PageBy(input)
+					.OrderByDescending(v=>v.IsDefault).AsNoTracking()
 					.ToListAsync();
-
-			// var entityListDtos = ObjectMapper.Map<List<CategoryListDto>>(entityList);
-			var entityListDtos =entityList.MapTo<List<CategoryListDto>>();
-
-			return new PagedResultDto<CategoryListDto>(count,entityListDtos);
-		}
+			var entityListDtos = entityList.MapTo<List<DeliveryListDto>>();
+            return entityListDtos;
+        }
 
 
 		/// <summary>
-		/// 通过指定id获取CategoryListDto信息
+		/// 通过指定id获取DeliveryListDto信息
 		/// </summary>
 		 
-		public async Task<CategoryListDto> GetById(Guid id)
+		public async Task<DeliveryListDto> GetById(EntityDto<Guid> input)
 		{
-			var entity = await _entityRepository.GetAsync(id);
+			var entity = await _entityRepository.GetAsync(input.Id);
 
-		    return entity.MapTo<CategoryListDto>();
+		    return entity.MapTo<DeliveryListDto>();
 		}
 
 		/// <summary>
-		/// 获取编辑 Category
+		/// 获取编辑 Delivery
 		/// </summary>
 		/// <param name="input"></param>
 		/// <returns></returns>
 		
-		public async Task<GetCategoryForEditOutput> GetForEdit(NullableIdDto<Guid> input)
+		public async Task<GetDeliveryForEditOutput> GetForEdit(NullableIdDto<Guid> input)
 		{
-			var output = new GetCategoryForEditOutput();
-            CategoryEditDto editDto;
+			var output = new GetDeliveryForEditOutput();
+DeliveryEditDto editDto;
 
 			if (input.Id.HasValue)
 			{
 				var entity = await _entityRepository.GetAsync(input.Id.Value);
 
-				editDto = entity.MapTo<CategoryEditDto>();
+				editDto = entity.MapTo<DeliveryEditDto>();
 
-				//categoryEditDto = ObjectMapper.Map<List<categoryEditDto>>(entity);
+				//deliveryEditDto = ObjectMapper.Map<List<deliveryEditDto>>(entity);
 			}
 			else
 			{
-				editDto = new CategoryEditDto();
+				editDto = new DeliveryEditDto();
 			}
 
-			output.Category = editDto;
+			output.Delivery = editDto;
 			return output;
 		}
 
 
 		/// <summary>
-		/// 添加或者修改Category的公共方法
+		/// 添加或者修改Delivery的公共方法
 		/// </summary>
 		/// <param name="input"></param>
 		/// <returns></returns>
 		
-		public async Task CreateOrUpdate(CreateOrUpdateCategoryInput input)
+		public async Task CreateOrUpdate(CreateOrUpdateDeliveryInput input)
 		{
 
-			if (input.Category.Id.HasValue)
+			if (input.Delivery.Id.HasValue)
 			{
-				await Update(input.Category);
+				await Update(input.Delivery);
 			}
 			else
 			{
-				await Create(input.Category);
+				await Create(input.Delivery);
 			}
 		}
 
 
 		/// <summary>
-		/// 新增Category
+		/// 新增Delivery
 		/// </summary>
 		
-		protected virtual async Task<CategoryEditDto> Create(CategoryEditDto input)
+		protected virtual async Task<DeliveryEditDto> Create(DeliveryEditDto input)
 		{
 			//TODO:新增前的逻辑判断，是否允许新增
 
-            // var entity = ObjectMapper.Map <Category>(input);
-            var entity=input.MapTo<Category>();
+            // var entity = ObjectMapper.Map <Delivery>(input);
+            var entity=input.MapTo<Delivery>();
 			
 
 			entity = await _entityRepository.InsertAsync(entity);
-			return entity.MapTo<CategoryEditDto>();
+			return entity.MapTo<DeliveryEditDto>();
 		}
 
 		/// <summary>
-		/// 编辑Category
+		/// 编辑Delivery
 		/// </summary>
 		
-		protected virtual async Task Update(CategoryEditDto input)
+		protected virtual async Task Update(DeliveryEditDto input)
 		{
 			//TODO:更新前的逻辑判断，是否允许更新
 
@@ -170,7 +161,7 @@ namespace HC.DZWechat.Categorys
 
 
 		/// <summary>
-		/// 删除Category信息的方法
+		/// 删除Delivery信息的方法
 		/// </summary>
 		/// <param name="input"></param>
 		/// <returns></returns>
@@ -184,7 +175,7 @@ namespace HC.DZWechat.Categorys
 
 
 		/// <summary>
-		/// 批量删除Category的方法
+		/// 批量删除Delivery的方法
 		/// </summary>
 		
 		public async Task BatchDelete(List<Guid> input)
@@ -195,7 +186,7 @@ namespace HC.DZWechat.Categorys
 
 
 		/// <summary>
-		/// 导出Category为excel表,等待开发。
+		/// 导出Delivery为excel表,等待开发。
 		/// </summary>
 		/// <returns></returns>
 		//public async Task<FileDto> GetToExcel()

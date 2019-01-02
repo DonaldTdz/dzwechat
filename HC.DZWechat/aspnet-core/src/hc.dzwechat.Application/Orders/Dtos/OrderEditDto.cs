@@ -31,11 +31,10 @@ namespace  HC.DZWechat.Orders.Dtos
 		public Guid? UserId { get; set; }
 
 
-
-		/// <summary>
-		/// Phone
-		/// </summary>
-		public string Phone { get; set; }
+        /// <summary>
+        /// Phone
+        /// </summary>
+        public string Phone { get; set; }
 
 
 

@@ -19,11 +19,14 @@ namespace HC.DZWechat.IntegralDetails.Dtos
 		public string OpenId { get; set; }
 
 
-
-		/// <summary>
-		/// InitialIntegral
-		/// </summary>
-		public decimal? InitialIntegral { get; set; }
+        /// <summary>
+        /// 外键
+        /// </summary>
+        public string UnionId { get; set; }
+        /// <summary>
+        /// InitialIntegral
+        /// </summary>
+        public decimal? InitialIntegral { get; set; }
 
 
 

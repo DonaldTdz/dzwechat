@@ -4,3 +4,4 @@ export * from './integral-detail';
 export * from './order';
 export * from './good';
 export * from './category';
+export * from './delivery';

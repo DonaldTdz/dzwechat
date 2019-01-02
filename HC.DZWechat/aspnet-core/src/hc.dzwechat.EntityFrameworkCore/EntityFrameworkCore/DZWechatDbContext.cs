@@ -10,6 +10,7 @@ using HC.DZWechat.WechatUsers;
 using HC.DZWechat.IntegralDetails;
 using HC.DZWechat.Orders;
 using HC.DZWechat.Goods;
+using HC.DZWechat.Deliverys;
 
 namespace HC.DZWechat.EntityFrameworkCore
 {
@@ -31,7 +32,7 @@ namespace HC.DZWechat.EntityFrameworkCore
         public virtual DbSet<IntegralDetail> IntegralDetails { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<Good> Goods { get; set; }
-        
+        public virtual DbSet<Delivery> Deliverys { get; set; }
     }
 }
 

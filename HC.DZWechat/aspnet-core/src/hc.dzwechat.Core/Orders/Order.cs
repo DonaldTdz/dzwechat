@@ -18,6 +18,7 @@ namespace HC.DZWechat.Orders
         [StringLength(20)]
         [Required]
         public virtual string Number { get; set; }
+
         /// <summary>
         /// 会员Id
         /// </summary>
