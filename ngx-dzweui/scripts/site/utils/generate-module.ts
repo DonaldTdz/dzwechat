@@ -87,8 +87,8 @@ export function generateModule(config: any, isSyncSpecific: boolean, target: str
         }
     });
 
-    generateDoc({ data: JSON.stringify(metas) }, tpl.meta, path.join(targetPath, `meta.ts`));
+    //generateDoc({ data: JSON.stringify(metas) }, tpl.meta, path.join(targetPath, `meta.ts`));
 
     // examples
-    genExamples(config.example);
+    //genExamples(config.example);
 }

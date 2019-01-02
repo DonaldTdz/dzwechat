@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
     <base href="./">
     <link rel="shortcut icon" href="./favicon.ico">
+    <link href="https://res.wx.qq.com/open/libs/weui/1.1.2/weui.min.css" rel="stylesheet">
     <style type="text/css">
         .preloader {
             position: fixed;
@@ -15,7 +16,7 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background: #49a9ee;
+            background: #f0f2f5;
             z-index: 9999;
             transition: opacity .65s;
         }
@@ -140,18 +141,15 @@
 <body ontouchstart>
     <app-root></app-root>
     <div class="preloader">
-        <div class="cs-loader">
-            <div class="cs-loader-inner">
-                <label>	●</label>
-                <label>	●</label>
-                <label>	●</label>
-                <label>	●</label>
-                <label>	●</label>
-                <label>	●</label>
+        <div id="loadingToast">
+            <div class="weui-mask_transparent"></div>
+            <div class="weui-toast">
+                <i class="weui-loading weui-icon_toast"></i>
+                <p class="weui-toast__content">加载中...</p>
             </div>
         </div>
     </div>
-    <script src="./assets/highlight.min.js"></script>
+    <!-- <script src="./assets/highlight.min.js"></script> -->
 </body>
 
 </html>
