@@ -1,12 +1,13 @@
 <!--component html goes here -->
 <page-header [title]="title"></page-header>
-<form nz-form #validateForm="ngForm" (ngSubmit)="save()" *ngIf="user">
+<form nz-form #validateForm="ngForm" (ngSubmit)="save()">
     <nz-tabset>
         <nz-tab [nzTitle]="l('UserDetails')">
             <!-- 标题 -->
             <nz-form-item>
                 <nz-form-control nzHasFeedback>
-                    <input nz-input name="userName" #userName="ngModel" [(ngModel)]="news.title" [placeholder]="'标题'" required>
+                    <input nz-input name="userName" #userName="ngModel" [(ngModel)]="news.title" [placeholder]="'标题'"
+                        required>
                     <nz-form-explain *ngIf="userName.control.dirty&&userName.control.errors">
                         <ng-container *ngIf="userName.control.hasError('required')">{{l('CanNotNull')}}</ng-container>
                     </nz-form-explain>
@@ -16,7 +17,8 @@
             <!-- 作者 -->
             <nz-form-item>
                 <nz-form-control nzHasFeedback>
-                    <input nz-input name="author" #name="ngModel" [(ngModel)]="news.author" [placeholder]="'作者'" autocomplete="author" required>
+                    <input nz-input name="author" #name="ngModel" [(ngModel)]="news.author" [placeholder]="'作者'"
+                        autocomplete="author" required>
                     <nz-form-explain *ngIf="name.control.dirty&&name.control.errors">
                         <ng-container *ngIf="name.control.hasError('required')">{{l('CanNotNull')}}</ng-container>
                     </nz-form-explain>
@@ -26,8 +28,8 @@
             <!-- 类型 -->
             <nz-form-item>
                 <nz-form-control nzHasFeedback>
-                    <input nz-input name="emailAddress" #emailAddress="ngModel" [(ngModel)]="news.emailAddress" [placeholder]="l('EmailAddress')"
-                        autocomplete="email" required email>
+                    <input nz-input name="emailAddress" #emailAddress="ngModel" [(ngModel)]="news.emailAddress"
+                        [placeholder]="l('EmailAddress')" autocomplete="email" required email>
                     <nz-form-explain *ngIf="emailAddress.control.dirty&&emailAddress.control.errors">
                         <ng-container *ngIf="emailAddress.control.hasError('required')">{{l('CanNotNull')}}</ng-container>
                         <ng-container *ngIf="emailAddress.control.hasError('email')">邮箱格式不对</ng-container>

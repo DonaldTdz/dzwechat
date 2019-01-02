@@ -1,5 +1,5 @@
 <page-header [title]="'会员管理'"></page-header>
-<nz-card [nzExtra]="extraTpl">
+<nz-card>
     <div nz-row class="mb-md">
         <div nz-col nzSpan="18" style="padding-right:10px;">
             <nz-input-group nzSearch [nzSuffix]="suffixButton">
@@ -16,8 +16,9 @@
         </div>
     </div>
     <ng-template #totalTemplate let-total>共 {{totalItems}} 条</ng-template>
-    <nz-table #ajaxTable nzShowSizeChanger [nzData]="dataList" [nzShowTotal]="totalTemplate" [nzTotal]="totalItems" [(nzPageIndex)]="pageNumber" [(nzPageSize)]="pageSize" [nzLoading]="isTableLoading" (nzPageIndexChange)="refresh()" (nzPageSizeChange)="refresh()"
-        [nzFrontPagination]="false">
+    <nz-table #ajaxTable nzShowSizeChanger [nzData]="dataList" [nzShowTotal]="totalTemplate" [nzTotal]="totalItems"
+        [(nzPageIndex)]="pageNumber" [(nzPageSize)]="pageSize" [nzLoading]="isTableLoading" (nzPageIndexChange)="refresh()"
+        (nzPageSizeChange)="refresh()" [nzFrontPagination]="false">
         <thead>
             <tr>
                 <th>微信昵称</th>
