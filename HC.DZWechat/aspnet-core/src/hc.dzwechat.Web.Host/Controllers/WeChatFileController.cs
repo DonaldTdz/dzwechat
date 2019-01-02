@@ -8,6 +8,7 @@ using HC.DZWechat.Controllers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Senparc.NeuChar.Entities;
 
 namespace HC.DZWechat.Web.Host.Controllers
 {
@@ -48,6 +49,7 @@ namespace HC.DZWechat.Web.Host.Controllers
                     {
                         Directory.CreateDirectory(fileDire);
                     }
+                    //Image aa =Image.
                    var filePath = fileDire + newName;
                     ////2018-7-6 压缩后保存
                     //using (Image<Rgba32> image = SixLabors.ImageSharp.Image.Load(imageByte))

@@ -21,13 +21,16 @@ export class NewsDetailComponent extends AppComponentBase implements OnInit {
         { value: 2, text: '新品快讯', selected: false },
         { value: 3, text: '产品大全', selected: false },
     ];
-    linkTypes: [
-        { value: 1, text: '外部链接', selected: true }
+    linkTypes = [
+        { value: 1, text: '外部链接' }
     ];
     actionUrl = '';
     isDelete = false;
     isPush = false;
     successMsg = '';
+    isConfirmLoadingDe = false;
+    isConfirmLoadingPu = false;
+    isConfirmLoadingSa = false;
     constructor(injector: Injector, private actRoter: ActivatedRoute, private newsService: NewsService, private router: Router) {
         super(injector);
         this.id = this.actRoter.snapshot.params['id'];
@@ -52,7 +55,7 @@ export class NewsDetailComponent extends AppComponentBase implements OnInit {
     getSingleNews() {
         this.newsService.getnewsById(this.id, this.newsType.toString()).subscribe((result) => {
             this.news = result;
-            this.news.showCoverPhoto = AppConsts.remoteServiceBaseUrl + this.news.coverPhoto;
+            // this.news.showCoverPhoto = this.news.coverPhoto;
             this.isPush = result.pushStatus == 1 ? false : true;
         });
     }
@@ -70,9 +73,9 @@ export class NewsDetailComponent extends AppComponentBase implements OnInit {
             this.notify.error('上传图片异常，请重试');
         }
         if (info.file.status === 'done') {
-            this.getBase64(info.file.originFileObj, (img: any) => {
-                this.news.showCoverPhoto = img;
-            });
+            // this.getBase64(info.file.originFileObj, (img: any) => {
+            //     this.news.showCoverPhoto = img;
+            // });
             this.news.coverPhoto = info.file.response.result.imageName;
             this.notify.success('上传图片完成');
         }
@@ -80,10 +83,20 @@ export class NewsDetailComponent extends AppComponentBase implements OnInit {
 
     //保存
     save(isPush) {
-        this.successMsg = isPush ? '发布成功！' : '保存成功！'
+        if (isPush) {
+            this.isConfirmLoadingPu = true;
+            this.successMsg = '发布成功！';
+        } else {
+            this.isConfirmLoadingSa = true;
+            this.successMsg = '保存成功！';
+        }
         this.newsService.update(this.news)
-            .finally(() => { this.saving = false; })
-            .subscribe(() => {
+            .finally(() => { this.saving = false; this.isConfirmLoadingSa = false; this.isConfirmLoadingPu = false; })
+            .subscribe((result) => {
+                this.news = result;
+                this.news.showCoverPhoto = result.coverPhoto;
+                this.isDelete = true;
+                this.isPush = result.pushStatus == 1 ? false : true;
                 this.notify.info(this.l(this.successMsg));
             });
     }
@@ -94,10 +107,13 @@ export class NewsDetailComponent extends AppComponentBase implements OnInit {
             '信息确认',
             (result: boolean) => {
                 if (result) {
-                    this.newsService.delete(entiy.id).subscribe(() => {
-                        this.notify.info(this.l('已删除资讯' + entiy.title));
-                        this.return();
-                    });
+                    this.isConfirmLoadingDe = true;
+                    this.newsService.delete(entiy.id)
+                        .finally(() => { this.isConfirmLoadingDe = false; })
+                        .subscribe(() => {
+                            this.notify.info(this.l('已删除资讯' + entiy.title));
+                            this.return();
+                        });
                 }
             });
     }
@@ -113,4 +129,6 @@ export class NewsDetailComponent extends AppComponentBase implements OnInit {
     return() {
         this.router.navigate(['app/news/news']);
     }
+
+
 }

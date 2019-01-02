@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using static HC.DZWechat.DZEnums.DZEnums;
 
 namespace HC.DZWechat.Newses
 {
@@ -25,7 +26,7 @@ namespace HC.DZWechat.Newses
         /// <summary>
         /// 咨讯分类（枚举：营销活动、经验分享）维护在同一个页面
         /// </summary>
-        public virtual int? Type { get; set; }
+        public virtual NewsType? Type { get; set; }
         /// <summary>
         /// 封面图片
         /// </summary>
@@ -40,7 +41,7 @@ namespace HC.DZWechat.Newses
         /// <summary>
         /// 发布状态（枚举：草稿、已发布）
         /// </summary>
-        public virtual int? PushStatus { get; set; }
+        public virtual PushType? PushStatus { get; set; }
         /// <summary>
         /// 发布时间
         /// </summary>
@@ -48,7 +49,7 @@ namespace HC.DZWechat.Newses
         /// <summary>
         /// 连接类型 (枚举：外部连接 目前只支持外部连接页面不用显示)
         /// </summary>
-        public virtual int? LinkType { get; set; }
+        public virtual LinkType? LinkType { get; set; }
         /// <summary>
         /// 连接地址
         /// </summary>
