@@ -13,14 +13,17 @@ namespace  HC.DZWechat.IntegralDetails.Dtos
         /// <summary>
         /// Id
         /// </summary>
-        public Guid? Id { get; set; }         
+        public Guid? Id { get; set; }
 
+        /// <summary>
+        /// 外键
+        /// </summary>
+        public string UnionId { get; set; }
 
-        
-		/// <summary>
-		/// OpenId
-		/// </summary>
-		public string OpenId { get; set; }
+        /// <summary>
+        /// OpenId
+        /// </summary>
+        public string OpenId { get; set; }
 
 
 

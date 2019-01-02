@@ -1,15 +1,13 @@
 
 using Abp.Runtime.Validation;
 using HC.DZWechat.Dtos;
-using HC.DZWechat.IntegralDetails;
+using HC.DZWechat.Deliverys;
 
-namespace HC.DZWechat.IntegralDetails.Dtos
+namespace HC.DZWechat.Deliverys.Dtos
 {
-    public class GetIntegralDetailsInput : PagedSortedAndFilteredInputDto, IShouldNormalize
+    public class GetDeliverysInput : PagedSortedAndFilteredInputDto, IShouldNormalize
     {
-        public string OpenId { get; set; }
         public string UnionId { get; set; }
-
         /// <summary>
         /// 正常化排序使用
         /// </summary>

@@ -71,6 +71,26 @@
                 </tbody>
             </nz-table>
         </nz-tab>
+        <nz-tab nzTitle="收货地址">
+            <nz-table #nzTableAd [nzData]="addressList" [nzShowPagination]="false" [nzFrontPagination]="false" [nzLoading]="loadingA">
+                <thead>
+                    <tr>
+                        <th>联系人姓名</th>
+                        <th>联系人电话</th>
+                        <th>收货地址</th>
+                        <th>是否是默认地址</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of nzTableAd.data">
+                        <td>{{data.name}}</td>
+                        <td>{{data.phone}}</td>
+                        <td>{{data.address}}</td>
+                        <td>{{data.isDefault}}</td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </nz-tab>
     </nz-tabset>
 </nz-card>
 <footer-toolbar>
