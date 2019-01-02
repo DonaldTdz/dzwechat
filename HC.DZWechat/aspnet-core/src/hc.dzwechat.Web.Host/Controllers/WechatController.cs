@@ -42,6 +42,23 @@ namespace HC.DZWechat.Web.Host.Controllers
             }
         }
 
+        private string UserUnionid
+        {
+            get
+            {
+                if (HttpContext.Session.GetString("DZUserUnionid") == null)
+                {
+                    return string.Empty;
+                }
+                return HttpContext.Session.GetString("DZUserUnionid");
+            }
+            set
+            {
+                value = value ?? string.Empty;
+                HttpContext.Session.SetString("DZUserUnionid", value);
+            }
+        }
+
         public WechatController(IHostingEnvironment env)
         {
             _appConfiguration = env.GetAppConfiguration();
@@ -59,6 +76,7 @@ namespace HC.DZWechat.Web.Host.Controllers
                     {
                         var oauth = await OAuthApi.GetAccessTokenAsync(AppId, AppSecret, code, "authorization_code");
                         UserOpenId = oauth.openid;
+                        UserUnionid = oauth.unionid;
                     }
                     catch (Exception ex)
                     {
@@ -81,7 +99,7 @@ namespace HC.DZWechat.Web.Host.Controllers
             {
                 result.Code = 0;
                 result.Msg = "获取成功";
-                result.Data = new { openId = UserOpenId };
+                result.Data = new { openId = UserOpenId, unionid = UserUnionid };
             }
             return Json(result);
         }
