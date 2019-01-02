@@ -38,11 +38,14 @@ export class NewsDetailComponent extends AppComponentBase implements OnInit {
         if (this.id) {
             this.title = '编辑资讯';
             this.getSingleNews();
+            this.isDelete = true;
         } else {
             this.title = '新增资讯';
+            this.news.pushStatus = 0;
+            this.news.pushStatusName = '草稿';
+            this.news.linkType = 1;
         }
         this.news.type = this.newsType;
-        console.log("type:" + this.news.type);
     }
 
     //获取单个资讯
@@ -50,6 +53,7 @@ export class NewsDetailComponent extends AppComponentBase implements OnInit {
         this.newsService.getnewsById(this.id, this.newsType.toString()).subscribe((result) => {
             this.news = result;
             this.news.showCoverPhoto = AppConsts.remoteServiceBaseUrl + this.news.coverPhoto;
+            this.isPush = result.pushStatus == 1 ? false : true;
         });
     }
 

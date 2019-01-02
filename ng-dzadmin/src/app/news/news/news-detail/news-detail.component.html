@@ -92,7 +92,7 @@
         <button nz-button type="button" [disabled]="saving" (click)="return()">
             {{l("返回")}}
         </button>
-        <button nz-button *ngIf="isDelete" [nzType]="'danger'" (click)="delete(deleteContent)" [nzSize]="'large'" [nzLoading]="isConfirmLoading">
+        <button nz-button *ngIf="isDelete" [nzType]="'danger'" (click)="delete(deleteContent)" [nzLoading]="isConfirmLoading">
             {{l("删除")}}
         </button>
         <button nz-button *ngIf="isPush" [nzType]="'primary'" type="button" (click)="push()">

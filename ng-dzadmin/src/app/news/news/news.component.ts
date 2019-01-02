@@ -41,9 +41,6 @@ export class NewsComponent extends PagedListingComponentBase<any> {
                     i.showCoverPhoto = AppConsts.remoteServiceBaseUrl + i.coverPhoto;
                     return i;
                 });
-                //     .pipe(map(i => {
-                //     i.showCoverPhoto = AppConsts.remoteServiceBaseUrl + i.coverPhoto;
-                // });
                 console.table(this.dataList);
                 this.totalItems = result.totalCount;
             })
