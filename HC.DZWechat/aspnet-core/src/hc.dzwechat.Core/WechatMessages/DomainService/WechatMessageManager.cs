@@ -33,6 +33,7 @@ namespace HC.DZWechat.WechatMessages
             messageHandler.OnSubscribe += MessageHandler_OnSubscribe;
             messageHandler.OnUnsubscribe += MessageHandler_OnUnsubscribe;
             messageHandler.DefaultMessageHandlerAsyncEvent = DefaultMessageHandlerAsyncEvent.SelfSynicMethod; //没有重写的异步方法将默认尝试调用同步方法中的代码
+            messageHandler.Logger = Logger;
 
             #region 设置消息去重
             //默认已经开启
@@ -135,6 +136,12 @@ namespace HC.DZWechat.WechatMessages
         private void MessageHandler_OnUnsubscribe(object sender, RequestMessageEvent_Unsubscribe e)
         {
             //throw new NotImplementedException();
-        }      
+        }
+
+        public async Task<CustomMessages> GetCustomMessagesAsyncTest()
+        {
+            var msg = await GetCustomMessagesAsync();
+            return msg;
+        }
     }
 }
