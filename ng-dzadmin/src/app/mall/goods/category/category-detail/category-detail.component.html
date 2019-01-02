@@ -1,0 +1,43 @@
+<!-- <div class="padding-bottom-45">
+    <div class="modal-header">
+        <div class="modal-title">{{title}}</div>
+    </div>
+    <form nz-form #validateForm="ngForm" (ngSubmit)="save()" *ngIf="category">
+        <nz-form-item>
+            <nz-form-control nzHasFeedback>
+                <input nz-input name="categoryName" #categoryName="ngModel" [(ngModel)]="category.categoryName" [placeholder]="'类型名称'" required>
+                <nz-form-explain *ngIf="categoryName.control.dirty&&categoryName.control.errors">
+                    <ng-container *ngIf="categoryName.control.hasError('required')">请输入类型名称</ng-container>
+                </nz-form-explain>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-control nzHasFeedback>
+                <input nz-input name="name" #name="ngModel" [(ngModel)]="category.name" [placeholder]="'排序'" autocomplete="name" required>
+                <nz-form-explain *ngIf="name.control.dirty&&name.control.errors">
+                    <ng-container *ngIf="name.control.hasError('required')">{{l('CanNotNull')}}</ng-container>
+                </nz-form-explain>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control nzHasFeedback>
+                <input nz-input name="name" #name="ngModel" [(ngModel)]="category.name" [placeholder]="'用户姓名'" autocomplete="name" required>
+                <nz-form-explain *ngIf="name.control.dirty&&name.control.errors">
+                    <ng-container *ngIf="name.control.hasError('required')">{{l('CanNotNull')}}</ng-container>
+                </nz-form-explain>
+            </nz-form-control>
+        </nz-form-item>
+
+
+        <div class="modal-footer">
+            <button nz-button type="button" [disabled]="saving" (click)="close()">
+                取消
+            </button>
+            <button nz-button [nzType]="'primary'" type="submit" [disabled]="!validateForm.valid||saving">
+                保存
+            </button>
+        </div>
+
+    </form>
+</div> -->

@@ -20,7 +20,7 @@ namespace  HC.DZWechat.WechatSubscribes.Dtos
 		/// MsgType
 		/// </summary>
 		[Required(ErrorMessage="MsgType不能为空")]
-		public int MsgType { get; set; }
+		public MsgTypeEnum MsgType { get; set; }
 
 
 

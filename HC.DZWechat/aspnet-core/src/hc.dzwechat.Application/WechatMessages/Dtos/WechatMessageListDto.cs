@@ -5,6 +5,7 @@ using Abp.Application.Services.Dto;
 using Abp.Domain.Entities.Auditing;
 using System.ComponentModel.DataAnnotations;
 using HC.DZWechat.WechatMessages;
+using HC.DZWechat.WechatSubscribes;
 
 namespace HC.DZWechat.WechatMessages.Dtos
 {
@@ -32,14 +33,14 @@ namespace HC.DZWechat.WechatMessages.Dtos
 		/// MsgType
 		/// </summary>
 		[Required(ErrorMessage="MsgType不能为空")]
-		public int MsgType { get; set; }
+		public MsgTypeEnum MsgType { get; set; }
 
+        public TriggerTypeEnum TriggerType { get; set; }
 
-
-		/// <summary>
-		/// Content
-		/// </summary>
-		[Required(ErrorMessage="Content不能为空")]
+        /// <summary>
+        /// Content
+        /// </summary>
+        [Required(ErrorMessage="Content不能为空")]
 		public string Content { get; set; }
 
 

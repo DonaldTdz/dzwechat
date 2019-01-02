@@ -7,6 +7,7 @@ import { MemberComponent } from './member/member.component';
 import { OrderComponent } from './order/order.component';
 import { ShopComponent } from './shop/shop.component';
 import { VipComponent } from './vip/vip.component';
+import { MemberDetailComponent } from './member/member-detail/member-detail.component';
 
 const routes: Routes = [
     {
@@ -17,6 +18,11 @@ const routes: Routes = [
     {
         path: 'member',
         component: MemberComponent,
+        canActivate: [AppRouteGuard],
+    },
+    {
+        path: 'member-detail/:id',
+        component: MemberDetailComponent,
         canActivate: [AppRouteGuard],
     },
     {

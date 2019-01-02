@@ -1,0 +1,80 @@
+<nz-card [nzBordered]="false" *ngIf="user">
+    <div nz-row nzGutter="16" style="margin-bottom: 16px;">
+        <div nz-col nzXs="24" nzMd="3" *ngIf="user.headImgUrl">
+            <!-- <nz-card [nzBordered]="false" class="ant-card__img" style="padding:0px;"> -->
+            <img class="img ng-star-inserted" src="{{user.headImgUrl}}">
+            <!-- </nz-card> -->
+        </div>
+        <div nz-col nzXs="24" nzSm="18">
+            <sv-container size="small" col="4" class="mb-md">
+                <sv label="会员名称">{{user.userName}}</sv>
+                <sv label="电话号码">{{user.phone}}</sv>
+                <sv label="用户类型">{{user.userTypeName}}</sv>
+                <sv label="积分总额">{{user.integral}}</sv>
+                <sv label="微信昵称">{{user.nickName}}</sv>
+                <sv label="绑定状态">{{user.bindStatusName}}</sv>
+                <sv *ngIf="user.bindTime" label="绑定时间">{{user.bindTime| _date}}</sv>
+                <sv *ngIf="user.unBindTime" label="解绑时间">{{user.unBindTime| _date}}</sv>
+                <sv *ngIf="user.authTime" label="认证时间">{{user.authTime| _date}}</sv>
+            </sv-container>
+        </div>
+    </div>
+    <nz-tabset>
+        <nz-tab nzTitle="订单">
+            <ng-template #totalTemplate let-total>共 {{queryO.totalO}} 条</ng-template>
+            <nz-table #nzTableO [nzData]="orderList" [nzFrontPagination]="false" [nzTotal]="queryO.totalO" [nzShowTotal]="totalTemplate" [(nzPageIndex)]="queryO.pageIndexO" [(nzPageSize)]="queryO.pageSizeO" [nzLoading]="loadingO" [nzShowSizeChanger]="true" (nzPageIndexChange)="getOrderList()"
+                (nzPageSizeChange)="getOrderList()">
+                <thead>
+                    <tr>
+                        <th>订单编号</th>
+                        <th>订单总积分</th>
+                        <th>订单状态</th>
+                        <th>收货人姓名</th>
+                        <th>收货人电话</th>
+                        <th>备注</th>
+                        <th>时间</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of nzTableO.data">
+                        <td>{{data.number}}</td>
+                        <td>{{data.integral}}</td>
+                        <td>{{data.statusName}}</td>
+                        <td>{{data.deliveryName}}</td>
+                        <td>{{data.deliveryPhone}}</td>
+                        <td>{{data.creationTime | _date}}</td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </nz-tab>
+        <nz-tab nzTitle="积分明细">
+            <ng-template #totalTemplate let-total>共 {{queryI.totalI}} 条</ng-template>
+            <nz-table #nzTable [nzData]="integralList" [nzFrontPagination]="false" [nzTotal]="queryI.totalI" [nzShowTotal]="totalTemplate" [(nzPageIndex)]="queryI.pageIndexI" [(nzPageSize)]="queryI.pageSizeI" [nzLoading]="loadingI" [nzShowSizeChanger]="true" (nzPageIndexChange)="getIntegralList()"
+                (nzPageSizeChange)="getIntegralList()">
+                <thead>
+                    <tr>
+                        <th>积分类型</th>
+                        <th>初始积分</th>
+                        <th>发生积分</th>
+                        <th>结束积分</th>
+                        <th>时间</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of nzTable.data">
+                        <td>{{data.typeName}}</td>
+                        <td>{{data.initialIntegral}}</td>
+                        <td>{{data.integral}}</td>
+                        <td>{{data.finalIntegral}}</td>
+                        <td>{{data.creationTime | _date}}</td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </nz-tab>
+    </nz-tabset>
+</nz-card>
+<footer-toolbar>
+    <button nz-button [nzType]="'default'" (click)="return()">
+        返回
+    </button>
+</footer-toolbar>

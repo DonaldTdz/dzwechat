@@ -1,0 +1,34 @@
+<div style="padding-bottom: 10px;border-right-width: 10px;padding-right: 10px; padding-left: 10px;">
+    <button nz-button (click)="showCreate()" style="width:100%" nzType="primary">
+        <i class="anticon anticon-plus"></i>
+        <span>添加分类</span>
+    </button>
+</div>
+<div nz-row>
+    <div nz-col nzSpan="24">
+        <div *ngIf="nodes && nodes.length > 0">
+            <nz-tree #treeCom [nzData]="nodes" nzMultiple="true" (nzClick)="activeNode($event)" [nzSearchValue]="searchName" (nzSearchValueChange)="nzEvent($event)" (nzDblClick)="openFolder($event)">
+                <ng-template #contextTemplate>
+                    <ul nz-menu nzInDropDown>
+                        <li nz-menu-item (click)="showEdit()">修改分类</li>
+                    </ul>
+                </ng-template>
+                <ng-template #nzTreeTemplate let-node>
+                    <span class="custom-node" [class.active]="activedNode?.key===node.key">
+                        <span *ngIf="!node.isLeaf" (contextmenu)="contextMenu($event,contextTemplate,node)">
+                            <i class="anticon" (click)="openFolder(node)"></i>
+                            <span class="folder-name" [innerHTML]="node.title"></span>
+                    </span>
+                    <span *ngIf="node.isLeaf" (contextmenu)="contextMenu($event,contextTemplate,node)">
+                            <i class="anticon"></i>
+                            <span class="file-name" [innerHTML]="node.title"></span>
+                    </span>
+                    </span>
+                </ng-template>
+            </nz-tree>
+        </div>
+        <div *ngIf="!nodes || nodes.length == 0" style="width:100%; text-align:left; padding-top: 15px; padding-bottom: 15px; color: grey;">
+            没有分类数据，点击“添加分类”进行添加
+        </div>
+    </div>
+</div>
