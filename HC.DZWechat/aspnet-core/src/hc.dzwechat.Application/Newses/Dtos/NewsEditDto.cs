@@ -6,13 +6,13 @@ using HC.DZWechat.Newses;
 
 namespace  HC.DZWechat.Newses.Dtos
 {
-    public class NewsEditDto
+    public class NewsEditDto:AuditedEntity<Guid?>
     {
 
-        /// <summary>
-        /// Id
-        /// </summary>
-        public Guid? Id { get; set; }         
+        ///// <summary>
+        ///// Id
+        ///// </summary>
+        //public Guid? Id { get; set; }         
 
 
         

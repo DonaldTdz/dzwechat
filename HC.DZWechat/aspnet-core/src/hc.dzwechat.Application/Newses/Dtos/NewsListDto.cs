@@ -5,6 +5,7 @@ using Abp.Application.Services.Dto;
 using Abp.Domain.Entities.Auditing;
 using System.ComponentModel.DataAnnotations;
 using HC.DZWechat.Newses;
+using static HC.DZWechat.DZEnums.DZEnums;
 
 namespace HC.DZWechat.Newses.Dtos
 {
@@ -13,7 +14,7 @@ namespace HC.DZWechat.Newses.Dtos
 
         
 		/// <summary>
-		/// Title
+		/// 标题
 		/// </summary>
 		[Required(ErrorMessage="Title不能为空")]
 		public string Title { get; set; }
@@ -21,7 +22,7 @@ namespace HC.DZWechat.Newses.Dtos
 
 
 		/// <summary>
-		/// Author
+		/// 作者
 		/// </summary>
 		[Required(ErrorMessage="Author不能为空")]
 		public string Author { get; set; }
@@ -29,14 +30,14 @@ namespace HC.DZWechat.Newses.Dtos
 
 
 		/// <summary>
-		/// Type
+		/// 资讯类型
 		/// </summary>
-		public int? Type { get; set; }
+		public NewsType? Type { get; set; }
 
 
 
 		/// <summary>
-		/// CoverPhoto
+		/// 封面图片
 		/// </summary>
 		[Required(ErrorMessage="CoverPhoto不能为空")]
 		public string CoverPhoto { get; set; }
@@ -44,42 +45,42 @@ namespace HC.DZWechat.Newses.Dtos
 
 
 		/// <summary>
-		/// Content
+		/// 内容
 		/// </summary>
 		public string Content { get; set; }
 
 
 
 		/// <summary>
-		/// PushStatus
+		/// 发布状态
 		/// </summary>
-		public int? PushStatus { get; set; }
+		public PushType? PushStatus { get; set; }
 
 
 
 		/// <summary>
-		/// PushTime
+		/// 发布时间
 		/// </summary>
 		public DateTime? PushTime { get; set; }
 
 
 
 		/// <summary>
-		/// LinkType
+		/// 链接类型
 		/// </summary>
-		public int? LinkType { get; set; }
+		public LinkType? LinkType { get; set; }
 
 
 
 		/// <summary>
-		/// LinkAddress
+		/// 链接地址
 		/// </summary>
 		public string LinkAddress { get; set; }
 
 
 
 		/// <summary>
-		/// IsDeleted
+		/// 是否删除
 		/// </summary>
 		[Required(ErrorMessage="IsDeleted不能为空")]
 		public bool IsDeleted { get; set; }
@@ -87,7 +88,7 @@ namespace HC.DZWechat.Newses.Dtos
 
 
 		/// <summary>
-		/// CreationTime
+		/// 创建时间
 		/// </summary>
 		[Required(ErrorMessage="CreationTime不能为空")]
 		public DateTime CreationTime { get; set; }
@@ -95,39 +96,58 @@ namespace HC.DZWechat.Newses.Dtos
 
 
 		/// <summary>
-		/// CreatorUserId
+		/// 创建人
 		/// </summary>
 		public long? CreatorUserId { get; set; }
 
 
 
 		/// <summary>
-		/// LastModificationTime
+		/// 修改时间
 		/// </summary>
 		public DateTime? LastModificationTime { get; set; }
 
 
 
 		/// <summary>
-		/// LastModifierUserId
+		/// 修改人
 		/// </summary>
 		public long? LastModifierUserId { get; set; }
 
 
 
 		/// <summary>
-		/// DeletionTime
+		/// 删除时间
 		/// </summary>
 		public DateTime? DeletionTime { get; set; }
 
 
 
 		/// <summary>
-		/// DeleterUserId
+		/// 删除人
 		/// </summary>
 		public long? DeleterUserId { get; set; }
 
-
+        public string TypeName
+        {
+            get
+            {
+                return Type.ToString();
+            }
+        }
+        public string PushStatusName
+        {
+            get {
+                return PushStatus.ToString();
+            }
+        }
+        public string LinkTypeName
+        {
+            get
+            {
+                return LinkType.ToString();
+            }
+        }
 
 
     }

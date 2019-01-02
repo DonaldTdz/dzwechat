@@ -6,6 +6,9 @@ namespace HC.DZWechat.DZEnums
 {
     public class DZEnums
     {
+        /// <summary>
+        /// 资讯类型
+        /// </summary>
         public enum NewsType
         {
             烟语课堂 = 1,
@@ -39,6 +42,23 @@ namespace HC.DZWechat.DZEnums
             已支付 = 2,
             已完成 = 3,
             已取消 = 4
+        }
+
+        /// <summary>
+        /// 发布状态
+        /// </summary>
+        public enum PushType
+        {
+            草稿=0,
+            已发布=1,
+        }
+
+        /// <summary>
+        /// 链接类型
+        /// </summary>
+        public enum LinkType
+        {
+            外部链接=1,
         }
     }
 }

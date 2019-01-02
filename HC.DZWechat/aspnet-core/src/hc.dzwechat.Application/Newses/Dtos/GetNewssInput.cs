@@ -11,7 +11,7 @@ namespace HC.DZWechat.Newses.Dtos
         /// <summary>
         /// 资讯类型
         /// </summary>
-        public NewsType? NewsType;
+        public NewsType? NewsType { get; set; }
 
         /// <summary>
         /// 正常化排序使用
