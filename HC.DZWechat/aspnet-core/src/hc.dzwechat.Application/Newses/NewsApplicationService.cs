@@ -56,7 +56,7 @@ namespace HC.DZWechat.Newses
         public async Task<PagedResultDto<NewsListDto>> GetPaged(GetNewssInput input)
 		{
 
-		    var query = _entityRepository.GetAll();
+		    var query = _entityRepository.GetAll().WhereIf(input.NewsType.HasValue,n=>n.Type==input.NewsType);
 			// TODO:根据传入的参数添加过滤条件
             
 
@@ -203,7 +203,7 @@ NewsEditDto editDto;
         public async Task<NewsListDto> GetByIdAndType(EntityDto<Guid> Input, NewsType newsType)
         {
             //var entity = await _entityRepository.GetAsync(input.Id);
-            var entity = await _entityRepository.GetAll().Where(n => n.Id == Input.Id && n.Type== (int)newsType).FirstOrDefaultAsync(); 
+            var entity = await _entityRepository.GetAll().Where(n => n.Id == Input.Id && n.Type== newsType).FirstOrDefaultAsync(); 
             return entity.MapTo<NewsListDto>();
         }
 

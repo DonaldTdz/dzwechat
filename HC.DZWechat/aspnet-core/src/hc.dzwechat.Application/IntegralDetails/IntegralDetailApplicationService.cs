@@ -78,7 +78,7 @@ namespace HC.DZWechat.IntegralDetails
         public async Task<PagedResultDto<IntegralDetailListDto>> GetPagedById(GetIntegralDetailsInput input)
         {
 
-            var query = _entityRepository.GetAll().Where(v => v.OpenId == input.OpenId);
+            var query = _entityRepository.GetAll().Where(v => v.UnionId == input.UnionId);
             var count = await query.CountAsync();
             var entityList = await query
                     .OrderByDescending(v => v.CreationTime).AsNoTracking()
