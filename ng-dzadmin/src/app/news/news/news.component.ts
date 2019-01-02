@@ -1,8 +1,9 @@
 import { Component, Injector } from '@angular/core';
-import { PagedRequestDto, PagedListingComponentBase } from '@shared/component-base';
-import { NewsService, PagedResultDtoOfNews } from 'services';
+import { PagedRequestDto, PagedListingComponentBase, PagedResultDto } from '@shared/component-base';
+import { NewsService } from 'services';
 import { Router } from '@angular/router';
 import { News } from 'entities';
+import { AppConsts } from '@shared/AppConsts';
 
 @Component({
     selector: 'app-news',
@@ -16,6 +17,10 @@ export class NewsComponent extends PagedListingComponentBase<any> {
         { value: 3, text: '产品大全', selected: false },
     ];
     param: any = { newsType: 1 };
+    //图片放大
+    previewImage = '';
+    previewVisible = false;
+
     constructor(injector: Injector, private newsService: NewsService, private router: Router) {
         super(injector);
     }
@@ -31,8 +36,15 @@ export class NewsComponent extends PagedListingComponentBase<any> {
         this.newsService.getNewsPage(this.param).finally(() => {
             finishedCallback();
         })
-            .subscribe((result: PagedResultDtoOfNews) => {
-                this.dataList = result.items;
+            .subscribe((result: PagedResultDto) => {
+                this.dataList = result.items.map((i) => {
+                    i.showCoverPhoto = AppConsts.remoteServiceBaseUrl + i.coverPhoto;
+                    return i;
+                });
+                //     .pipe(map(i => {
+                //     i.showCoverPhoto = AppConsts.remoteServiceBaseUrl + i.coverPhoto;
+                // });
+                console.table(this.dataList);
                 this.totalItems = result.totalCount;
             })
     }
@@ -41,11 +53,16 @@ export class NewsComponent extends PagedListingComponentBase<any> {
         this.param.newsType = item.value;
         this.refresh();
     }
-    // create() {
-    //     console.log('aa')
-    //     this.router.navigate(['app/news/news-detail', this.param.newsType]);
-    // }
-    // edit(item: News) {
-    //     this.router.navigate(['app/news/news-detail', { newsType: this.param.newsType, id: item.id }]);
-    // }
+    create() {
+        console.log('aa')
+        this.router.navigate(['app/news/news-detail', this.param.newsType]);
+    }
+    edit(item: News) {
+        this.router.navigate(['app/news/news-detail', this.param.newsType, item.id]);
+    }
+    //图片放大
+    handlePreview = (url: string) => {
+        this.previewImage = url;
+        this.previewVisible = true;
+    }
 }

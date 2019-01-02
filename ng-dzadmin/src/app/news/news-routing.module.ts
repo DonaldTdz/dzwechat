@@ -13,14 +13,16 @@ const routes: Routes = [
     {
         path: 'news-detail/:newsType',
         component: NewsDetailComponent,
+        // data: { translate: 'news-detail', permission: 'Pages', title: '新增资讯' },
         canActivate: [AppRouteGuard],
     },
 
-    // {
-    //     path: 'news-detail/:newsType&:id',
-    //     component: NewsDetailComponent,
-    //     canActivate: [AppRouteGuard],
-    // }
+    {
+        path: 'news-detail/:newsType/:id',
+        component: NewsDetailComponent,
+        // data: { translate: 'news-detail', permission: 'Pages', title: '编辑资讯' },
+        canActivate: [AppRouteGuard],
+    }
 ];
 
 @NgModule({

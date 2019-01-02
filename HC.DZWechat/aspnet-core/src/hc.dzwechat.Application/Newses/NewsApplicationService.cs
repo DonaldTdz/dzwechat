@@ -150,7 +150,7 @@ NewsEditDto editDto;
 		/// <summary>
 		/// 编辑News
 		/// </summary>
-		protected virtual async Task Update(NewsEditDto input)
+		protected virtual async Task<NewsEditDto> Update(NewsEditDto input)
 		{
 			//TODO:更新前的逻辑判断，是否允许更新
 
@@ -159,7 +159,8 @@ NewsEditDto editDto;
 
 			// ObjectMapper.Map(input, entity);
 		    await _entityRepository.UpdateAsync(entity);
-		}
+            return entity.MapTo<NewsEditDto>();
+        }
 
 
 
@@ -199,11 +200,28 @@ NewsEditDto editDto;
         //}
         
        
-        public async Task<NewsListDto> GetByIdAndType(Guid? id, NewsType newsType)
+        public async Task<NewsListDto> GetByIdAndType(EntityDto<Guid> Input, NewsType newsType)
         {
             //var entity = await _entityRepository.GetAsync(input.Id);
-            var entity = await _entityRepository.GetAll().Where(n => n.Id == id && n.Type==int.Parse(newsType.ToString())).FirstOrDefaultAsync(); 
+            var entity = await _entityRepository.GetAll().Where(n => n.Id == Input.Id && n.Type== (int)newsType).FirstOrDefaultAsync(); 
             return entity.MapTo<NewsListDto>();
+        }
+
+        /// <summary>
+		/// 添加或者修改News的公共方法
+		/// </summary>
+		/// <param name="input"></param>
+		/// <returns></returns>
+		public async Task<NewsEditDto> CreateOrUpdateDto(NewsEditDto input)
+        {
+            if (input.Id.HasValue)
+            {
+               return await Update(input);
+            }
+            else
+            {
+               return await Create(input);
+            }
         }
 
     }

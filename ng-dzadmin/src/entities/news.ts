@@ -6,7 +6,7 @@ export class News {
     coverPhoto: string;
     content: string;
     pushStatus: number;
-    pushTime: Date;
+    pushTime: string;
     linkType: number;
     linkAddress: string;
     isDeleted: boolean;
@@ -16,7 +16,10 @@ export class News {
     lastModifierUserId: number;
     deletionTime: Date;
     deleterUserId: number;
-
+    typeName: string;
+    pushStatusName: string;
+    linkTypeName: string;
+    showCoverPhoto: string;
     constructor(data?: any) {
         if (data) {
             for (var property in data) {
@@ -45,6 +48,9 @@ export class News {
             this.lastModifierUserId = data["lastModifierUserId"];
             this.deletionTime = data["deletionTime"];
             this.deleterUserId = data["deleterUserId"];
+            this.typeName = data["typeName"];
+            this.pushStatusName = data["pushStatusName"];
+            this.linkTypeName = data["linkTypeName"];
         }
     }
 
@@ -92,4 +98,6 @@ export class News {
         result.init(json);
         return result;
     }
+
 }
+
