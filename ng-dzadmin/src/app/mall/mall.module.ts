@@ -13,6 +13,7 @@ import { MallRoutingModule } from './mall-routing.module';
 import { WechatUserService, IntegralDetailService, OrderService, GoodsService } from 'services';
 import { MemberDetailComponent } from './member/member-detail/member-detail.component';
 import { CategoryComponent } from './goods/category/category.component';
+import { CategoryDetailComponent } from './goods/category/category-detail/category-detail.component';
 
 @NgModule({
     imports: [
@@ -32,6 +33,7 @@ import { CategoryComponent } from './goods/category/category.component';
         VipComponent,
         MemberDetailComponent,
         CategoryComponent,
+        CategoryDetailComponent,
         // ProductComponent,
     ],
     entryComponents: [
@@ -42,6 +44,7 @@ import { CategoryComponent } from './goods/category/category.component';
         VipComponent,
         MemberDetailComponent,
         CategoryComponent,
+        CategoryDetailComponent,
         // ProductComponent,
     ],
     providers: [WechatUserService, IntegralDetailService, OrderService, GoodsService]

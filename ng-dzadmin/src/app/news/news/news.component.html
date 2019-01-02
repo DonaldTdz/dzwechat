@@ -16,8 +16,9 @@
                 </button>
             </ng-template>
 
-            <nz-table #ajaxTable nzShowSizeChanger [nzData]="dataList" [nzTotal]="totalItems" [(nzPageIndex)]="pageNumber" [(nzPageSize)]="pageSize"
-                [nzLoading]="isTableLoading" (nzPageIndexChange)="refresh()" (nzPageSizeChange)="refresh()" [nzFrontPagination]="false">
+            <nz-table #ajaxTable nzShowSizeChanger [nzData]="dataList" [nzTotal]="totalItems" [(nzPageIndex)]="pageNumber"
+                [(nzPageSize)]="pageSize" [nzLoading]="isTableLoading" (nzPageIndexChange)="refresh()"
+                (nzPageSizeChange)="refresh()" [nzFrontPagination]="false">
                 <thead>
                     <tr>
                         <th>封面图片</th>
@@ -57,7 +58,7 @@
                 </tbody>
             </nz-table>
         </div>
-        <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null" [nzWidth]="imgWidth" (nzOnCancel)="previewVisible=false">
+        <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null" (nzOnCancel)="previewVisible=false">
             <ng-template #modalContent>
                 <img [src]="(previewImage)" [ngStyle]="{ 'width': '100%' }" />
             </ng-template>

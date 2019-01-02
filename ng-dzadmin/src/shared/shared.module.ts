@@ -18,6 +18,7 @@ import { CountdownModule } from 'ngx-countdown';
  * 第三方的一些组件模块
  */
 const THIRDMODULES = [
+  PipeModule,
   NgZorroAntdModule,
   CountdownModule,
   CustomComponentModule,
@@ -33,6 +34,7 @@ import { DelonChartModule } from '@delon/chart';
 import { DelonACLModule } from '@delon/acl';
 import { PermissionService } from './auth';
 import { DirectivesModule } from './directives/directives.module';
+import { PipeModule } from './pipe/pipe.module';
 
 
 @NgModule({
