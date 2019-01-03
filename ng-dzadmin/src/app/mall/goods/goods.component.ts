@@ -3,6 +3,7 @@ import { PagedRequestDto, PagedListingComponentBase, PagedResultDto } from '@sha
 import { Goods } from 'entities';
 import { Router } from '@angular/router';
 import { GoodsService } from 'services';
+import { AppConsts } from '@shared/AppConsts';
 
 @Component({
     selector: 'app-goods',
@@ -11,6 +12,10 @@ import { GoodsService } from 'services';
 export class GoodsComponent extends PagedListingComponentBase<Goods>{
     categoryName: string;
     keyWord: string;
+    cNodeKey: string;
+    //图片放大
+    previewImage = '';
+    previewVisible = false;
     constructor(injector: Injector
         , private router: Router
         , private goodService: GoodsService) {
@@ -41,18 +46,35 @@ export class GoodsComponent extends PagedListingComponentBase<Goods>{
         let params: any = {};
         params.SkipCount = request.skipCount;
         params.MaxResultCount = request.maxResultCount;
-        // params.Filter = this.search.filter;
+        params.Filter = this.keyWord;
+        params.NodeKey = this.cNodeKey;
         this.goodService.getAll(params)
             .finally(() => {
                 finishedCallback();
             })
             .subscribe((result: PagedResultDto) => {
-                this.dataList = result.items;
+                this.dataList = result.items.map((i) => {
+                    i.showCoverPhoto = AppConsts.remoteServiceBaseUrl + i.coverPhoto;
+                    return i;
+                });
+                console.log(this.dataList);
+
                 this.totalItems = result.totalCount;
             });
     }
-
+    goCreate() {
+        this.router.navigate(['/app/mall/goods-detail']);
+    }
     goDetail(id: string) {
-        this.router.navigate(['/app/mall/member-detail', id]);
+        this.router.navigate(['/app/mall/goods-detail', id]);
+    }
+    //图片放大
+    handlePreview = (url: string) => {
+        this.previewImage = url;
+        this.previewVisible = true;
+    }
+    getNodeKey(event) {
+        this.cNodeKey = event;
+        this.resetSearch();
     }
 }

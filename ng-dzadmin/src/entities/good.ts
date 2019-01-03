@@ -14,6 +14,8 @@ export class Goods {
     creationTime: Date;
     creatorUserId: number;
     categoryName: string;
+    onlineTime: Date;
+    offlineTime: Date;
     constructor(data?: any) {
         if (data) {
             for (var property in data) {
@@ -39,6 +41,8 @@ export class Goods {
             this.creationTime = data["creationTime"];
             this.creatorUserId = data["creatorUserId"];
             this.categoryName = data["categoryName"];
+            this.onlineTime = data["onlineTime"];
+            this.offlineTime = data["offlineTime"];
         }
     }
     toJSON(data?: any) {
@@ -57,6 +61,8 @@ export class Goods {
         data["isAction"] = this.isAction;
         data["creationTime"] = this.creationTime;
         data["creatorUserId"] = this.creatorUserId;
+        data["onlineTime"] = this.onlineTime;
+        data["offlineTime"] = this.offlineTime;
         return data;
     }
     static fromJS(data: any): Goods {

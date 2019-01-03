@@ -5,9 +5,11 @@ using Abp.Application.Services.Dto;
 using Abp.Domain.Entities.Auditing;
 using System.ComponentModel.DataAnnotations;
 using HC.DZWechat.Goods;
+using Abp.AutoMapper;
 
 namespace HC.DZWechat.Goods.Dtos
 {
+    [AutoMapFrom(typeof(Good))]
     public class GoodListDto : EntityDto<Guid>, IHasCreationTime, ICreationAudited
     {
 
@@ -60,12 +62,12 @@ namespace HC.DZWechat.Goods.Dtos
 		/// </summary>
 		public int? CategoryId { get; set; }
 
+        public string CategoryName { get; set; }
 
-
-		/// <summary>
-		/// Integral
-		/// </summary>
-		public decimal? Integral { get; set; }
+        /// <summary>
+        /// Integral
+        /// </summary>
+        public decimal? Integral { get; set; }
 
 
 
@@ -96,15 +98,12 @@ namespace HC.DZWechat.Goods.Dtos
 		[Required(ErrorMessage="CreationTime不能为空")]
 		public DateTime CreationTime { get; set; }
 
+        public DateTime OnlineTime { get; set; }
+        public DateTime OfflineTime { get; set; }
 
-
-		/// <summary>
-		/// CreatorUserId
-		/// </summary>
-		public long? CreatorUserId { get; set; }
-
-
-
-
+        /// <summary>
+        /// CreatorUserId
+        /// </summary>
+        public long? CreatorUserId { get; set; }
     }
 }

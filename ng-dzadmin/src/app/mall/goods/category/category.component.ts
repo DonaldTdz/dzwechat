@@ -1,27 +1,30 @@
-import { Component, ViewChild, TemplateRef, Output, EventEmitter } from '@angular/core';
+import { Component, ViewChild, TemplateRef, Output, EventEmitter, OnInit, Injector } from '@angular/core';
 import { NzTreeNode, NzFormatEmitEvent, NzTreeComponent, NzDropdownContextComponent, NzDropdownService } from 'ng-zorro-antd';
+import { GoodsService } from 'services';
+import { CategoryDetailComponent } from './category-detail/category-detail.component';
 
 @Component({
     selector: 'category',
     templateUrl: 'category.component.html',
     styleUrls: ['category.component.less']
 })
-export class CategoryComponent {
-    @Output() selectedCategory = new EventEmitter<any>();
+export class CategoryComponent implements OnInit {
+    @Output() modalSelect = new EventEmitter<any>();
     @ViewChild('treeCom') treeCom: NzTreeComponent;
-    // @ViewChild('createModal') createModal: CreateTagComponent;
-    // @ViewChild('editModal') editModal: EditTagComponent;
+    @ViewChild('createModal') createModal: CategoryDetailComponent;
     dropdown: NzDropdownContextComponent;
     activedNode: NzTreeNode;
     tempNode: string = 'root';
     rkeyNode: number;
     search: any = {};
     nodes = [];
-    constructor(
-        //  private productService: ProductServiceProxy
-        private nzDropdownService: NzDropdownService
+    constructor(private goodsService: GoodsService
+        , private nzDropdownService: NzDropdownService
     ) {
-        // super(injector);
+    }
+
+    ngOnInit(): void {
+        this.getTreeAsync();
     }
     /*商品类型*/
     openFolder(data: NzTreeNode | NzFormatEmitEvent): void {
@@ -42,6 +45,7 @@ export class CategoryComponent {
         this.search = {};
         this.treeCom.nzTreeService.setSelectedNodeList(this.activedNode);
         // this.refreshData(data.node.key);
+        this.modalSelect.emit(data.node.key);
     }
 
     contextMenu($event: MouseEvent, template: TemplateRef<void>, node: any): void {
@@ -51,14 +55,15 @@ export class CategoryComponent {
         }
     }
 
-    showEdit(): void {
+    goDetail(): void {
         if (this.dropdown) {
             this.dropdown.close();
         }
-        // this.editModal.show(this.rkeyNode);
+        this.createModal.show(this.rkeyNode);
     }
-    showCreate(): void {
-        // this.createModal.show();
+
+    goCreate(): void {
+        this.createModal.show();
     }
 
     getCreateData() {
@@ -70,9 +75,10 @@ export class CategoryComponent {
     }
 
     getTreeAsync() {
-        // this.productService.getTagsTreeAsync().subscribe(res => {
-        //     this.nodes = res;
-        //     this.refreshData('root');
-        // });
+        let params: any = {};
+        this.goodsService.getCategoryTrees(params).subscribe(res => {
+            this.nodes = res;
+            this.modalSelect.emit('root');
+        });
     }
 }

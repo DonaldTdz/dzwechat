@@ -55,7 +55,7 @@ namespace HC.DZWechat.Goods
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        Task CreateOrUpdate(CreateOrUpdateGoodInput input);
+        Task<GoodListDto> CreateOrUpdate(GoodEditDto input);
 
 
         /// <summary>

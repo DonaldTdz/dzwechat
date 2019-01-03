@@ -3,7 +3,7 @@
 <nz-card>
     <div nz-row>
         <div nz-col nzSpan="6">
-            <category></category>
+            <category (modalSelect)="getNodeKey($event)"></category>
         </div>
         <div nz-col nzSpan="18">
             <div nz-row class="mb-md">
@@ -12,46 +12,47 @@
                         <input type="text" [(ngModel)]="keyWord" nz-input placeholder="商品条码或名称">
                     </nz-input-group>
                     <ng-template #suffixButton>
-                        <button nz-button nzType="primary" [nzLoading]="isTableLoading" (click)="refreshData()"
-                            nzSearch>搜索</button>
+                        <button nz-button nzType="primary" [nzLoading]="isTableLoading" (click)="refreshData()" nzSearch>搜索</button>
                     </ng-template>
                 </div>
                 <div nz-col nzSpan="6" style="text-align:right;">
                     <button nz-button (click)="resetSearch()" nzShape="circle" nz-tooltip nzPlacement="top" nzTitle="刷新">
                         <i class="anticon anticon-reload"></i>
                     </button>
-                    <button nz-button nzShape="circle" nzType="primary" nz-tooltip nzPlacement="top" nzTitle="新增">
+                    <button nz-button (click)="goCreate()" nzShape="circle" nzType="primary" nz-tooltip nzPlacement="top" nzTitle="新增">
                         <i class="anticon anticon-plus"></i>
                     </button>
                 </div>
             </div>
             <ng-template #totalTemplate let-total>共 {{totalItems}} 条</ng-template>
-            <nz-table #nzTable [nzData]="dataList" [nzFrontPagination]="false" [nzTotal]="totalItems" [nzShowTotal]="totalTemplate"
-                [(nzPageIndex)]="pageNumber" [(nzPageSize)]="pageSize" [nzLoading]="isTableLoading" [nzShowSizeChanger]="true"
-                (nzPageIndexChange)="refresh()" (nzPageSizeChange)="refresh()">
+            <nz-table #nzTable [nzData]="dataList" [nzFrontPagination]="false" [nzTotal]="totalItems" [nzShowTotal]="totalTemplate" [(nzPageIndex)]="pageNumber" [(nzPageSize)]="pageSize" [nzLoading]="isTableLoading" [nzShowSizeChanger]="true" (nzPageIndexChange)="refresh()"
+                (nzPageSizeChange)="refresh()">
                 <thead>
                     <tr>
-                        <th>商品条码</th>
-                        <th>商品规格</th>
+                        <th>商品图片</th>
+                        <th>商品名称</th>
                         <th>商品单位</th>
-                        <th>兑换方式</th>
+                        <!-- <th>兑换方式</th> -->
                         <th>商品分类</th>
-                        <th>库存</th>
-                        <th>兑换积分</th>
+                        <!-- <th>库存</th> -->
+                        <th>所需积分</th>
                         <th>状态</th>
+                        <th>上架时间</th>
                         <th>操作</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let data of nzTable.data">
-                        <td>{{data.barCode}}</td>
+                        <td>
+                            <nz-avatar [nzSrc]="(data.photoUrl)" style="width:80px;height: 80px;" (click)="handlePreview(data.showCoverPhoto)" [nzSize]="'large'" [nzShape]="'square'"></nz-avatar>
+                        </td>
                         <td>{{data.specification}}</td>
                         <td>{{data.unit}}</td>
-                        <td>{{data.exchangeCode}}</td>
+                        <!-- <td>{{data.exchangeCode}}</td> -->
                         <td>{{data.categoryName}}</td>
-                        <td>{{data.stock}}</td>
                         <td>{{data.integral}}</td>
-                        <td>{{data.isAction}}</td>
+                        <td>{{data.isAction == true?"上架":"下架"}}</td>
+                        <td>{{data.onlineTime | _date}}</td>
                         <td>
                             <a (click)="goDetail(data.id)">详情</a>
                         </td>
@@ -61,3 +62,8 @@
         </div>
     </div>
 </nz-card>
+<nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null" (nzOnCancel)="previewVisible=false">
+    <ng-template #modalContent>
+        <img [src]="(previewImage)" [ngStyle]="{ 'width': '100%' }" />
+    </ng-template>
+</nz-modal>

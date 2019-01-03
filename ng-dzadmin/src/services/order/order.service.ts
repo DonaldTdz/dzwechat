@@ -12,6 +12,15 @@ export class OrderService {
     constructor(@Inject(CommonHttpClient) commonhttp: CommonHttpClient) {
         this._commonhttp = commonhttp;
     }
+    getAll(params: any): Observable<PagedResultDto> {
+        let url_ = "/api/services/app/Order/GetPaged";
+        return this._commonhttp.get(url_, params).pipe(map(data => {
+            const result = new PagedResultDto();
+            result.items = data.items;
+            result.totalCount = data.totalCount;
+            return result;
+        }));
+    }
 
     getOrderById(params: any): Observable<PagedResultDto> {
         let url_ = "/api/services/app/Order/GetPagedById";

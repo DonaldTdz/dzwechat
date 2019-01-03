@@ -8,11 +8,22 @@ import { OrderComponent } from './order/order.component';
 import { ShopComponent } from './shop/shop.component';
 import { VipComponent } from './vip/vip.component';
 import { MemberDetailComponent } from './member/member-detail/member-detail.component';
+import { GoodsDetailComponent } from './goods/goods-detail/goods-detail.component';
 
 const routes: Routes = [
     {
         path: 'goods',
         component: GoodsComponent,
+        canActivate: [AppRouteGuard],
+    },
+    {
+        path: 'goods-detail/:id',
+        component: GoodsDetailComponent,
+        canActivate: [AppRouteGuard],
+    },
+    {
+        path: 'goods-detail',
+        component: GoodsDetailComponent,
         canActivate: [AppRouteGuard],
     },
     {
