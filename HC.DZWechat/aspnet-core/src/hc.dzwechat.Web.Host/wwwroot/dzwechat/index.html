@@ -1,0 +1,154 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>达州金叶 | 达州烟草</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <base href="/dzwechat/">    <link rel="shortcut icon" href="./favicon.ico">
+    <link href="https://res.wx.qq.com/open/libs/weui/1.1.2/weui.min.css" rel="stylesheet">
+    <style type="text/css">
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #f0f2f5;
+            z-index: 9999;
+            transition: opacity .65s;
+        }
+
+        .preloader-hidden-add {
+            opacity: 1;
+            display: block;
+        }
+
+        .preloader-hidden-add-active {
+            opacity: 0;
+        }
+
+        .preloader-hidden {
+            display: none;
+        }
+
+        .cs-loader {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+        }
+
+        .cs-loader-inner {
+            -webkit-transform: translateY(-50%);
+            transform: translateY(-50%);
+            top: 50%;
+            position: absolute;
+            width: calc(100% - 200px);
+            color: #FFF;
+            padding: 0 100px;
+            text-align: center;
+        }
+
+        .cs-loader-inner label {
+            font-size: 20px;
+            opacity: 0;
+            display: inline-block;
+        }
+
+        @-webkit-keyframes lol {
+            0% {
+                opacity: 0;
+                -webkit-transform: translateX(-300px);
+                transform: translateX(-300px);
+            }
+            33% {
+                opacity: 1;
+                -webkit-transform: translateX(0px);
+                transform: translateX(0px);
+            }
+            66% {
+                opacity: 1;
+                -webkit-transform: translateX(0px);
+                transform: translateX(0px);
+            }
+            100% {
+                opacity: 0;
+                -webkit-transform: translateX(300px);
+                transform: translateX(300px);
+            }
+        }
+
+        @keyframes lol {
+            0% {
+                opacity: 0;
+                -webkit-transform: translateX(-300px);
+                transform: translateX(-300px);
+            }
+            33% {
+                opacity: 1;
+                -webkit-transform: translateX(0px);
+                transform: translateX(0px);
+            }
+            66% {
+                opacity: 1;
+                -webkit-transform: translateX(0px);
+                transform: translateX(0px);
+            }
+            100% {
+                opacity: 0;
+                -webkit-transform: translateX(300px);
+                transform: translateX(300px);
+            }
+        }
+
+        .cs-loader-inner label:nth-child(6) {
+            -webkit-animation: lol 3s infinite ease-in-out;
+            animation: lol 3s infinite ease-in-out;
+        }
+
+        .cs-loader-inner label:nth-child(5) {
+            -webkit-animation: lol 3s 100ms infinite ease-in-out;
+            animation: lol 3s 100ms infinite ease-in-out;
+        }
+
+        .cs-loader-inner label:nth-child(4) {
+            -webkit-animation: lol 3s 200ms infinite ease-in-out;
+            animation: lol 3s 200ms infinite ease-in-out;
+        }
+
+        .cs-loader-inner label:nth-child(3) {
+            -webkit-animation: lol 3s 300ms infinite ease-in-out;
+            animation: lol 3s 300ms infinite ease-in-out;
+        }
+
+        .cs-loader-inner label:nth-child(2) {
+            -webkit-animation: lol 3s 400ms infinite ease-in-out;
+            animation: lol 3s 400ms infinite ease-in-out;
+        }
+
+        .cs-loader-inner label:nth-child(1) {
+            -webkit-animation: lol 3s 500ms infinite ease-in-out;
+            animation: lol 3s 500ms infinite ease-in-out;
+        }
+
+    </style>
+<link rel="stylesheet" href="styles.1114c29c4ebc5e133b6f.css"></head>
+
+<body ontouchstart>
+    <app-root></app-root>
+    <div class="preloader">
+        <div id="loadingToast">
+            <div class="weui-mask_transparent"></div>
+            <div class="weui-toast">
+                <i class="weui-loading weui-icon_toast"></i>
+                <p class="weui-toast__content">加载中...</p>
+            </div>
+        </div>
+    </div>
+    <!-- <script src="./assets/highlight.min.js"></script> -->
+<script type="text/javascript" src="runtime.4a13e776daf56752d0e1.js"></script><script type="text/javascript" src="polyfills.a706ac1d80e257173a2d.js"></script><script type="text/javascript" src="scripts.c021ee3716fc53e65e0b.js"></script><script type="text/javascript" src="main.a96ffddb370ff56959bc.js"></script></body>
+
+</html>
