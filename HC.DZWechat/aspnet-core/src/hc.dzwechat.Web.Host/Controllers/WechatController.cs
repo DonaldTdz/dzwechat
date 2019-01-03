@@ -122,22 +122,24 @@ namespace HC.DZWechat.Web.Host.Controllers
             {
                 case AuthorizationPageEnum.NewsStudy: //烟雨课堂
                     {
-                        if (!string.IsNullOrEmpty(UserOpenId))//如果已获取当前openId 直接跳转到个人中心
-                        {
-                            return Redirect(AuthorizationPageUrl.NewsStudyUrl);
-                        }
-                        url = host + "/Wechat/NewsStudyAsync";
+                        //if (!string.IsNullOrEmpty(UserOpenId))//如果已获取当前openId 直接跳转到个人中心
+                        //{
+                        //    return Redirect(AuthorizationPageUrl.NewsStudyUrl);
+                        //}
+                        //url = host + "/Wechat/NewsStudyAsync";
+                        return Redirect(AuthorizationPageUrl.NewsStudyUrl);
                     }
-                    break;
+                    //break;
                 case AuthorizationPageEnum.MarketingStrategy:
                     {
-                        if (!string.IsNullOrEmpty(UserOpenId))
-                        {
-                            return Redirect(AuthorizationPageUrl.MarketingStrategyUrl);
-                        }
-                        url = host + "/Wechat/MarketingStrategyAsync";
+                        //if (!string.IsNullOrEmpty(UserOpenId))
+                        //{
+                        //    return Redirect(AuthorizationPageUrl.MarketingStrategyUrl);
+                        //}
+                        //url = host + "/Wechat/MarketingStrategyAsync";
+                        return Redirect(AuthorizationPageUrl.MarketingStrategyUrl);
                     }
-                    break;
+                    //break;
                 default:
                     {
                         return Redirect("/dzwechat/index.html");

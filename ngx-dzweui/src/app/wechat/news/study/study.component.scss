@@ -1,0 +1,27 @@
+.swiper-slide {
+    width: 100%;
+    height: 200px;
+    line-height: 200px;
+    text-align: center;
+    background: #93FF93;
+}
+
+.weui-media-box_appmsg .weui-media-box__thumb {
+    width: 100%;
+    height: 100%;
+    vertical-align: top;
+}
+
+.weui-cell_img {
+    width: 60px;
+    height: 60px;
+    background: no-repeat center center;
+    background-size: cover;
+    position: relative;
+    margin-right: 10px;
+}
+
+.weui-media-box_appmsg {
+    padding-top: 7px;
+    padding-bottom: 7px;
+}

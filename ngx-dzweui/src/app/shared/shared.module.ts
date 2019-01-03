@@ -9,10 +9,12 @@ import { GesturePasswordModule } from 'ngx-gesture-password';
 import { ToastrModule } from 'ngx-toastr';
 import { CountdownModule } from 'ngx-countdown';
 import { PageComponent } from './page/page.component';
+import { PipeModule } from './pipe/pipe.module';
 
 const COMPONENTS = [ PageComponent ];
 
 const THIDS = [
+  PipeModule,
   CountdownModule,
   ToastrModule,
   GesturePasswordModule,

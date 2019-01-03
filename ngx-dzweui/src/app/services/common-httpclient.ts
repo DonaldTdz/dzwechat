@@ -19,7 +19,7 @@ export class CommonHttpClient {
         this.baseUrl = baseUrl ? baseUrl : "";
     }
 
-    get(url: string, params?: { [key: string]: string }, showLoading?: boolean): Observable<any> {
+    get(url: string, params?: { [key: string]: any }, showLoading?: boolean): Observable<any> {
         url = this.baseUrl + url;
         return this.request(url + this._formatUrl(params), "get", null, showLoading);
     }
@@ -120,7 +120,7 @@ export class CommonHttpClient {
     /**
      * 将字典转为QueryString
      */
-    private _formatUrl(params?: { [key: string]: string }): string {
+    private _formatUrl(params?: { [key: string]: any }): string {
         if (!params) return '';
 
         let fegment = [];

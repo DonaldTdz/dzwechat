@@ -1,4 +1,24 @@
-<Page [ngClass]="'list'"
-      [title]="'烟语课堂'"
-      [subTitle]="'咨询'">
+<Page [ngClass]="'list'" [title]="'烟语课堂'" [showTitle]="false" [spacing]="false">
+    <div class="weui-panel weui-panel_access">
+        <div class="weui-cell" style=" padding-bottom: 0px; padding-top: 0px; padding-left: 0px; padding-right: 0px;">
+            <div style="text-align: center; width: 100%;">
+                <img src="assets/images/ic_exp_share.jpg" style="width:100%;">
+            </div>
+        </div>
+        <div class="weui-panel__bd">
+            <weui-loadmore type="line" *ngIf="!news || news.length == 0"></weui-loadmore>
+            <a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg" *ngFor="let item of news"
+                (click)="goLink(item.linkAddress)">
+                <div class="weui-media-box__hd weui-cell_img" [ngStyle]="{'background-image':'url('+ hostUrl + item.coverPhoto +')'}">
+                </div>
+                <div class="weui-media-box__bd">
+                    <h4 class="weui-media-box__title">{{item.title}}</h4>
+                    <p class="weui-media-box__desc">{{item.content | lengthLimit:30}}</p>
+                </div>
+                <div class="weui-media-box__ft" style="font-size: 14px;">
+                    {{item.pushTime| date:'yyyy-MM-dd'}}
+                </div>
+            </a>
+        </div>
+    </div>
 </Page>
