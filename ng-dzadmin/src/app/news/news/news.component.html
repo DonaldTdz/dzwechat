@@ -7,14 +7,18 @@
             </ul>
         </div>
         <div nz-col [nzSm]="20" [nzSpan]="20">
-            <ng-template #extraTpl>
+            <!-- <ng-template #extraTpl> -->
+            <div nz-row >
+                <div nz-col [nzOffset]="22" [nzSpan]="2">
                 <button nz-button (click)="refresh()" nzShape="circle">
                     <i class="anticon anticon-reload"></i>
                 </button>
                 <button nz-button (click)="create()" nzShape="circle" nzType="primary">
                     <i class="anticon anticon-plus"></i>
                 </button>
-            </ng-template>
+            </div>
+            </div>
+            <!-- </ng-template> -->
             <nz-table #ajaxTable nzShowSizeChanger [nzData]="dataList" [nzTotal]="totalItems" [(nzPageIndex)]="pageNumber" [(nzPageSize)]="pageSize"
                 [nzLoading]="isTableLoading" (nzPageIndexChange)="refresh()" (nzPageSizeChange)="refresh()" [nzFrontPagination]="false">
                 <thead>
