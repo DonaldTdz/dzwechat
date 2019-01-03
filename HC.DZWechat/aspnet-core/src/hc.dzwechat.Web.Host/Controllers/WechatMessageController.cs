@@ -46,8 +46,8 @@ namespace HC.DZWechat.Web.Host.Controllers
                 }
                 else
                 {
-                    return "failed:" + signature + "," + CheckSignature.GetSignature(timestamp, nonce, Token) + "。" +
-                        "如果你在浏览器中看到这句话，说明此地址可以被作为微信公众账号后台的Url，请注意保持Token一致。";
+                    return "failed:" + signature + "," + CheckSignature.GetSignature(timestamp, nonce, Token) + "。" + "此URL打开环境异常";
+                        //"如果你在浏览器中看到这句话，说明此地址可以被作为微信公众账号后台的Url，请注意保持Token一致。";
                 }
             }).ContinueWith<ActionResult>(task => Content(task.Result));
         }
@@ -73,6 +73,12 @@ namespace HC.DZWechat.Web.Host.Controllers
             var messageHandler = await _wechatMessageManager.GetMessageHandlerAsync(Request.GetRequestMemoryStream(), postModel, 10);
             return new FixWeixinBugWeixinResult(messageHandler);
         }
+
+        //public virtual async Task<ActionResult> GetCustomMessagesAsyncTest()
+        //{
+        //    var res = await _wechatMessageManager.GetCustomMessagesAsyncTest();
+        //    return Json(res);
+        //}
 
     }
 }

@@ -3,10 +3,11 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using Abp.Domain.Entities.Auditing;
 using HC.DZWechat.Newses;
+using static HC.DZWechat.DZEnums.DZEnums;
 
 namespace  HC.DZWechat.Newses.Dtos
 {
-    public class NewsEditDto:AuditedEntity<Guid?>
+    public class NewsEditDto:FullAuditedEntity<Guid?>
     {
 
         ///// <summary>
@@ -35,7 +36,7 @@ namespace  HC.DZWechat.Newses.Dtos
 		/// <summary>
 		/// Type
 		/// </summary>
-		public int? Type { get; set; }
+		public NewsType? Type { get; set; }
 
 
 
@@ -57,7 +58,7 @@ namespace  HC.DZWechat.Newses.Dtos
 		/// <summary>
 		/// PushStatus
 		/// </summary>
-		public int? PushStatus { get; set; }
+		public PushType? PushStatus { get; set; }
 
 
 
@@ -71,7 +72,7 @@ namespace  HC.DZWechat.Newses.Dtos
 		/// <summary>
 		/// LinkType
 		/// </summary>
-		public int? LinkType { get; set; }
+		public LinkType? LinkType { get; set; }
 
 
 
@@ -82,56 +83,65 @@ namespace  HC.DZWechat.Newses.Dtos
 
 
 
-		/// <summary>
-		/// IsDeleted
-		/// </summary>
-		[Required(ErrorMessage="IsDeleted不能为空")]
-		public bool IsDeleted { get; set; }
+		///// <summary>
+		///// IsDeleted
+		///// </summary>
+		//[Required(ErrorMessage="IsDeleted不能为空")]
+		//public bool IsDeleted { get; set; }
 
 
 
-		/// <summary>
-		/// CreationTime
-		/// </summary>
-		[Required(ErrorMessage="CreationTime不能为空")]
-		public DateTime CreationTime { get; set; }
+		///// <summary>
+		///// CreationTime
+		///// </summary>
+		//[Required(ErrorMessage="CreationTime不能为空")]
+		//public DateTime CreationTime { get; set; }
 
 
 
-		/// <summary>
-		/// CreatorUserId
-		/// </summary>
-		public long? CreatorUserId { get; set; }
+		///// <summary>
+		///// CreatorUserId
+		///// </summary>
+		//public long? CreatorUserId { get; set; }
 
 
 
-		/// <summary>
-		/// LastModificationTime
-		/// </summary>
-		public DateTime? LastModificationTime { get; set; }
+		///// <summary>
+		///// LastModificationTime
+		///// </summary>
+		//public DateTime? LastModificationTime { get; set; }
 
 
 
-		/// <summary>
-		/// LastModifierUserId
-		/// </summary>
-		public long? LastModifierUserId { get; set; }
+		///// <summary>
+		///// LastModifierUserId
+		///// </summary>
+		//public long? LastModifierUserId { get; set; }
 
 
 
-		/// <summary>
-		/// DeletionTime
-		/// </summary>
-		public DateTime? DeletionTime { get; set; }
+		///// <summary>
+		///// DeletionTime
+		///// </summary>
+		//public DateTime? DeletionTime { get; set; }
 
 
 
-		/// <summary>
-		/// DeleterUserId
-		/// </summary>
-		public long? DeleterUserId { get; set; }
+		///// <summary>
+		///// DeleterUserId
+		///// </summary>
+		//public long? DeleterUserId { get; set; }
 
-
+        /// <summary>
+        /// 发布状态名
+        /// </summary>
+        public string PushStatusName
+        {
+            get
+            {
+                return PushStatus.ToString();
+            }
+        }
 
 
     }

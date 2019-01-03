@@ -11,7 +11,7 @@ import { ChangePasswordComponent } from '@layout/default/change-password/change-
   template: `
   <nz-dropdown nzPlacement="bottomRight">
     <div class="alain-default__nav-item d-flex align-items-center px-sm" nz-dropdown>
-      <nz-avatar  nzSize="small" class="mr-sm"  [nzSrc]="'/assets/avatar.jpg'" ></nz-avatar>
+      <nz-avatar  nzSize="small" class="mr-sm"  [nzSrc]="'assets/avatar.jpg'" ></nz-avatar>
     </div>
     <div nz-menu class="width-sm">
       <div nz-menu-item (click)="chanagepwd()">

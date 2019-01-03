@@ -1,0 +1,29 @@
+<Page [ngClass]="'grid'" [title]="'达州烟草'" [subTitle]="'主页'" [spacing]="false" [ftBottom]="true">
+
+    <div class="weui-grids">
+        <a [routerLink]="['/news/study']" class="weui-grid">
+            <div class="weui-grid__icon">
+                <img src="./assets/images/icon_tabbar.png" alt="">
+            </div>
+            <p class="weui-grid__label">烟语课堂</p>
+        </a>
+        <a [routerLink]="['/shares/share']" class="weui-grid">
+            <div class="weui-grid__icon">
+                <img src="./assets/images/icon_tabbar.png" alt="">
+            </div>
+            <p class="weui-grid__label">新品快讯</p>
+        </a>
+        <a [routerLink]="['/marketing/strategy']" class="weui-grid">
+            <div class="weui-grid__icon">
+                <img src="./assets/images/icon_tabbar.png" alt="">
+            </div>
+            <p class="weui-grid__label">营销策略</p>
+        </a>
+        <a [routerLink]="['/vip/user']" class="weui-grid">
+            <div class="weui-grid__icon">
+                <img src="./assets/images/icon_tabbar.png" alt="">
+            </div>
+            <p class="weui-grid__label">个人中心</p>
+        </a>
+    </div>
+</Page>
