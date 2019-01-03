@@ -19,7 +19,8 @@
             </div>
             </div>
             <!-- </ng-template> -->
-            <nz-table #ajaxTable nzShowSizeChanger [nzData]="dataList" [nzTotal]="totalItems" [(nzPageIndex)]="pageNumber" [(nzPageSize)]="pageSize"
+            <ng-template #totalTemplate >共 {{totalItems}} 条</ng-template>
+            <nz-table #ajaxTable nzShowSizeChanger [nzData]="dataList" [nzShowTotal]="totalTemplate" [nzTotal]="totalItems" [(nzPageIndex)]="pageNumber" [(nzPageSize)]="pageSize"
                 [nzLoading]="isTableLoading" (nzPageIndexChange)="refresh()" (nzPageSizeChange)="refresh()" [nzFrontPagination]="false">
                 <thead>
                     <tr>

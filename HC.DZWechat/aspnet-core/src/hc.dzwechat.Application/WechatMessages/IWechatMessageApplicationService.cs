@@ -72,11 +72,18 @@ namespace HC.DZWechat.WechatMessages
         Task BatchDelete(List<Guid> input);
 
 
-		/// <summary>
+        /// <summary>
         /// 导出WechatMessage为excel表
         /// </summary>
         /// <returns></returns>
-		//Task<FileDto> GetToExcel();
+        //Task<FileDto> GetToExcel();
+
+
+        /// <summary>
+        /// 添加或者修改WechatMessage的公共方法
+        /// </summary>
+        /// <returns></returns>   
+        Task CreateOrUpdateDto(WechatMessageEditDto input);
 
     }
 }

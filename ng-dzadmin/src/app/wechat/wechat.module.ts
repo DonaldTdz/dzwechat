@@ -7,6 +7,8 @@ import { WechatConfigComponent } from './config/wechat-config.component';
 
 import { WechatRoutingModule } from './wechat-routing.module';
 import { LayoutModule } from '@layout/layout.module';
+import { WeChatMessageService } from 'services';
+import { CreateWecahtMessgeComponent } from '@app/wechat/config/create-wecaht-messge/create-wecaht-messge.component';
 
 @NgModule({
     imports: [
@@ -19,11 +21,13 @@ import { LayoutModule } from '@layout/layout.module';
         SharedModule,
     ],
     declarations: [
-        WechatConfigComponent
+        WechatConfigComponent,
+        CreateWecahtMessgeComponent,
     ],
     entryComponents: [
-        WechatConfigComponent
+        WechatConfigComponent,
+        CreateWecahtMessgeComponent,
     ],
-    // providers: [LocalizationService, MenuService],
+    providers: [WeChatMessageService],
 })
 export class WechatModule { }

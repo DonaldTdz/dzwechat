@@ -30,9 +30,9 @@ export class NewsService {
      * 获取单条资讯信息
      * @param id 
      */
-    getnewsById(id: string, newsType: string): Observable<News> {
+    getnewsById(id: string): Observable<News> {
         let url_ = "/api/services/app/News/GetByIdAndType";
-        let params = { 'id': id, 'newsType': newsType }
+        let params = { 'id': id };
         return this._commonhttp.get(url_, params).pipe(map(data => {
             return News.fromJS(data);
         }))

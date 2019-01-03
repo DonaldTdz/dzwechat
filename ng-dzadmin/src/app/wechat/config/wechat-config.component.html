@@ -1,1 +1,61 @@
 <page-header [title]="'微信配置'"></page-header>
+<nz-tabset>
+    <nz-tab [nzTitle]="'关注回复'">
+        <nz-card>
+            <div nz-row class="mb-md">
+                <div nz-col [nzSpan]="20">
+                    <!-- <nz-form-label [nzSm]="5" [nzXs]="24" nzRequired nzFor="mesText">关键字</nz-form-label>
+                    <nz-form-control [nzSm]="15" nzHasFeedback>
+                        <input nz-input name="mesText" #title="ngModel" [(ngModel)]="mesText" [placeholder]="'请输入关键字'">
+                    </nz-form-control> -->
+                    <nz-input-group nzSearch [nzSuffix]="suffixButton">
+                        <input type="text" [(ngModel)]="mesText" nz-input placeholder="请输入关键字">
+                    </nz-input-group>
+                    <ng-template #suffixButton>
+                        <button nz-button nzType="primary" [nzLoading]="isTableLoading" (click)="refresh()" nzSearch>搜索</button>
+                    </ng-template>
+                </div>
+                <div nz-col [nzSpan]="2" style="float:right;text-align: right; padding-left:0px">
+                    <!-- <button nz-button (click)="refresh()" nzShape="circle">
+                        <i class="anticon anticon-reload"></i>
+                    </button> -->
+                    <button nz-button (click)="create()" nzShape="circle" nzType="primary">
+                        <i class="anticon anticon-plus"></i>
+                    </button>
+                </div>
+            </div>
+            <ng-template #totalTemplate let-total>共 {{totalItems}} 条</ng-template>
+            <nz-table #ajaxTable nzShowSizeChanger [nzData]="dataList" [nzShowTotal]="totalTemplate" [nzTotal]="totalItems" [(nzPageIndex)]="pageNumber"
+                [(nzPageSize)]="pageSize" [nzLoading]="isTableLoading" (nzPageIndexChange)="refresh()" (nzPageSizeChange)="refresh()"
+                [nzFrontPagination]="false">
+                <thead>
+                    <tr>
+                        <th>关键字</th>
+                        <!-- <th>匹配模式（枚举 精准匹配、模糊匹配）</th> -->
+                        <!-- <th>消息类型（枚举 文字消息、图文消息）</th> -->
+                        <th>回复内容</th>
+                        <th>操作</th>
+                    </tr>
+
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of ajaxTable.data">
+                        <td>{{item.keyWord}}</td>
+                        <!-- <td>{{item.matchMode}}</td> -->
+                        <!-- <td>{{item.msgType}}</td> -->
+                        <td>{{item.content}}</td>
+                        <td>
+                            <a (click)="edit(item)">编辑</a>
+                            <nz-divider nzType="vertical"></nz-divider>
+                            <a (click)="delete(item)">删除</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </nz-card>
+    </nz-tab>
+    <nz-tab [nzTitle]="'图文消息'">
+
+    </nz-tab>
+
+</nz-tabset>

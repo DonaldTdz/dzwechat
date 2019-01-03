@@ -60,5 +60,13 @@ namespace HC.DZWechat.DZEnums
         {
             外部链接=1,
         }
+
+        /// <summary>
+        /// 匹配模式
+        /// </summary>
+        public enum MatchModeEnum
+        {
+            精准匹配 = 1,
+        }
     }
 }

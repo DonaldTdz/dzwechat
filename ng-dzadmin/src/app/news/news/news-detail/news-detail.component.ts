@@ -54,7 +54,7 @@ export class NewsDetailComponent extends AppComponentBase implements OnInit {
 
     //获取单个资讯
     getSingleNews() {
-        this.newsService.getnewsById(this.id, this.newsType.toString()).subscribe((result) => {
+        this.newsService.getnewsById(this.id).subscribe((result) => {
             this.news = result;
             // this.news.showCoverPhoto = this.news.coverPhoto;
             this.isPush = result.pushStatus == 1 ? false : true;

@@ -4,3 +4,4 @@ export * from './wechat-user/wechat-user.service';
 export * from './integral/integral.service';
 export * from './order/order.service';
 export * from './goods/goods.service';
+export * from './wechat-message/wechat-message.service';

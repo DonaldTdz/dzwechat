@@ -7,6 +7,10 @@ namespace HC.DZWechat.WechatMessages.Dtos
 {
     public class GetWechatMessagesInput : PagedSortedAndFilteredInputDto, IShouldNormalize
     {
+        /// <summary>
+        /// 关键字
+        /// </summary>
+        public string MesText { get; set; }
 
         /// <summary>
         /// 正常化排序使用
