@@ -24,7 +24,7 @@ export class NewsComponent extends PagedListingComponentBase<any> {
     constructor(injector: Injector, private newsService: NewsService, private router: Router) {
         super(injector);
     }
-
+    
     protected fetchDataList(
         request: PagedRequestDto,
         pageNumber: number,

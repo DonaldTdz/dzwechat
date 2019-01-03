@@ -50,6 +50,8 @@
     <PackageReference Include="Senparc.Weixin.MP.CoreMvc" Version="1.5.0" />
     <PackageReference Include="Senparc.Weixin.MP.MVC" Version="7.1.11" />
     <PackageReference Include="Senparc.Weixin.MP.MvcExtension" Version="4.1.1" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0005" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta0005" />
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="2.0.0" />

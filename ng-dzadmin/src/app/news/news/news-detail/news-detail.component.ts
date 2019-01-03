@@ -10,6 +10,7 @@ import { AppConsts } from '@shared/AppConsts';
     moduleId: module.id,
     selector: 'news-detail',
     templateUrl: 'news-detail.component.html',
+    // styleUrls: ['news-detail.component.scss']
 })
 export class NewsDetailComponent extends AppComponentBase implements OnInit {
     title: string;
@@ -60,11 +61,11 @@ export class NewsDetailComponent extends AppComponentBase implements OnInit {
         });
     }
 
-    private getBase64(img: File, callback: (img: any) => void) {
-        const reader = new FileReader();
-        reader.addEventListener('load', () => callback(reader.result));
-        reader.readAsDataURL(img);
-    }
+    // private getBase64(img: File, callback: (img: any) => void) {
+    //     const reader = new FileReader();
+    //     reader.addEventListener('load', () => callback(reader.result));
+    //     reader.readAsDataURL(img);
+    // }
 
     //图片上传返回
     handleChange(info: { file: UploadFile }): void {
@@ -76,7 +77,7 @@ export class NewsDetailComponent extends AppComponentBase implements OnInit {
             // this.getBase64(info.file.originFileObj, (img: any) => {
             //     this.news.showCoverPhoto = img;
             // });
-            this.news.coverPhoto = info.file.response.result.imageName;
+            this.news.coverPhoto = info.file.response.result.data;
             this.notify.success('上传图片完成');
         }
     }
@@ -90,28 +91,35 @@ export class NewsDetailComponent extends AppComponentBase implements OnInit {
             this.isConfirmLoadingSa = true;
             this.successMsg = '保存成功！';
         }
-        this.newsService.update(this.news)
-            .finally(() => { this.saving = false; this.isConfirmLoadingSa = false; this.isConfirmLoadingPu = false; })
-            .subscribe((result) => {
-                this.news = result;
-                this.news.showCoverPhoto = result.coverPhoto;
-                this.isDelete = true;
-                this.isPush = result.pushStatus == 1 ? false : true;
-                this.notify.info(this.l(this.successMsg));
-            });
+        if (this.news.coverPhoto) {
+            this.newsService.update(this.news)
+                .finally(() => { this.saving = false; this.isConfirmLoadingSa = false; this.isConfirmLoadingPu = false; })
+                .subscribe((result) => {
+                    this.news = result;
+                    this.news.showCoverPhoto = result.coverPhoto;
+                    this.isDelete = true;
+                    this.isPush = result.pushStatus == 1 ? false : true;
+                    this.notify.info(this.l(this.successMsg));
+                });
+        } else {
+            this.isConfirmLoadingPu = false;
+            this.isConfirmLoadingSa = false;
+            this.notify.warn(this.l('封面图片不能为空'));
+        }
+
     }
     //删除
-    delete(entiy: News): void {
+    delete(): void {
         this.message.confirm(
-            "删除资讯'" + entiy.title + "'?",
+            "删除资讯'" + this.news.title + "'?",
             '信息确认',
             (result: boolean) => {
                 if (result) {
                     this.isConfirmLoadingDe = true;
-                    this.newsService.delete(entiy.id)
+                    this.newsService.delete(this.news.id)
                         .finally(() => { this.isConfirmLoadingDe = false; })
                         .subscribe(() => {
-                            this.notify.info(this.l('已删除资讯' + entiy.title));
+                            this.notify.info(this.l('删除成功！'));
                             this.return();
                         });
                 }
