@@ -32,8 +32,6 @@ namespace HC.DZWechat.Newses
         /// <summary>
 		/// 获取News的分页列表信息
 		///</summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
         Task<PagedResultDto<NewsListDto>> GetPaged(GetNewssInput input);
 
 
@@ -46,24 +44,18 @@ namespace HC.DZWechat.Newses
         /// <summary>
         /// 返回实体的EditDto
         /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
         Task<GetNewsForEditOutput> GetForEdit(NullableIdDto<Guid> input);
 
 
         /// <summary>
         /// 添加或者修改News的公共方法
         /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
         Task CreateOrUpdate(CreateOrUpdateNewsInput input);
 
 
         /// <summary>
         /// 删除News信息的方法
         /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
         Task Delete(EntityDto<Guid> input);
 
 
@@ -75,19 +67,18 @@ namespace HC.DZWechat.Newses
 
         /// <summary>
         /// 导出News为excel表
-        /// </summary>
-        /// <returns></returns>
-        //Task<FileDto> GetToExcel();
-        
-            
+        /// </summary> 
         Task<NewsListDto> GetByIdAndType(EntityDto<Guid> id, NewsType newsType);
 
         /// <summary>
         /// 添加或者修改News的公共方法
         /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
         Task<NewsEditDto> CreateOrUpdateDto(NewsEditDto input);
+
+        /// <summary>
+        /// 获取news列表 通过type
+        /// </summary> 
+        Task<List<NewsListDto>> GetNewsByTypeAsync(NewsType newsType);
 
     }
 }

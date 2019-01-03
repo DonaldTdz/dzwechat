@@ -12,5 +12,7 @@ namespace HC.DZWechat.WechatMessages
     public interface IWechatMessageManager : IDomainService
     {
         Task<IMessageHandlerDocument> GetMessageHandlerAsync(Stream inputStream, PostModel postModel, int maxRecordCount = 0);
+
+        Task<CustomMessages> GetCustomMessagesAsyncTest();
     }
 }

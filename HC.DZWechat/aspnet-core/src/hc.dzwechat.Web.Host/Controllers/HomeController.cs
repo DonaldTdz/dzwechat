@@ -19,7 +19,8 @@ namespace HC.DZWechat.Web.Host.Controllers
 
         public IActionResult Index()
         {
-            return Redirect("/swagger");
+            //return Redirect("/swagger");
+            return Redirect("/dzadmin/index.html");
         }
 
         /// <summary>

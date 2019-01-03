@@ -8,13 +8,13 @@ import { AqmModule } from 'angular-qq-maps';
 import { GesturePasswordModule } from 'ngx-gesture-password';
 import { ToastrModule } from 'ngx-toastr';
 import { CountdownModule } from 'ngx-countdown';
+import { PageComponent } from './page/page.component';
+import { PipeModule } from './pipe/pipe.module';
 
-import { DocsNavComponent } from './docs-nav/docs-nav.component';
-import { EditButtonComponent } from './edit-button/edit-button.component';
-
-const COMPONENTS = [DocsNavComponent, EditButtonComponent];
+const COMPONENTS = [ PageComponent ];
 
 const THIDS = [
+  PipeModule,
   CountdownModule,
   ToastrModule,
   GesturePasswordModule,

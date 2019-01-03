@@ -18,6 +18,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Castle.Core.Logging;
+using Newtonsoft.Json;
 
 namespace HC.DZWechat.WechatMessages
 {
@@ -46,6 +48,8 @@ namespace HC.DZWechat.WechatMessages
         /// </summary>
         public CustomMessages Messages { get; set; }
 
+        public ILogger Logger { get; set; }
+
         /// <summary>
         /// 模板消息集合（Key：checkCode，Value：OpenId）
         /// </summary>
@@ -63,6 +67,7 @@ namespace HC.DZWechat.WechatMessages
             }
 
             Messages = new CustomMessages();
+            Logger = NullLogger.Instance;
 
             //在指定条件下，不使用消息去重
             //base.OmitRepeatedMessageFunc = requestMessage =>
@@ -98,6 +103,7 @@ namespace HC.DZWechat.WechatMessages
         public override IResponseMessageBase OnTextRequest(RequestMessageText requestMessage)
         {
             var requestHandler = requestMessage.StartHandler();
+            //Logger.Info("msgs:"+JsonConvert.SerializeObject(Messages));
 
             //1、文字消息回复
             var textResponseMessage = base.CreateResponseMessage<ResponseMessageText>();
@@ -173,7 +179,9 @@ namespace HC.DZWechat.WechatMessages
             }
 
             //3、没有配置则默认 不回复任何消息
-            return new SuccessResponseMessage();
+            //return new SuccessResponseMessage();
+
+            return requestHandler.GetResponseMessage() as IResponseMessageBase;
         }
 
         /// <summary>

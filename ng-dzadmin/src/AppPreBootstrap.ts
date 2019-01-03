@@ -41,7 +41,8 @@ export class AppPreBootstrap {
         } else {
             envName = 'dev';
         }
-        let url = '/assets/appconfig.' + envName + '.json';
+        //let url = '/assets/appconfig.' + envName + '.json';
+        let url = 'assets/appconfig.' + envName + '.json';
         httpClient.get(url).subscribe((result: any) => {
             AppConsts.appBaseUrl = window.location.protocol + '//' + window.location.host;
             AppConsts.remoteServiceBaseUrl = result.remoteServiceBaseUrl;
