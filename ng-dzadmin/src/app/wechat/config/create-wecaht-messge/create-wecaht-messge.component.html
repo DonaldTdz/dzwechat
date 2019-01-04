@@ -2,7 +2,7 @@
 <div class="padding-bottom-45">
 
     <div class="modal-header">
-        <div class="modal-title">{{l('新增关注回复')}}</div>
+        <div class="modal-title">{{l('新增消息回复')}}</div>
     </div>
 
     <form nz-form #validateForm="ngForm" (ngSubmit)="save()" *ngIf="wechatMessage">
@@ -47,10 +47,10 @@
         </nz-form-item>
 
         <!-- 回复内容 -->
-        <nz-form-item *ngIf="wechatMessage.msgType==1">
+        <nz-form-item *ngIf="wechatMessage.msgType==1" nz-row>
             <nz-form-label [nzSm]="5" [nzXs]="24" nzRequired nzFor="content">回复内容</nz-form-label>
             <nz-form-control [nzSm]="19">
-                <textarea nz-input name="content" #content="ngModel" [(ngModel)]="wechatMessage.content" maxlength="200" autocomplete="content"
+                <textarea nz-input name="content" #content="ngModel" [(ngModel)]="wechatMessage.content" maxlength="200" rows="6" autocomplete="content"
                     [nzAutosize]="{ minRows: 6, maxRows: 10}" required></textarea>
                 <nz-form-explain *ngIf="content.control.dirty&&content.control.errors">
                     <ng-container *ngIf="content.control.hasError('required')">{{l('CanNotNull')}}</ng-container>
