@@ -92,7 +92,8 @@
     "tslint-language-service": "^0.9.9",
     "editorconfig-tools": "^0.1.1",
     "lint-staged": "^7.1.2",
-    "husky": "^0.14.3"
+    "husky": "^0.14.3",
+    "node-sass": "^4.11.0"
   },
   "lint-staged": {
     "*.{cmd,html,json,md,sh,txt,xml,yml}": [

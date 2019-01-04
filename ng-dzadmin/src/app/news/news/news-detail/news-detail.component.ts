@@ -10,7 +10,7 @@ import { AppConsts } from '@shared/AppConsts';
     moduleId: module.id,
     selector: 'news-detail',
     templateUrl: 'news-detail.component.html',
-    // styleUrls: ['news-detail.component.scss']
+    styleUrls: ['news-detail.component.scss']
 })
 export class NewsDetailComponent extends AppComponentBase implements OnInit {
     title: string;
@@ -54,7 +54,7 @@ export class NewsDetailComponent extends AppComponentBase implements OnInit {
 
     //获取单个资讯
     getSingleNews() {
-        this.newsService.getnewsById(this.id, this.newsType.toString()).subscribe((result) => {
+        this.newsService.getnewsById(this.id).subscribe((result) => {
             this.news = result;
             // this.news.showCoverPhoto = this.news.coverPhoto;
             this.isPush = result.pushStatus == 1 ? false : true;
@@ -99,7 +99,7 @@ export class NewsDetailComponent extends AppComponentBase implements OnInit {
                     this.news.showCoverPhoto = result.coverPhoto;
                     this.isDelete = true;
                     this.isPush = result.pushStatus == 1 ? false : true;
-                    this.notify.info(this.l(this.successMsg));
+                    this.notify.success(this.l(this.successMsg));
                 });
         } else {
             this.isConfirmLoadingPu = false;
@@ -119,7 +119,7 @@ export class NewsDetailComponent extends AppComponentBase implements OnInit {
                     this.newsService.delete(this.news.id)
                         .finally(() => { this.isConfirmLoadingDe = false; })
                         .subscribe(() => {
-                            this.notify.info(this.l('删除成功！'));
+                            this.notify.success(this.l('删除成功！'));
                             this.return();
                         });
                 }

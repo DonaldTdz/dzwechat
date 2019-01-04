@@ -11,6 +11,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using Senparc.NeuChar.Entities;
+using static HC.DZWechat.DZEnums.DZEnums;
 
 namespace HC.DZWechat.WechatMessages
 {

@@ -226,7 +226,7 @@ namespace HC.DZWechat.Newses
         [AbpAllowAnonymous]
         public async Task<List<NewsListDto>> GetNewsByTypeAsync(NewsType newsType)
         {
-            var entity = await _entityRepository.GetAll().Where(n => n.Type == newsType && n.PushStatus == PushType.已发布).ToListAsync();
+            var entity = await _entityRepository.GetAll().Where(n => n.Type == newsType && n.PushStatus == PushType.已发布).OrderByDescending(r => r.PushTime).ToListAsync();
             return entity.MapTo<List<NewsListDto>>();
         }
     }

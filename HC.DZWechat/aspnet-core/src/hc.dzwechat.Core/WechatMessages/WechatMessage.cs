@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using static HC.DZWechat.DZEnums.DZEnums;
 
 namespace HC.DZWechat.WechatMessages
 {
@@ -38,7 +39,7 @@ namespace HC.DZWechat.WechatMessages
         /// 回复内容
         /// </summary>
         [StringLength(200)]
-        [Required]
+        //[Required]
         public virtual string Content { get; set; }
         /// <summary>
         /// 标题
@@ -61,13 +62,6 @@ namespace HC.DZWechat.WechatMessages
         public virtual string Url { get; set; }
     }
 
-    /// <summary>
-    /// 触发类型
-    /// </summary>
-    public enum TriggerTypeEnum
-    {
-        关键字 = 1,
-        点击事件 = 2
-    }
+  
 
 }

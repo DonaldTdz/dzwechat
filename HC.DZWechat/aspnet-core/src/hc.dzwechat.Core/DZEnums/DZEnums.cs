@@ -72,5 +72,28 @@ namespace HC.DZWechat.DZEnums
             线下兑换 = 1,
             邮寄兑换 = 2,
         }
+        
+        /// <summary>
+        /// 匹配模式
+        /// </summary>
+        public enum MatchModeEnum
+        {
+            精准匹配 = 1,
+        }
+
+        /// <summary>
+        /// 触发类型
+        /// </summary>
+        public enum TriggerTypeEnum
+        {
+            关键字 = 1,
+            点击事件 = 2
+        }
+
+        public enum MsgTypeEnum
+        {
+            文字消息 = 1,
+            图文消息 = 2
+        }
     }
 }

@@ -129,7 +129,14 @@ namespace HC.DZWechat.Web.Host.Controllers
                         //url = host + "/Wechat/NewsStudyAsync";
                         return Redirect(AuthorizationPageUrl.NewsStudyUrl);
                     }
-                    //break;
+                case AuthorizationPageEnum.NewsLaunch: //新品快讯
+                    {
+                        return Redirect(AuthorizationPageUrl.NewsLaunchUrl);
+                    }
+                case AuthorizationPageEnum.NewsProduct: //产品大全
+                    {
+                        return Redirect(AuthorizationPageUrl.NewsProductUrl);
+                    }
                 case AuthorizationPageEnum.MarketingStrategy:
                     {
                         //if (!string.IsNullOrEmpty(UserOpenId))
@@ -146,9 +153,9 @@ namespace HC.DZWechat.Web.Host.Controllers
                     }
             }
 
-            param = param ?? "123";
-            var pageUrl = OAuthApi.GetAuthorizeUrl(AppId, url, param, OAuthScope.snsapi_base, "code"); 
-            return Redirect(pageUrl);
+            //param = param ?? "123";
+            //var pageUrl = OAuthApi.GetAuthorizeUrl(AppId, url, param, OAuthScope.snsapi_base, "code"); 
+            //return Redirect(pageUrl);
         }
 
         /// <summary>
@@ -176,13 +183,18 @@ namespace HC.DZWechat.Web.Host.Controllers
     public enum AuthorizationPageEnum
     {
         NewsStudy = 1,
+        NewsLaunch = 2,
+        NewsProduct = 3,
+
         MarketingStrategy = 101
     }
 
     public class AuthorizationPageUrl
     {
-        public static string NewsStudyUrl = "/dzwechat/index.html#/news/study";
+        public static string NewsStudyUrl = "/dzwechat/index.html#/news-study/study";
+        public static string NewsLaunchUrl = "/dzwechat/index.html#/news-launch/launch";
+        public static string NewsProductUrl = "/dzwechat/index.html#/news-product/product";
 
-        public static string MarketingStrategyUrl = "/dzwechat/index.html#/marketing/strategy";
+        public static string MarketingStrategyUrl = "/dzwechat/index.html#/marketing-strategy/strategy";
     }
 }

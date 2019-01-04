@@ -7,3 +7,5 @@ export * from './category';
 export * from './delivery';
 export * from './order-detail';
 export * from './exchange';
+export * from './wechatmessage';
+export * from './wechatsubscribe';

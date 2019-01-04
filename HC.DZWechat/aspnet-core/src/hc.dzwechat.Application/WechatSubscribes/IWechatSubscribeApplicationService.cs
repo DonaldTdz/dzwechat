@@ -72,11 +72,21 @@ namespace HC.DZWechat.WechatSubscribes
         Task BatchDelete(List<Guid> input);
 
 
-		/// <summary>
+        /// <summary>
         /// 导出WechatSubscribe为excel表
         /// </summary>
         /// <returns></returns>
-		//Task<FileDto> GetToExcel();
+        //Task<FileDto> GetToExcel();
+
+        /// <summary>
+        /// 获取第一条图文消息
+        /// </summary>
+        Task<WechatSubscribeListDto> GetWechatSubscribeInfo();
+
+        /// <summary>
+        /// 添加或者修改WechatSubscribe的公共方法
+        /// </summary>
+        Task CreateOrUpdateDto(WechatSubscribeEditDto input);
 
     }
 }

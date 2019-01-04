@@ -56,13 +56,11 @@
         <nz-form-label [nzSm]="5" [nzXs]="24" nzRequired nzFor="coverPhoto">封面图片</nz-form-label>
         <nz-form-control [nzSm]="15">
             <nz-upload class="avatar-uploader" nzAction="{{actionUrl}}" [nzName]="'image'" [nzShowUploadList]="false" (nzChange)="handleChange($event)">
-                <i *ngIf="!news.coverPhoto" style="width: 150px; height: 150px;display: block; border: 1px dashed #d9d9d9; border-radius: 6px;cursor: pointer;display: table-cell;vertical-align: middle;font-size: 28px;color: #999;"
-                    class="anticon anticon-plus avatar-uploader-trigger"></i>
+                <i *ngIf="!news.coverPhoto" class="anticon anticon-plus avatar-uploader-trigger"></i>
                 <img *ngIf="news.coverPhoto" [src]="news.coverPhoto|hostUrl" class="avatar" [width]="200" [height]="200">
             </nz-upload>
         </nz-form-control>
     </nz-form-item>
-
 
 
     <!-- 活动内容 -->
