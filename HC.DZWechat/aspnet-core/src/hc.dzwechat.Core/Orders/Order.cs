@@ -23,6 +23,7 @@ namespace HC.DZWechat.Orders
         /// 会员Id
         /// </summary>
         public virtual Guid? UserId { get; set; }
+        public virtual string NickName { get; set; }
         /// <summary>
         /// 会员手机号
         /// </summary>

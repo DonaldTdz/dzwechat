@@ -1,0 +1,31 @@
+<nz-modal [(nzVisible)]="isVisible" nzMaskClosable="false" nzTitle="{{title}}" [nzContent]="modalContent" (nzOnCancel)="handleCancel($event)" style="width: 520px;" [nzFooter]="null">
+    <div class="padding-bottom-45">
+        <form nz-form #validateForm="ngForm" (ngSubmit)="save()" *ngIf="exchange">
+            <nz-alert style="margin-bottom:12px;" nzType="info" nzMessage="邮寄信息保存后系统自动将订单状态修改为'已兑换'" nzShowIcon></nz-alert>
+            <nz-form-item>
+                <nz-form-control nzHasFeedback>
+                    <input nz-input name="logisticsCompany" maxlength="50" #logisticsCompany="ngModel" [(ngModel)]="exchange.logisticsCompany" [placeholder]="'物流公司'" required>
+                    <nz-form-explain *ngIf="logisticsCompany.control.dirty&&logisticsCompany.control.errors">
+                        <ng-container *ngIf="logisticsCompany.control.hasError('required')">物流公司不能为空</ng-container>
+                    </nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-control nzHasFeedback>
+                    <input nz-input name="logisticsNo" maxlength="50" #logisticsNo="ngModel" [(ngModel)]="exchange.logisticsNo" [placeholder]="'物流单号'" required>
+                    <nz-form-explain *ngIf="logisticsNo.control.dirty&&logisticsNo.control.errors">
+                        <ng-container *ngIf="logisticsNo.control.hasError('required')">请输入物流单号</ng-container>
+                    </nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <div class="modal-footer">
+                <button nz-button type="button" [disabled]="loading" (click)="handleCancel()">
+                    取消
+                </button>
+                <button nz-button [nzType]="'primary'" type="submit" [disabled]="!validateForm.valid||loading">
+                    保存
+                </button>
+            </div>
+        </form>
+    </div>
+</nz-modal>

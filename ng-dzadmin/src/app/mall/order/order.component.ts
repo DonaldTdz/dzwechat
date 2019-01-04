@@ -49,6 +49,6 @@ export class OrderComponent extends PagedListingComponentBase<any> {
     }
 
     goDetail(id: string) {
-        this.router.navigate(['/app/mall/member-detail', id]);
+        this.router.navigate(['/app/mall/order-detail', id]);
     }
 }

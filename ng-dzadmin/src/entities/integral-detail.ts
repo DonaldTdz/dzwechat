@@ -1,6 +1,6 @@
 export class IntegralDetail {
     id: string;
-    openId: string;
+    userId: string;
     initialIntegral: number;
     integral: number;
     finalIntegral: number;
@@ -20,7 +20,7 @@ export class IntegralDetail {
     init(data?: any) {
         if (data) {
             this.id = data["id"];
-            this.openId = data["openId"];
+            this.userId = data["userId"];
             this.initialIntegral = data["initialIntegral"];
             this.integral = data["integral"];
             this.finalIntegral = data["finalIntegral"];
@@ -34,7 +34,7 @@ export class IntegralDetail {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["openId"] = this.openId;
+        data["userId"] = this.userId;
         data["initialIntegral"] = this.initialIntegral;
         data["integral"] = this.integral;
         data["finalIntegral"] = this.finalIntegral;

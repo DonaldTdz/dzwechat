@@ -47,6 +47,9 @@ export class GoodsComponent extends PagedListingComponentBase<Goods>{
         params.SkipCount = request.skipCount;
         params.MaxResultCount = request.maxResultCount;
         params.Filter = this.keyWord;
+        if (!this.cNodeKey) {
+            this.cNodeKey = 'root';
+        }
         params.NodeKey = this.cNodeKey;
         this.goodService.getAll(params)
             .finally(() => {
@@ -54,11 +57,16 @@ export class GoodsComponent extends PagedListingComponentBase<Goods>{
             })
             .subscribe((result: PagedResultDto) => {
                 this.dataList = result.items.map((i) => {
-                    i.showCoverPhoto = AppConsts.remoteServiceBaseUrl + i.coverPhoto;
+                    if (i.photoUrl) {
+                        if (i.photoUrl.indexOf(',') != -1) {
+                            let firstPhoto: string = i.photoUrl.split(',')[0];
+                            i.showPhotoUrl = AppConsts.remoteServiceBaseUrl + firstPhoto;
+                        } else {
+                            i.showPhotoUrl = AppConsts.remoteServiceBaseUrl + i.photoUrl;
+                        }
+                    }
                     return i;
                 });
-                console.log(this.dataList);
-
                 this.totalItems = result.totalCount;
             });
     }

@@ -57,7 +57,7 @@ namespace HC.DZWechat.Goods
         /// <summary>
         /// 搜索次数
         /// </summary>
-        public virtual int? SearchCount { get; set; }
+        public virtual int? SellCount { get; set; }
         /// <summary>
         /// 上架、下架
         /// </summary>

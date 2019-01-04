@@ -20,8 +20,8 @@ namespace HC.DZWechat.Deliverys
         /// <summary>
         /// 外键
         /// </summary>
-        [ForeignKey("UnionId")]
-        public virtual string UnionId { get; set; }
+        [ForeignKey("UserId")]
+        public virtual Guid UserId { get; set; }
         /// <summary>
         /// 联系人电话
         /// </summary>

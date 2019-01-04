@@ -15,6 +15,8 @@ import { MemberDetailComponent } from './member/member-detail/member-detail.comp
 import { CategoryComponent } from './goods/category/category.component';
 import { CategoryDetailComponent } from './goods/category/category-detail/category-detail.component';
 import { GoodsDetailComponent } from './goods/goods-detail/goods-detail.component';
+import { OrderDetailComponent } from './order/order-detail/order-detail.component';
+import { ExchangeDetailComponent } from './order/order-detail/exchange-detail/exchange-detail.component';
 
 @NgModule({
     imports: [
@@ -36,6 +38,8 @@ import { GoodsDetailComponent } from './goods/goods-detail/goods-detail.componen
         CategoryComponent,
         CategoryDetailComponent,
         GoodsDetailComponent,
+        OrderDetailComponent,
+        ExchangeDetailComponent,
     ],
     entryComponents: [
         GoodsComponent,
@@ -47,6 +51,8 @@ import { GoodsDetailComponent } from './goods/goods-detail/goods-detail.componen
         CategoryComponent,
         CategoryDetailComponent,
         GoodsDetailComponent,
+        OrderDetailComponent,
+        ExchangeDetailComponent,
     ],
     providers: [WechatUserService, IntegralDetailService, OrderService, GoodsService]
 })

@@ -13,14 +13,14 @@ namespace  HC.DZWechat.Orders.Dtos
         /// <summary>
         /// Id
         /// </summary>
-        public Guid? Id { get; set; }         
+        public Guid? Id { get; set; }
 
+        public string NickName { get; set; }
 
-        
-		/// <summary>
-		/// Number
-		/// </summary>
-		[Required(ErrorMessage="Number不能为空")]
+        /// <summary>
+        /// Number
+        /// </summary>
+        [Required(ErrorMessage="Number不能为空")]
 		public string Number { get; set; }
 
 

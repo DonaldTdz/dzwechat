@@ -30,12 +30,13 @@ namespace  HC.DZWechat.WechatUsers.Dtos
 		[Required(ErrorMessage="OpenId不能为空")]
 		public string OpenId { get; set; }
 
+        public string WxOpenId { get; set; }
 
 
-		/// <summary>
-		/// UnionId
-		/// </summary>
-		public string UnionId { get; set; }
+        /// <summary>
+        /// UnionId
+        /// </summary>
+        public string UnionId { get; set; }
 
 
 

@@ -81,7 +81,7 @@ namespace HC.DZWechat.Goods.Dtos
 		/// <summary>
 		/// SearchCount
 		/// </summary>
-		public int? SearchCount { get; set; }
+		public int? SellCount { get; set; }
 
 
 

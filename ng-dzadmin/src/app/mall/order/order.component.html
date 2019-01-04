@@ -21,30 +21,32 @@
         <thead>
             <tr>
                 <th>订单编号</th>
+                <th>会员昵称</th>
                 <th>会员手机号</th>
                 <th>订单积分</th>
                 <th>订单状态</th>
                 <th>支付时间</th>
-                <th>完成时间</th>
+                <!-- <th>完成时间</th> -->
                 <th>收货人姓名</th>
                 <th>收货人电话</th>
-                <th>收货人地址</th>
-                <th>备注</th>
+                <!-- <th>收货人地址</th> -->
+                <!-- <th>备注</th> -->
                 <th>操作</th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let item of ajaxTable.data">
                 <td>{{item.number}}</td>
+                <td>{{item.nickName}}</td>
                 <td>{{item.phone}}</td>
                 <td>{{item.integral}}</td>
-                <td>{{item.status}}</td>
-                <td>{{item.payTime}}</td>
-                <td>{{item.completeTime}}</td>
+                <td>{{item.statusName}}</td>
+                <td>{{item.payTime| _date}}</td>
+                <!-- <td>{{item.completeTime| _date}}</td> -->
                 <td>{{item.deliveryName}}</td>
                 <td>{{item.deliveryPhone}}</td>
-                <td>{{item.deliveryAddress}}</td>
-                <td>{{item.remark}}</td>
+                <!-- <td>{{item.deliveryAddress| lengthLimit:9}}</td> -->
+                <!-- <td>{{item.remark}}</td> -->
                 <td>
                     <a (click)="goDetail(item.id)">详情</a>
                 </td>

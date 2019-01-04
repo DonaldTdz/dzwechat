@@ -4,7 +4,7 @@
             <div nz-col [nzSpan]="16">
                 <nz-form-item *ngIf="goods.id" nz-row style="margin-bottom: 0px;">
                     <nz-form-label nz-col [nzSm]="4" nzRequired>状态</nz-form-label>
-                    <nz-form-control nz-col [nzSm]="20" [ngStyle]="{color: goods.isAction? 'rgb(247, 98, 158)':'gray'}">
+                    <nz-form-control nz-col [nzSm]="20" [ngStyle]="{color: goods.isAction? 'rgb(82, 196, 26)':'gray'}">
                         {{goods.isAction==true?"上架中":"已下架"}}
                     </nz-form-control>
                 </nz-form-item>
@@ -72,6 +72,34 @@
                         <textarea nz-input row="3" name="desc" #desc="ngModel" [(ngModel)]="goods.desc" [placeholder]="'请输入商品描述信息'"></textarea>
                     </nz-form-control>
                 </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nz-col [nzSm]="4" nzRequired>商品图片</nz-form-label>
+                    <nz-form-control [nzSm]="20" nzHasFeedback>
+                        <div class="clearfix">
+                            <nz-upload nzAction="{{actionUrl}}" [nzName]="'image'" nzListType="picture-card" [(nzFileList)]="fileList" [nzShowButton]="fileList.length < 4" (nzChange)="handleChange($event)" [nzRemove]="handleRemove" [nzPreview]="handlePreview">
+                                <i nz-icon type="plus"></i>
+                                <div class="ant-upload-text">添加图片</div>
+                            </nz-upload>
+                            <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null" (nzOnCancel)="previewVisible=false">
+                                <ng-template #modalContent>
+                                    <img [src]="previewImage" [ngStyle]="{ 'width': '100%' }" />
+                                </ng-template>
+                            </nz-modal>
+                        </div>
+                        <!-- <nz-upload class="avatar-uploader" nzAction="{{actionUrl}}" nzName="avatar" nzListType="picture-card" [nzShowUploadList]="false" [nzBeforeUpload]="beforeUpload"  (nzChange)="handleChange($event)">
+                            <ng-container *ngIf="!avatarUrl">
+                                <i nz-icon type="plus"></i>
+                                <div class="ant-upload-text">添加图片</div>
+                            </ng-container>
+                            <img *ngIf="fileList[0]" [src]="fileList[0]" class="avatar">
+                        </nz-upload> -->
+                        <nz-alert nzType="info" nzMessage="第1张为封面图片且最多上传4张图片" nzShowIcon></nz-alert>
+
+                        <!-- <div style="color:red;">
+                            注: 
+                        </div> -->
+                    </nz-form-control>
+                </nz-form-item>
                 <!-- <nz-form-item nz-row>
                     <nz-form-label nz-col [nzSm]="4" nzRequired>状态</nz-form-label>
                     <nz-form-control nz-col [nzSm]="20">
@@ -89,7 +117,7 @@
                     下架
                 </button>
             <button nz-button *ngIf="goods.id && !isOnline" [nzType]="'primary'" type="button" (click)="online()" [nzLoading]="loading" [disabled]="!validateForm.valid || loading">
-                            上架
+                    上架
                         </button>
             <button nz-button [nzType]="'primary'" type="submit" [disabled]="!validateForm.valid || loading">
                 保存

@@ -7,20 +7,16 @@
             </ul>
         </div>
         <div nz-col [nzSm]="20" [nzSpan]="20">
-            <!-- <ng-template #extraTpl> -->
-            <div nz-row >
-                <div nz-col [nzOffset]="22" [nzSpan]="2">
+            <ng-template #extraTpl>
                 <button nz-button (click)="refresh()" nzShape="circle">
                     <i class="anticon anticon-reload"></i>
                 </button>
                 <button nz-button (click)="create()" nzShape="circle" nzType="primary">
                     <i class="anticon anticon-plus"></i>
                 </button>
-            </div>
-            </div>
-            <!-- </ng-template> -->
-            <nz-table #ajaxTable nzShowSizeChanger [nzData]="dataList" [nzTotal]="totalItems" [(nzPageIndex)]="pageNumber" [(nzPageSize)]="pageSize"
-                [nzLoading]="isTableLoading" (nzPageIndexChange)="refresh()" (nzPageSizeChange)="refresh()" [nzFrontPagination]="false">
+            </ng-template>
+
+            <nz-table #ajaxTable nzShowSizeChanger [nzData]="dataList" [nzTotal]="totalItems" [(nzPageIndex)]="pageNumber" [(nzPageSize)]="pageSize" [nzLoading]="isTableLoading" (nzPageIndexChange)="refresh()" (nzPageSizeChange)="refresh()" [nzFrontPagination]="false">
                 <thead>
                     <tr>
                         <th>封面图片</th>
@@ -39,18 +35,17 @@
                 <tbody>
                     <tr *ngFor="let item of ajaxTable.data">
                         <td>
-                            <nz-avatar [nzSrc]="(item.coverPhoto|hostUrl)" style="width:80px;height: 80px;" (click)="handlePreview(item.coverPhoto)"
-                                [nzSize]="'large'" [nzShape]="'square'"></nz-avatar>
+                            <nz-avatar [nzSrc]="(item.showCoverPhoto)" style="width:80px;height: 80px;" (click)="handlePreview(item.showCoverPhoto)" [nzSize]="'large'" [nzShape]="'square'"></nz-avatar>
                         </td>
                         <td>{{item.title}}</td>
                         <td>{{item.author}}</td>
                         <!-- <td>{{item.typeName}}</td>
                         <td>{{item.content}}</td> -->
                         <td>{{item.pushStatusName}}</td>
-                        <td>{{item.pushTime| _date}}</td>
+                        <td>{{item.pushTime}}</td>
                         <!-- <td>{{item.linkTypeName}}</td>
                         <td>{{item.linkAddress}}</td> -->
-                        <td>{{item.creationTime| _date}}</td>
+                        <td>{{item.creationTime| _date: 'YYYY-MM-DD'}}</td>
                         <td>
                             <a (click)="edit(item)">详情</a>
                             <!-- <nz-divider nzType="vertical"></nz-divider> -->
@@ -62,7 +57,7 @@
         </div>
         <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null" (nzOnCancel)="previewVisible=false">
             <ng-template #modalContent>
-                <img [src]="(previewImage|hostUrl)" [ngStyle]="{ 'width': '100%' }" />
+                <img [src]="(previewImage)" [ngStyle]="{ 'width': '100%' }" />
             </ng-template>
         </nz-modal>
     </div>

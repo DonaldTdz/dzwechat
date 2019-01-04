@@ -101,11 +101,13 @@ namespace HC.DZWechat.Goods
                                 Specification = g.Specification,
                                 Unit = g.Unit,
                                 CategoryName = c.Name,
-                                Stock = g.Stock,
-                                BarCode = g.BarCode,
+                                PhotoUrl = g.PhotoUrl,
+                                //Stock = g.Stock,
+                                //BarCode = g.BarCode,
                                 //Desc = g.Desc,
                                 //ExchangeCode = g.ExchangeCode,
-                                //Integral = g.Integral,
+                                OnlineTime = g.OnlineTime,
+                                Integral = g.Integral,
                                 IsAction = g.IsAction
                             };
                 var count = await query.CountAsync();

@@ -16,21 +16,16 @@ namespace  HC.DZWechat.IntegralDetails.Dtos
         public Guid? Id { get; set; }
 
         /// <summary>
-        /// 外键
+        /// UserId
         /// </summary>
-        public string UnionId { get; set; }
+        public Guid UserId { get; set; }
+
+
 
         /// <summary>
-        /// OpenId
+        /// InitialIntegral
         /// </summary>
-        public string OpenId { get; set; }
-
-
-
-		/// <summary>
-		/// InitialIntegral
-		/// </summary>
-		public decimal? InitialIntegral { get; set; }
+        public decimal? InitialIntegral { get; set; }
 
 
 

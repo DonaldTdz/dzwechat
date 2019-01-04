@@ -14,7 +14,7 @@ namespace HC.DZWechat.EntityMapper.IntegralDetails
             builder.ToTable("IntegralDetails", YoYoAbpefCoreConsts.SchemaNames.CMS);
 
             
-			builder.Property(a => a.OpenId).HasMaxLength(YoYoAbpefCoreConsts.EntityLengthNames.Length64);
+			builder.Property(a => a.UserId).HasMaxLength(YoYoAbpefCoreConsts.EntityLengthNames.Length64);
 			builder.Property(a => a.InitialIntegral).HasMaxLength(YoYoAbpefCoreConsts.EntityLengthNames.Length64);
 			builder.Property(a => a.Integral).HasMaxLength(YoYoAbpefCoreConsts.EntityLengthNames.Length64);
 			builder.Property(a => a.FinalIntegral).HasMaxLength(YoYoAbpefCoreConsts.EntityLengthNames.Length64);

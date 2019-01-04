@@ -12,17 +12,13 @@ namespace HC.DZWechat.IntegralDetails.Dtos
     public class IntegralDetailListDto : EntityDto<Guid>, IHasCreationTime
     {
 
-        
-		/// <summary>
-		/// OpenId
-		/// </summary>
-		public string OpenId { get; set; }
-
 
         /// <summary>
-        /// 外键
+        /// UserId
         /// </summary>
-        public string UnionId { get; set; }
+        public Guid UserId { get; set; }
+
+
         /// <summary>
         /// InitialIntegral
         /// </summary>

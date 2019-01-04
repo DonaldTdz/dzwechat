@@ -9,6 +9,7 @@ import { ShopComponent } from './shop/shop.component';
 import { VipComponent } from './vip/vip.component';
 import { MemberDetailComponent } from './member/member-detail/member-detail.component';
 import { GoodsDetailComponent } from './goods/goods-detail/goods-detail.component';
+import { OrderDetailComponent } from './order/order-detail/order-detail.component';
 
 const routes: Routes = [
     {
@@ -39,6 +40,11 @@ const routes: Routes = [
     {
         path: 'order',
         component: OrderComponent,
+        canActivate: [AppRouteGuard],
+    },
+    {
+        path: 'order-detail/:id',
+        component: OrderDetailComponent,
         canActivate: [AppRouteGuard],
     },
     {

@@ -60,5 +60,17 @@ namespace HC.DZWechat.DZEnums
         {
             外部链接=1,
         }
+
+        public enum ExchangeStatus
+        {
+            未兑换 = 1,
+            已兑换 = 2,
+        }
+
+        public enum ExchangeCode
+        {
+            线下兑换 = 1,
+            邮寄兑换 = 2,
+        }
     }
 }

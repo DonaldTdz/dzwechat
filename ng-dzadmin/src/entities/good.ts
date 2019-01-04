@@ -9,13 +9,14 @@ export class Goods {
     categoryId: number;
     integral: number;
     barCode: string;
-    searchCount: number;
+    sellCount: number;
     isAction: boolean;
     creationTime: Date;
     creatorUserId: number;
     categoryName: string;
     onlineTime: Date;
     offlineTime: Date;
+    showPhotoUrl: string;
     constructor(data?: any) {
         if (data) {
             for (var property in data) {
@@ -36,7 +37,7 @@ export class Goods {
             this.categoryId = data["categoryId"];
             this.integral = data["integral"];
             this.barCode = data["barCode"];
-            this.searchCount = data["searchCount"];
+            this.sellCount = data["sellCount"];
             this.isAction = data["isAction"];
             this.creationTime = data["creationTime"];
             this.creatorUserId = data["creatorUserId"];
@@ -57,7 +58,7 @@ export class Goods {
         data["categoryId"] = this.categoryId;
         data["integral"] = this.integral;
         data["barCode"] = this.barCode;
-        data["searchCount"] = this.searchCount;
+        data["sellCount"] = this.sellCount;
         data["isAction"] = this.isAction;
         data["creationTime"] = this.creationTime;
         data["creatorUserId"] = this.creatorUserId;
