@@ -13,9 +13,18 @@ import { WechatSubscribe } from 'entities';
     styles: [],
 })
 export class WechatConfigComponent extends PagedListingComponentBase<any> {
-    param: any = {};
+    param: any = { triType: 0, msType: 0 };
     mesText = '';
-
+    triggerTypesMe = [
+        { value: 0, text: '全部' },
+        { value: 1, text: '关键字' },
+        { value: 2, text: '点击事件' },
+    ];
+    msgTypesMe = [
+        { value: 0, text: '全部' },
+        { value: 1, text: '文字消息' },
+        { value: 2, text: '图文消息' }
+    ];
     //图文消息
     wechatSubscribe: WechatSubscribe = new WechatSubscribe();
     isConfirmLoadingDe = false;
@@ -37,8 +46,7 @@ export class WechatConfigComponent extends PagedListingComponentBase<any> {
         //图文消息
         this.getSubScribe();
         //关注回复
-        this.param.mesText = this.mesText;
-        this.messageService.getMessagePage(this.param).finally(() => {
+        this.messageService.getMessagePage(this.getParameter()).finally(() => {
             finishedCallback();
         }).subscribe((result: PagedResultDto) => {
             this.dataList = result.items;
@@ -78,6 +86,13 @@ export class WechatConfigComponent extends PagedListingComponentBase<any> {
                 }
             }
         );
+    }
+    getParameter(): any {
+        var arry: any = {};
+        arry.MesText = this.param.mesText;
+        arry.TriggerType = this.param.triType == 0 ? null : this.param.triType;
+        arry.MsgType = this.param.msType === 0 ? null : this.param.msType;
+        return arry;
     }
     //#endregion
 

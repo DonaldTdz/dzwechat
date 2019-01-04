@@ -8,7 +8,7 @@
     <form nz-form #validateForm="ngForm" (ngSubmit)="save()" *ngIf="wechatMessageE">
         <!-- 触发类型 -->
         <nz-form-item nz-row>
-            <nz-form-label nz-col [nzSm]="5" [nzXs]="24" nzRequired nzFor="type">资讯分类</nz-form-label>
+            <nz-form-label nz-col [nzSm]="5" [nzXs]="24" nzRequired nzFor="type">回复类型</nz-form-label>
             <nz-form-control nz-col [nzSm]="19" nzHasFeedback>
                 <nz-select name="triggerType" #triggertype="ngModel" [(ngModel)]="wechatMessageE.triggerType" autocomplete="triggerType">
                     <nz-option *ngFor="let i of triggerTypes" [nzLabel]="i.text" [nzValue]="i.value">
@@ -50,8 +50,8 @@
         <nz-form-item *ngIf="wechatMessageE.msgType==1">
             <nz-form-label [nzSm]="5" [nzXs]="24" nzRequired nzFor="content">回复内容</nz-form-label>
             <nz-form-control [nzSm]="19">
-                <textarea nz-input name="content" #content="ngModel" [(ngModel)]="wechatMessageE.content" [placeholder]="'活动内容'" nzAutosize
-                    maxlength="200" autocomplete="content" required></textarea>
+                <textarea nz-input name="content" #content="ngModel" [(ngModel)]="wechatMessageE.content" maxlength="200" autocomplete="content"
+                    required [nzAutosize]="{ minRows: 6, maxRows: 10 }"></textarea>
                 <nz-form-explain *ngIf="content.control.dirty&&content.control.errors">
                     <ng-container *ngIf="content.control.hasError('required')">{{l('CanNotNull')}}</ng-container>
                     <ng-container *ngIf="content.control.hasError('maxlength')">{{l('MaxLength')}}</ng-container>
@@ -72,17 +72,7 @@
                 </nz-form-control>
             </nz-form-item>
 
-            <!-- 描述 -->
-            <nz-form-item nz-row>
-                <nz-form-label nz-col [nzSm]="5" [nzXs]="24" nzRequired nzFor="desc">描述</nz-form-label>
-                <nz-form-control nz-col [nzSm]="19" nzHasFeedback>
-                    <input nz-input name="desc" #desc="ngModel" [(ngModel)]="wechatMessageE.desc" autocomplete="desc" maxlength="200" required>
-                    <nz-form-explain *ngIf="desc.control.dirty&&desc.control.errors">
-                        <ng-container *ngIf="desc.control.hasError('required')">{{l('CanNotNull')}}</ng-container>
-                        <ng-container *ngIf="desc.control.hasError('maxlength')">{{l('MaxLength')}}</ng-container>
-                    </nz-form-explain>
-                </nz-form-control>
-            </nz-form-item>
+
 
             <!-- 图片链接 -->
             <nz-form-item nz-row>
@@ -104,6 +94,19 @@
                     <nz-form-explain *ngIf="url.control.dirty&&url.control.errors">
                         <ng-container *ngIf="url.control.hasError('required')">{{l('CanNotNull')}}</ng-container>
                         <ng-container *ngIf="url.control.hasError('maxlength')">{{l('MaxLength')}}</ng-container>
+                    </nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+
+            <!-- 描述 -->
+            <nz-form-item nz-row>
+                <nz-form-label nz-col [nzSm]="5" [nzXs]="24" nzRequired nzFor="desc">描述</nz-form-label>
+                <nz-form-control nz-col [nzSm]="19" nzHasFeedback>
+                    <textarea nz-input name="desc" #desc="ngModel" [(ngModel)]="wechatMessageE.desc" autocomplete="desc" maxlength="200" required
+                        [nzAutosize]="{ minRows: 3, maxRows: 6 }"></textarea>
+                    <nz-form-explain *ngIf="desc.control.dirty&&desc.control.errors">
+                        <ng-container *ngIf="desc.control.hasError('required')">{{l('CanNotNull')}}</ng-container>
+                        <ng-container *ngIf="desc.control.hasError('maxlength')">{{l('MaxLength')}}</ng-container>
                     </nz-form-explain>
                 </nz-form-control>
             </nz-form-item>

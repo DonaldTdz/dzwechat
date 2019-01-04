@@ -1,7 +1,87 @@
 <page-header [title]="'微信配置'"></page-header>
 <nz-tabset>
 
-    <nz-tab [nzTitle]="'图文消息'">
+    <nz-tab [nzTitle]="'消息回复'">
+        <nz-card>
+            <div nz-row class="mb-md">
+                <div nz-col [nzSpan]="7">
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="5" [nzXs]="24" nzFor="type">回复类型</nz-form-label>
+                        <nz-form-control nz-col [nzSm]="19">
+                            <nz-select style="width: 100%;" name="triType" #triType="ngModel" [(ngModel)]="param.triType">
+                                <nz-option *ngFor="let i of triggerTypesMe" [nzLabel]="i.text" [nzValue]="i.value">
+                                </nz-option>
+                            </nz-select>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="7">
+                    <nz-form-label nz-col [nzSm]="5" [nzXs]="24" nzFor="type">消息类型</nz-form-label>
+                    <nz-form-control nz-col [nzSm]="19">
+                        <nz-select name="msType" style="width: 100%;" #msType="ngModel" [(ngModel)]="param.msType">
+                            <nz-option *ngFor="let i of msgTypesMe" [nzLabel]="i.text" [nzValue]="i.value">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </div>
+                <div nz-col [nzSpan]="6">
+                    <nz-form-label [nzSm]="8" [nzXs]="24" nzFor="mesText">关键字/事件Key</nz-form-label>
+                    <nz-form-control [nzSm]="16">
+                        <input nz-input name="mesText" #mesText="ngModel" [(ngModel)]="param.mesText" [placeholder]="'请输入关键字/事件Key'">
+                    </nz-form-control>
+                    <!-- <nz-input-group nzSearch [nzSuffix]="suffixButton">
+                        <input type="text" [(ngModel)]="mesText" nz-input placeholder="请输入关键字/事件Key">
+                    </nz-input-group>
+                    <ng-template #suffixButton>
+                        <button nz-button nzType="primary" [nzLoading]="isTableLoading" (click)="refresh()" nzSearch>搜索</button>
+                    </ng-template> -->
+                </div>
+                <div nz-col [nzSpan]="4" style="float:right;text-align: right; padding-left:0px">
+                    <button nz-button (click)="refresh()" nzType="primary">
+                        搜索
+                    </button>
+                    <button nz-button (click)="create()" nzType="primary">
+                        <i class="anticon anticon-plus"></i>
+                        <span>新建</span>
+                    </button>
+                </div>
+            </div>
+            <ng-template #totalTemplate let-total>共 {{totalItems}} 条</ng-template>
+            <nz-table #ajaxTable nzShowSizeChanger [nzData]="dataList" [nzShowTotal]="totalTemplate" [nzTotal]="totalItems" [(nzPageIndex)]="pageNumber"
+                [(nzPageSize)]="pageSize" [nzLoading]="isTableLoading" (nzPageIndexChange)="refresh()" (nzPageSizeChange)="refresh()"
+                [nzFrontPagination]="false">
+                <thead>
+                    <tr>
+                        <th>关键字/事件Key</th>
+                        <!-- <th>匹配模式（枚举 精准匹配、模糊匹配）</th> -->
+                        <th>回复类型</th>
+                        <th>消息类型</th>
+                        <th>回复内容</th>
+                        <th>文章地址</th>
+                        <th>操作</th>
+                    </tr>
+
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of ajaxTable.data">
+                        <td>{{item.keyWord}}</td>
+                        <!-- <td>{{item.matchMode}}</td> -->
+                        <td>{{item.triggerTypeName}}</td>
+                        <td>{{item.msgTypeName}}</td>
+                        <td>{{item.content}}</td>
+                        <td>{{item.url}}</td>
+                        <td>
+                            <a (click)="edit(item)">编辑</a>
+                            <nz-divider nzType="vertical"></nz-divider>
+                            <a (click)="delete(item)">删除</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </nz-card>
+    </nz-tab>
+
+    <nz-tab [nzTitle]="'关注回复'">
         <form nz-form #validateForm="ngForm" (ngSubmit)="saveSub()" *ngIf="wechatSubscribe">
             <!-- 消息类型 -->
             <nz-form-item nz-row>
@@ -22,8 +102,8 @@
             <nz-form-item *ngIf="wechatSubscribe.msgType==1">
                 <nz-form-label [nzSm]="5" [nzXs]="24" nzRequired nzFor="content">回复内容</nz-form-label>
                 <nz-form-control [nzSm]="19">
-                    <textarea nz-input name="content" #content="ngModel" [(ngModel)]="wechatSubscribe.content" [placeholder]="'活动内容'" nzAutosize
-                        maxlength="200" autocomplete="content" required></textarea>
+                    <textarea nz-input name="content" #content="ngModel" [(ngModel)]="wechatSubscribe.content" [placeholder]="'活动内容'" maxlength="200"
+                        autocomplete="content" [nzAutosize]="{ minRows: 6}" required></textarea>
                     <nz-form-explain *ngIf="content.control.dirty&&content.control.errors">
                         <ng-container *ngIf="content.control.hasError('required')">{{l('CanNotNull')}}</ng-container>
                         <ng-container *ngIf="content.control.hasError('maxlength')">{{l('MaxLength')}}</ng-container>
@@ -40,18 +120,6 @@
                         <nz-form-explain *ngIf="title.control.dirty&&title.control.errors">
                             <ng-container *ngIf="title.control.hasError('required')">{{l('CanNotNull')}}</ng-container>
                             <ng-container *ngIf="title.control.hasError('maxlength')">{{l('MaxLength')}}</ng-container>
-                        </nz-form-explain>
-                    </nz-form-control>
-                </nz-form-item>
-
-                <!-- 描述 -->
-                <nz-form-item nz-row>
-                    <nz-form-label nz-col [nzSm]="5" [nzXs]="24" nzRequired nzFor="desc">描述</nz-form-label>
-                    <nz-form-control nz-col [nzSm]="19" nzHasFeedback>
-                        <input nz-input name="desc" #desc="ngModel" [(ngModel)]="wechatSubscribe.desc" autocomplete="desc" maxlength="200" required>
-                        <nz-form-explain *ngIf="desc.control.dirty&&desc.control.errors">
-                            <ng-container *ngIf="desc.control.hasError('required')">{{l('CanNotNull')}}</ng-container>
-                            <ng-container *ngIf="desc.control.hasError('maxlength')">{{l('MaxLength')}}</ng-container>
                         </nz-form-explain>
                     </nz-form-control>
                 </nz-form-item>
@@ -79,6 +147,19 @@
                         </nz-form-explain>
                     </nz-form-control>
                 </nz-form-item>
+
+                <!-- 描述 -->
+                <nz-form-item nz-row>
+                    <nz-form-label nz-col [nzSm]="5" [nzXs]="24" nzRequired nzFor="desc">描述</nz-form-label>
+                    <nz-form-control nz-col [nzSm]="19" nzHasFeedback>
+                        <textarea nz-input name="desc" #desc="ngModel" [(ngModel)]="wechatSubscribe.desc" autocomplete="desc" maxlength="200" required
+                            [nzAutosize]="{ minRows: 6}"></textarea>
+                        <nz-form-explain *ngIf="desc.control.dirty&&desc.control.errors">
+                            <ng-container *ngIf="desc.control.hasError('required')">{{l('CanNotNull')}}</ng-container>
+                            <ng-container *ngIf="desc.control.hasError('maxlength')">{{l('MaxLength')}}</ng-container>
+                        </nz-form-explain>
+                    </nz-form-control>
+                </nz-form-item>
             </div>
 
             <footer-toolbar>
@@ -89,63 +170,10 @@
                     {{l("保存")}}
                 </button>
                 <!-- <button nz-button [nzType]="'primary'" type="submit" [disabled]="!validateForm.valid||saving" [nzLoading]="isConfirmLoadingSa">
-                    {{l("保存")}}
-                </button> -->
+                        {{l("保存")}}
+                    </button> -->
             </footer-toolbar>
         </form>
     </nz-tab>
 
-    <nz-tab [nzTitle]="'关注回复'">
-        <nz-card>
-            <div nz-row class="mb-md">
-                <div nz-col [nzSpan]="20">
-                    <!-- <nz-form-label [nzSm]="5" [nzXs]="24" nzRequired nzFor="mesText">关键字</nz-form-label>
-                    <nz-form-control [nzSm]="15" nzHasFeedback>
-                        <input nz-input name="mesText" #title="ngModel" [(ngModel)]="mesText" [placeholder]="'请输入关键字'">
-                    </nz-form-control> -->
-                    <nz-input-group nzSearch [nzSuffix]="suffixButton">
-                        <input type="text" [(ngModel)]="mesText" nz-input placeholder="请输入关键字">
-                    </nz-input-group>
-                    <ng-template #suffixButton>
-                        <button nz-button nzType="primary" [nzLoading]="isTableLoading" (click)="refresh()" nzSearch>搜索</button>
-                    </ng-template>
-                </div>
-                <div nz-col [nzSpan]="2" style="float:right;text-align: right; padding-left:0px">
-                    <button nz-button (click)="create()" nzShape="circle" nzType="primary">
-                        <i class="anticon anticon-plus"></i>
-                    </button>
-                </div>
-            </div>
-            <ng-template #totalTemplate let-total>共 {{totalItems}} 条</ng-template>
-            <nz-table #ajaxTable nzShowSizeChanger [nzData]="dataList" [nzShowTotal]="totalTemplate" [nzTotal]="totalItems" [(nzPageIndex)]="pageNumber"
-                [(nzPageSize)]="pageSize" [nzLoading]="isTableLoading" (nzPageIndexChange)="refresh()" (nzPageSizeChange)="refresh()"
-                [nzFrontPagination]="false">
-                <thead>
-                    <tr>
-                        <th>关键字</th>
-                        <!-- <th>匹配模式（枚举 精准匹配、模糊匹配）</th> -->
-                        <th>消息类型</th>
-                        <th>回复内容</th>
-                        <th>文章地址</th>
-                        <th>操作</th>
-                    </tr>
-
-                </thead>
-                <tbody>
-                    <tr *ngFor="let item of ajaxTable.data">
-                        <td>{{item.keyWord}}</td>
-                        <!-- <td>{{item.matchMode}}</td> -->
-                        <td>{{item.msgTypeName}}</td>
-                        <td>{{item.content}}</td>
-                        <td>{{item.url}}</td>
-                        <td>
-                            <a (click)="edit(item)">编辑</a>
-                            <nz-divider nzType="vertical"></nz-divider>
-                            <a (click)="delete(item)">删除</a>
-                        </td>
-                    </tr>
-                </tbody>
-            </nz-table>
-        </nz-card>
-    </nz-tab>
 </nz-tabset>

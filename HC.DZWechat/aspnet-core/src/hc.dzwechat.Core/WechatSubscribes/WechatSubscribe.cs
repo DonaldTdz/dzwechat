@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using static HC.DZWechat.DZEnums.DZEnums;
 
 namespace HC.DZWechat.WechatSubscribes
 {
@@ -45,10 +46,6 @@ namespace HC.DZWechat.WechatSubscribes
 
     }
 
-    public enum MsgTypeEnum
-    {
-        文字消息 = 1,
-        图文消息 = 2
-    }
+   
 
 }

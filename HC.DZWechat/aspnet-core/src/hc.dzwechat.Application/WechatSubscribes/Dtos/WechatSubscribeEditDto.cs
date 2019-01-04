@@ -3,6 +3,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using Abp.Domain.Entities.Auditing;
 using HC.DZWechat.WechatSubscribes;
+using static HC.DZWechat.DZEnums.DZEnums;
 
 namespace  HC.DZWechat.WechatSubscribes.Dtos
 {

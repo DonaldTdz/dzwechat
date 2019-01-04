@@ -68,5 +68,20 @@ namespace HC.DZWechat.DZEnums
         {
             精准匹配 = 1,
         }
+
+        /// <summary>
+        /// 触发类型
+        /// </summary>
+        public enum TriggerTypeEnum
+        {
+            关键字 = 1,
+            点击事件 = 2
+        }
+
+        public enum MsgTypeEnum
+        {
+            文字消息 = 1,
+            图文消息 = 2
+        }
     }
 }
