@@ -6,13 +6,13 @@ using HC.DZWechat.WechatSubscribes;
 
 namespace  HC.DZWechat.WechatSubscribes.Dtos
 {
-    public class WechatSubscribeEditDto
+    public class WechatSubscribeEditDto:AuditedEntity<Guid?>
     {
 
-        /// <summary>
-        /// Id
-        /// </summary>
-        public Guid? Id { get; set; }         
+        ///// <summary>
+        ///// Id
+        ///// </summary>
+        //public Guid? Id { get; set; }         
 
 
         
@@ -27,37 +27,56 @@ namespace  HC.DZWechat.WechatSubscribes.Dtos
 		/// <summary>
 		/// Content
 		/// </summary>
-		[Required(ErrorMessage="Content不能为空")]
+		//[Required(ErrorMessage="Content不能为空")]
 		public string Content { get; set; }
 
 
+        /// <summary>
+        /// 标题
+        /// </summary>
+        public virtual string Title { get; set; }
 
-		/// <summary>
-		/// CreationTime
-		/// </summary>
-		[Required(ErrorMessage="CreationTime不能为空")]
-		public DateTime CreationTime { get; set; }
+        /// <summary>
+        /// 描述
+        /// </summary>
+        public virtual string Desc { get; set; }
+
+        /// <summary>
+        /// 图片链接
+        /// </summary>
+        public virtual string PicLink { get; set; }
+
+        /// <summary>
+        /// 文章连接
+        /// </summary>
+        public virtual string Url { get; set; }
+
+        ///// <summary>
+        ///// CreationTime
+        ///// </summary>
+        //[Required(ErrorMessage="CreationTime不能为空")]
+        //public DateTime CreationTime { get; set; }
 
 
 
-		/// <summary>
-		/// CreatorUserId
-		/// </summary>
-		public long? CreatorUserId { get; set; }
+        ///// <summary>
+        ///// CreatorUserId
+        ///// </summary>
+        //public long? CreatorUserId { get; set; }
 
 
 
-		/// <summary>
-		/// LastModificationTime
-		/// </summary>
-		public DateTime? LastModificationTime { get; set; }
+        ///// <summary>
+        ///// LastModificationTime
+        ///// </summary>
+        //public DateTime? LastModificationTime { get; set; }
 
 
 
-		/// <summary>
-		/// LastModifierUserId
-		/// </summary>
-		public long? LastModifierUserId { get; set; }
+        ///// <summary>
+        ///// LastModifierUserId
+        ///// </summary>
+        //public long? LastModifierUserId { get; set; }
 
 
 

@@ -38,7 +38,7 @@ namespace HC.DZWechat.WechatMessages
         /// 回复内容
         /// </summary>
         [StringLength(200)]
-        [Required]
+        //[Required]
         public virtual string Content { get; set; }
         /// <summary>
         /// 标题

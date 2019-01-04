@@ -19,7 +19,6 @@ namespace HC.DZWechat.WechatSubscribes.Dtos
 		public MsgTypeEnum MsgType { get; set; }
 
 
-
 		/// <summary>
 		/// Content
 		/// </summary>
@@ -27,5 +26,24 @@ namespace HC.DZWechat.WechatSubscribes.Dtos
 		public string Content { get; set; }
 
 
+        /// <summary>
+        /// 标题
+        /// </summary>
+        public virtual string Title { get; set; }
+
+        /// <summary>
+        /// 描述
+        /// </summary>
+        public virtual string Desc { get; set; }
+
+        /// <summary>
+        /// 图片链接
+        /// </summary>
+        public virtual string PicLink { get; set; }
+
+        /// <summary>
+        /// 文章连接
+        /// </summary>
+        public virtual string Url { get; set; }
     }
 }

@@ -5,3 +5,5 @@ export * from './order';
 export * from './good';
 export * from './category';
 export * from './delivery';
+export * from './wechatmessage';
+export * from './wechatsubscribe';

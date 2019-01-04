@@ -3,10 +3,10 @@ import { Observer, Observable } from "rxjs";
 import { CommonHttpClient } from "services/common-httpclient";
 import { map } from "rxjs/operators";
 import { PagedResultDto } from "@shared/component-base";
-import { WechatMessage } from "entities";
+import { WechatSubscribe } from "entities";
 
 @Injectable()
-export class WeChatMessageService {
+export class WechatSubscribeService {
     private _commonhttp: CommonHttpClient;
 
     constructor(@Inject(CommonHttpClient) commonhttp: CommonHttpClient) {
@@ -14,37 +14,34 @@ export class WeChatMessageService {
     }
 
     /**
-     * 获取微信消息
+     * 获取图文消息
      * @param param 
      */
-    getMessagePage(param: any): Observable<PagedResultDto> {
-        let _url = "/api/services/app/WechatMessage/GetPaged";
-        return this._commonhttp.get(_url, param).pipe(map(data => {
-            const result = new PagedResultDto();
-            result.items = data.items;
-            result.totalCount = data.totalCount;
-            return result;
+    getSubscribe(): Observable<WechatSubscribe> {
+        let _url = "/api/services/app/WechatSubscribe/GetWechatSubscribeInfo";
+        return this._commonhttp.get(_url).pipe(map(data => {
+            return WechatSubscribe.fromJS(data);
         }));
     }
 
     /**
-     * 获取单个微信消息
+     * 获取单个图文消息
      * @param id 
      */
-    getMessageById(id: string): Observable<WechatMessage> {
-        let _url = "/api/services/app/WechatMessage/GetById";
+    getSubscribeById(id: string): Observable<WechatSubscribe> {
+        let _url = "/api/services/app/WechatSubscribe/GetById";
         let param = { 'id': id };
         return this._commonhttp.get(_url, param).pipe(map(data => {
-            return WechatMessage.fromJS(data);
+            return WechatSubscribe.fromJS(data);
         }));
     }
 
     /**
-     * 更新微信消息
+     * 更新图文消息
      * @param input 
      */
-    update(input: WechatMessage): Observable<WechatMessage> {
-        let _url = "/api/services/app/WechatMessage/CreateOrUpdateDto";
+    update(input: WechatSubscribe): Observable<WechatSubscribe> {
+        let _url = "/api/services/app/WechatSubscribe/CreateOrUpdateDto";
         return this._commonhttp.post(_url, input).pipe(map(data => {
             return data;
         }))
@@ -52,14 +49,12 @@ export class WeChatMessageService {
 
 
     /**
-     * 删除微信消息
+     * 删除图文消息
      * @param id 
      */
     delete(id: string): Observable<any> {
-        let _url = "/api/services/app/WechatMessage/Delete";
+        let _url = "/api/services/app/WechatSubscribe/Delete";
         let param = { 'id': id };
         return this._commonhttp.delete(_url, param);
     }
-
-
 }

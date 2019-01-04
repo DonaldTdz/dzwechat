@@ -43,7 +43,7 @@ namespace  HC.DZWechat.WechatMessages.Dtos
         /// <summary>
         /// Content
         /// </summary>
-        [Required(ErrorMessage="Content不能为空")]
+        //[Required(ErrorMessage="Content不能为空")]
 		public string Content { get; set; }
 
         /// <summary>

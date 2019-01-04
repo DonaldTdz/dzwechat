@@ -5,3 +5,4 @@ export * from './integral/integral.service';
 export * from './order/order.service';
 export * from './goods/goods.service';
 export * from './wechat-message/wechat-message.service';
+export * from './wechat-subscribe/wechat-subscribe.service';
