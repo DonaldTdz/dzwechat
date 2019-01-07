@@ -22,6 +22,10 @@ using HC.DZWechat.Goods;
 using HC.DZWechat.Goods.Dtos;
 using HC.DZWechat.Goods.DomainService;
 using HC.DZWechat.Categorys;
+using HC.DZWechat.Dtos;
+using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Hosting;
+using HC.DZWechat.Configuration;
 
 namespace HC.DZWechat.Goods
 {
@@ -34,6 +38,7 @@ namespace HC.DZWechat.Goods
         private readonly IRepository<Good, Guid> _entityRepository;
         private readonly IRepository<Category> _categoryRepository;
         private readonly IGoodManager _entityManager;
+        private readonly IConfigurationRoot _appConfiguration;
 
         /// <summary>
         /// 构造函数 
@@ -42,12 +47,13 @@ namespace HC.DZWechat.Goods
         IRepository<Good, Guid> entityRepository
         ,IRepository<Category> categoryRepository
         , IGoodManager entityManager
+        , IHostingEnvironment env
         )
         {
             _entityRepository = entityRepository;
             _categoryRepository = categoryRepository;
-
             _entityManager = entityManager;
+            _appConfiguration = AppConfigurations.Get(env.ContentRootPath, env.EnvironmentName, env.IsDevelopment());
         }
 
 
@@ -238,18 +244,42 @@ GoodEditDto editDto;
 			await _entityRepository.DeleteAsync(s => input.Contains(s.Id));
 		}
 
+        /// <summary>
+        /// 热卖商品
+        /// </summary>
+        [AbpAllowAnonymous]
+        public async Task<WxPagedResultDto<GoodsGridDto>> GetHeatGoodsAsync(WxPagedInputDto input)
+        {
+            var hostUrl = _appConfiguration["App:ServerRootAddress"];
+            var query = _entityRepository.GetAll().Where(e => e.IsAction == true).Select(e => new GoodsGridDto(hostUrl)
+            {
+                Id = e.Id,
+                name = e.Specification,
+                saleCount = e.SellCount??0,
+                price = e.Integral,
+                photoUrl = e.PhotoUrl,
+                unit = e.Unit
+            });
+            var count = await query.CountAsync();
+            var dataList = await query.OrderByDescending(o => o.saleCount)
+                        .PageBy(input)
+                        .ToListAsync();
+            var result = new WxPagedResultDto<GoodsGridDto>(count, dataList);
+            result.PageSize = input.Size;
+            return result;
+        }
 
-		/// <summary>
-		/// 导出Good为excel表,等待开发。
-		/// </summary>
-		/// <returns></returns>
-		//public async Task<FileDto> GetToExcel()
-		//{
-		//	var users = await UserManager.Users.ToListAsync();
-		//	var userListDtos = ObjectMapper.Map<List<UserListDto>>(users);
-		//	await FillRoleNames(userListDtos);
-		//	return _userListExcelExporter.ExportToFile(userListDtos);
-		//}
+        /// <summary>
+        /// 导出Good为excel表,等待开发。
+        /// </summary>
+        /// <returns></returns>
+        //public async Task<FileDto> GetToExcel()
+        //{
+        //	var users = await UserManager.Users.ToListAsync();
+        //	var userListDtos = ObjectMapper.Map<List<UserListDto>>(users);
+        //	await FillRoleNames(userListDtos);
+        //	return _userListExcelExporter.ExportToFile(userListDtos);
+        //}
 
     }
 }

@@ -20,6 +20,7 @@ using Abp.Application.Services.Dto;
 
 using HC.DZWechat.Goods.Dtos;
 using HC.DZWechat.Goods;
+using HC.DZWechat.Dtos;
 
 namespace HC.DZWechat.Goods
 {
@@ -72,11 +73,13 @@ namespace HC.DZWechat.Goods
         Task BatchDelete(List<Guid> input);
 
 
-		/// <summary>
+        /// <summary>
         /// 导出Good为excel表
         /// </summary>
         /// <returns></returns>
-		//Task<FileDto> GetToExcel();
+        //Task<FileDto> GetToExcel();
 
+        
+        Task<WxPagedResultDto<GoodsGridDto>> GetHeatGoodsAsync(WxPagedInputDto input);
     }
 }
