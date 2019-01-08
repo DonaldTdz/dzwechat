@@ -147,11 +147,15 @@ namespace HC.DZWechat.Goods.Dtos
         {
             get
             {
-                var arr = photoUrl.Split(',');
-                if (arr.Length > 0)
+                if (!string.IsNullOrEmpty(photoUrl))
                 {
-                    return host + arr[0];
+                    var arr = photoUrl.Split(',');
+                    if (arr.Length > 0)
+                    {
+                        return host + arr[0];
+                    }
                 }
+               
                 return string.Empty;
             }
         }
