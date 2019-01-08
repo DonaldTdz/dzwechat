@@ -5,7 +5,7 @@ using Abp.Application.Services.Dto;
 using Abp.Domain.Entities.Auditing;
 using System.ComponentModel.DataAnnotations;
 using HC.DZWechat.WechatSubscribes;
-using static HC.DZWechat.DZEnums.DZEnums;
+using HC.DZWechat.DZEnums.DZCommonEnums;
 
 namespace HC.DZWechat.WechatSubscribes.Dtos
 {

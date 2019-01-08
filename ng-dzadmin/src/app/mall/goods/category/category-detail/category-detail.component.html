@@ -1,9 +1,11 @@
-<nz-modal [(nzVisible)]="isVisible" nzMaskClosable="false" nzTitle="{{title}}" [nzContent]="modalContent" (nzOnCancel)="handleCancel($event)" style="width: 520px;" [nzFooter]="null">
+<nz-modal [(nzVisible)]="isVisible" nzMaskClosable="false" nzTitle="{{title}}" (nzOnCancel)="handleCancel($event)"
+    style="width: 520px;" [nzFooter]="null">
     <div class="padding-bottom-45">
         <form nz-form #validateForm="ngForm" (ngSubmit)="save()" *ngIf="category">
             <nz-form-item>
                 <nz-form-control nzHasFeedback>
-                    <input nz-input name="name" maxlength="200" #name="ngModel" [(ngModel)]="category.name" [placeholder]="'类型名称'" required>
+                    <input nz-input name="name" maxlength="200" #name="ngModel" [(ngModel)]="category.name"
+                        [placeholder]="'类型名称'" required>
                     <nz-form-explain *ngIf="name.control.dirty&&name.control.errors">
                         <ng-container *ngIf="name.control.hasError('required')">请输入类型名称</ng-container>
                         <ng-container *ngIf="name.control.hasError('maxlength')">字符长度小于等于200</ng-container>
@@ -13,7 +15,8 @@
 
             <nz-form-item>
                 <nz-form-control nzHasFeedback>
-                    <input nz-input name="seq" pattern="[^[0-9]*[1-9][0-9]*$]*" #seq="ngModel" [(ngModel)]="category.seq" [placeholder]="'排序'" required>
+                    <input nz-input name="seq" pattern="[^[0-9]*[1-9][0-9]*$]*" #seq="ngModel" [(ngModel)]="category.seq"
+                        [placeholder]="'排序'" required>
                     <nz-form-explain *ngIf="seq.control.dirty&&seq.control.errors">
                         <ng-container *ngIf="seq.control.hasError('required')">排序不能为空</ng-container>
                         <ng-container *ngIf="seq.control.hasError('pattern')">请输入正整数</ng-container>
@@ -22,11 +25,11 @@
             </nz-form-item>
             <div class="modal-footer">
                 <button nz-button type="button" [disabled]="loading" (click)="handleCancel()">
-                取消
-            </button>
+                    取消
+                </button>
                 <button nz-button [nzType]="'primary'" type="submit" [disabled]="!validateForm.valid||loading">
-                保存
-            </button>
+                    保存
+                </button>
             </div>
         </form>
     </div>

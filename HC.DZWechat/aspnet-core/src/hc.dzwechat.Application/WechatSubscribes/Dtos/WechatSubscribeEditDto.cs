@@ -3,11 +3,12 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using Abp.Domain.Entities.Auditing;
 using HC.DZWechat.WechatSubscribes;
-using static HC.DZWechat.DZEnums.DZEnums;
+using HC.DZWechat.DZEnums.DZCommonEnums;
+using Abp.Application.Services.Dto;
 
 namespace  HC.DZWechat.WechatSubscribes.Dtos
 {
-    public class WechatSubscribeEditDto:AuditedEntity<Guid?>
+    public class WechatSubscribeEditDto:AuditedEntityDto<Guid?>
     {
 
         ///// <summary>

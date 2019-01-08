@@ -20,6 +20,7 @@ using Abp.Application.Services.Dto;
 
 using HC.DZWechat.Goods.Dtos;
 using HC.DZWechat.Goods;
+using HC.DZWechat.Dtos;
 
 namespace HC.DZWechat.Goods
 {
@@ -72,5 +73,8 @@ namespace HC.DZWechat.Goods
         Task BatchDelete(List<Guid> input);
 
         Task<GoodListDto> ChangeStatus(GoodEditDto input);
+
+        
+        Task<WxPagedResultDto<GoodsGridDto>> GetHeatGoodsAsync(WxPagedInputDto input);
     }
 }

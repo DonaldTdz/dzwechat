@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
-using static HC.DZWechat.DZEnums.DZEnums;
+using HC.DZWechat.DZEnums.DZCommonEnums;
 
 namespace HC.DZWechat.WechatUsers
 {

@@ -6,6 +6,7 @@ import { LayoutModule } from '@layout/layout.module';
 import { HomeComponent } from '@app/home/home.component';
 import { SharedModule } from '@shared/shared.module';
 import { HttpClientModule } from '@angular/common/http';
+import { HomeService } from 'services';
 
 @NgModule({
   imports: [
@@ -22,6 +23,6 @@ import { HttpClientModule } from '@angular/common/http';
   ],
   entryComponents: [
   ],
-  // providers: [LocalizationService, MenuService],
+  providers: [HomeService],
 })
 export class AppModule { }

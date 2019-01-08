@@ -21,8 +21,9 @@ using Abp.Linq.Extensions;
 using HC.DZWechat.Orders;
 using HC.DZWechat.Orders.Dtos;
 using HC.DZWechat.Orders.DomainService;
-
-
+using HC.DZWechat.WechatUsers;
+using HC.DZWechat.IntegralDetails;
+using HC.DZWechat.DZEnums.DZCommonEnums;
 
 namespace HC.DZWechat.Orders
 {
@@ -33,19 +34,25 @@ namespace HC.DZWechat.Orders
     public class OrderAppService : DZWechatAppServiceBase, IOrderAppService
     {
         private readonly IRepository<Order, Guid> _entityRepository;
+        private readonly IRepository<WechatUser, Guid> _wechatUserRepository;
+        private readonly IRepository<IntegralDetail, Guid> _integralRepository;
 
         private readonly IOrderManager _entityManager;
+
 
         /// <summary>
         /// 构造函数 
         ///</summary>
         public OrderAppService(
         IRepository<Order, Guid> entityRepository
-        ,IOrderManager entityManager
+        , IOrderManager entityManager, IRepository<WechatUser, Guid> wechatUserRepository
+        , IRepository<IntegralDetail, Guid> integralRepository
         )
         {
-            _entityRepository = entityRepository; 
-             _entityManager=entityManager;
+            _entityRepository = entityRepository;
+            _entityManager = entityManager;
+            _wechatUserRepository = wechatUserRepository;
+            _integralRepository = integralRepository;
         }
 
 
@@ -54,34 +61,30 @@ namespace HC.DZWechat.Orders
         ///</summary>
         /// <param name="input"></param>
         /// <returns></returns>
-		 
+
         public async Task<PagedResultDto<OrderListDto>> GetPaged(GetOrdersInput input)
-		{
+        {
 
 		    var query = _entityRepository.GetAll().WhereIf(!string.IsNullOrEmpty(input.FilterText), u => u.Phone.Contains(input.FilterText));
-			// TODO:根据传入的参数添加过滤条件
-            
+            var count = await query.CountAsync();
+            var entityList = await query
+                    .OrderBy(input.Sorting).AsNoTracking()
+                    .PageBy(input)
+                    .ToListAsync();
 
-			var count = await query.CountAsync();
+            // var entityListDtos = ObjectMapper.Map<List<OrderListDto>>(entityList);
+            var entityListDtos = entityList.MapTo<List<OrderListDto>>();
 
-			var entityList = await query
-					.OrderBy(input.Sorting).AsNoTracking()
-					.PageBy(input)
-					.ToListAsync();
-
-			// var entityListDtos = ObjectMapper.Map<List<OrderListDto>>(entityList);
-			var entityListDtos =entityList.MapTo<List<OrderListDto>>();
-
-			return new PagedResultDto<OrderListDto>(count,entityListDtos);
-		}
+            return new PagedResultDto<OrderListDto>(count, entityListDtos);
+        }
 
         public async Task<PagedResultDto<OrderListDto>> GetPagedById(GetOrdersInput input)
         {
 
-            var query = _entityRepository.GetAll().Where(v=>v.UserId == input.Id);
+            var query = _entityRepository.GetAll().Where(v => v.UserId == input.Id);
             var count = await query.CountAsync();
             var entityList = await query
-                    .OrderByDescending(v=>v.CreationTime).AsNoTracking()
+                    .OrderByDescending(v => v.CreationTime).AsNoTracking()
                     .PageBy(input)
                     .ToListAsync();
             var entityListDtos = entityList.MapTo<List<OrderListDto>>();
@@ -94,130 +97,143 @@ namespace HC.DZWechat.Orders
         /// </summary>
 
         public async Task<OrderListDto> GetById(Guid id)
-		{
-			var entity = await _entityRepository.GetAsync(id);
-		    return entity.MapTo<OrderListDto>();
-		}
+        {
+            var entity = await _entityRepository.GetAsync(id);
+            return entity.MapTo<OrderListDto>();
+        }
 
-		/// <summary>
-		/// 获取编辑 Order
-		/// </summary>
-		/// <param name="input"></param>
-		/// <returns></returns>
-		
-		public async Task<GetOrderForEditOutput> GetForEdit(NullableIdDto<Guid> input)
-		{
-			var output = new GetOrderForEditOutput();
-OrderEditDto editDto;
+        /// <summary>
+        /// 获取编辑 Order
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
 
-			if (input.Id.HasValue)
-			{
-				var entity = await _entityRepository.GetAsync(input.Id.Value);
+        public async Task<GetOrderForEditOutput> GetForEdit(NullableIdDto<Guid> input)
+        {
+            var output = new GetOrderForEditOutput();
+            OrderEditDto editDto;
 
-				editDto = entity.MapTo<OrderEditDto>();
+            if (input.Id.HasValue)
+            {
+                var entity = await _entityRepository.GetAsync(input.Id.Value);
 
-				//orderEditDto = ObjectMapper.Map<List<orderEditDto>>(entity);
-			}
-			else
-			{
-				editDto = new OrderEditDto();
-			}
+                editDto = entity.MapTo<OrderEditDto>();
 
-			output.Order = editDto;
-			return output;
-		}
+                //orderEditDto = ObjectMapper.Map<List<orderEditDto>>(entity);
+            }
+            else
+            {
+                editDto = new OrderEditDto();
+            }
 
-
-		/// <summary>
-		/// 添加或者修改Order的公共方法
-		/// </summary>
-		/// <param name="input"></param>
-		/// <returns></returns>
-		
-		public async Task CreateOrUpdate(CreateOrUpdateOrderInput input)
-		{
-
-			if (input.Order.Id.HasValue)
-			{
-				await Update(input.Order);
-			}
-			else
-			{
-				await Create(input.Order);
-			}
-		}
+            output.Order = editDto;
+            return output;
+        }
 
 
-		/// <summary>
-		/// 新增Order
-		/// </summary>
-		
-		protected virtual async Task<OrderEditDto> Create(OrderEditDto input)
-		{
-			//TODO:新增前的逻辑判断，是否允许新增
+        /// <summary>
+        /// 添加或者修改Order的公共方法
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+
+        public async Task CreateOrUpdate(CreateOrUpdateOrderInput input)
+        {
+
+            if (input.Order.Id.HasValue)
+            {
+                await Update(input.Order);
+            }
+            else
+            {
+                await Create(input.Order);
+            }
+        }
+
+
+        /// <summary>
+        /// 新增Order
+        /// </summary>
+
+        protected virtual async Task<OrderEditDto> Create(OrderEditDto input)
+        {
+            //TODO:新增前的逻辑判断，是否允许新增
 
             // var entity = ObjectMapper.Map <Order>(input);
-            var entity=input.MapTo<Order>();
-			
-
-			entity = await _entityRepository.InsertAsync(entity);
-			return entity.MapTo<OrderEditDto>();
-		}
-
-		/// <summary>
-		/// 编辑Order
-		/// </summary>
-		
-		protected virtual async Task Update(OrderEditDto input)
-		{
-			//TODO:更新前的逻辑判断，是否允许更新
-
-			var entity = await _entityRepository.GetAsync(input.Id.Value);
-			input.MapTo(entity);
-
-			// ObjectMapper.Map(input, entity);
-		    await _entityRepository.UpdateAsync(entity);
-		}
+            var entity = input.MapTo<Order>();
 
 
+            entity = await _entityRepository.InsertAsync(entity);
+            return entity.MapTo<OrderEditDto>();
+        }
 
-		/// <summary>
-		/// 删除Order信息的方法
-		/// </summary>
-		/// <param name="input"></param>
-		/// <returns></returns>
-		
-		public async Task Delete(EntityDto<Guid> input)
-		{
-			//TODO:删除前的逻辑判断，是否允许删除
-			await _entityRepository.DeleteAsync(input.Id);
-		}
+        /// <summary>
+        /// 编辑Order
+        /// </summary>
+
+        protected virtual async Task Update(OrderEditDto input)
+        {
+            //TODO:更新前的逻辑判断，是否允许更新
+
+            var entity = await _entityRepository.GetAsync(input.Id.Value);
+            input.MapTo(entity);
+
+            // ObjectMapper.Map(input, entity);
+            await _entityRepository.UpdateAsync(entity);
+        }
 
 
 
-		/// <summary>
-		/// 批量删除Order的方法
-		/// </summary>
-		
-		public async Task BatchDelete(List<Guid> input)
-		{
-			// TODO:批量删除前的逻辑判断，是否允许删除
-			await _entityRepository.DeleteAsync(s => input.Contains(s.Id));
-		}
+        /// <summary>
+        /// 删除Order信息的方法
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+
+        public async Task Delete(EntityDto<Guid> input)
+        {
+            //TODO:删除前的逻辑判断，是否允许删除
+            await _entityRepository.DeleteAsync(input.Id);
+        }
 
 
-		/// <summary>
-		/// 导出Order为excel表,等待开发。
-		/// </summary>
-		/// <returns></returns>
-		//public async Task<FileDto> GetToExcel()
-		//{
-		//	var users = await UserManager.Users.ToListAsync();
-		//	var userListDtos = ObjectMapper.Map<List<UserListDto>>(users);
-		//	await FillRoleNames(userListDtos);
-		//	return _userListExcelExporter.ExportToFile(userListDtos);
-		//}
 
+        /// <summary>
+        /// 批量删除Order的方法
+        /// </summary>
+
+        public async Task BatchDelete(List<Guid> input)
+        {
+            // TODO:批量删除前的逻辑判断，是否允许删除
+            await _entityRepository.DeleteAsync(s => input.Contains(s.Id));
+        }
+
+
+        /// <summary>
+        /// 导出Order为excel表,等待开发。
+        /// </summary>
+        /// <returns></returns>
+        //public async Task<FileDto> GetToExcel()
+        //{
+        //	var users = await UserManager.Users.ToListAsync();
+        //	var userListDtos = ObjectMapper.Map<List<UserListDto>>(users);
+        //	await FillRoleNames(userListDtos);
+        //	return _userListExcelExporter.ExportToFile(userListDtos);
+        //}
+
+        /// <summary>
+        /// 主页数据统计
+        /// </summary>
+        /// <returns></returns>
+        public async Task<HomeInfo> GetHomeInfo()
+        {
+            var homeInfo = new HomeInfo();
+            homeInfo.WeChatUsersTotal = await _wechatUserRepository.GetAll().CountAsync();
+            homeInfo.IntegralTotal = (int)await _wechatUserRepository.GetAll().SumAsync(i => i.Integral);
+            homeInfo.OrderTotal = await _entityRepository.GetAll().Where(o=>o.Status!=OrderStatus.已取消).CountAsync();
+            homeInfo.PendingOrderTotal = await _entityRepository.GetAll().Where(o => o.Status == OrderStatus.已支付).CountAsync();
+            return homeInfo;
+        }
     }
 }
 

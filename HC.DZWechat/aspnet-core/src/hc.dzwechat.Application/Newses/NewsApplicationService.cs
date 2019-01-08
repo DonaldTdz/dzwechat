@@ -21,8 +21,7 @@ using Abp.Linq.Extensions;
 using HC.DZWechat.Newses;
 using HC.DZWechat.Newses.Dtos;
 using HC.DZWechat.Newses.DomainService;
-using static HC.DZWechat.DZEnums.DZEnums;
-using HC.DZWechat.DZEnums;
+using HC.DZWechat.DZEnums.DZCommonEnums;
 
 namespace HC.DZWechat.Newses
 {
@@ -201,10 +200,10 @@ namespace HC.DZWechat.Newses
         //}
 
 
-        public async Task<NewsListDto> GetByIdAndType(EntityDto<Guid> Input, NewsType newsType)
+        public async Task<NewsListDto> GetByIdAndType(EntityDto<Guid> Input)
         {
             //var entity = await _entityRepository.GetAsync(input.Id);
-            var entity = await _entityRepository.GetAll().Where(n => n.Id == Input.Id && n.Type == newsType).FirstOrDefaultAsync();
+            var entity = await _entityRepository.GetAll().Where(n => n.Id == Input.Id).FirstOrDefaultAsync();
             return entity.MapTo<NewsListDto>();
         }
 

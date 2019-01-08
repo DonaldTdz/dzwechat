@@ -5,7 +5,7 @@ using Abp.Application.Services.Dto;
 using Abp.Domain.Entities.Auditing;
 using System.ComponentModel.DataAnnotations;
 using HC.DZWechat.Orders;
-using static HC.DZWechat.DZEnums.DZEnums;
+using HC.DZWechat.DZEnums.DZCommonEnums;
 using Abp.AutoMapper;
 
 namespace HC.DZWechat.Orders.Dtos
@@ -120,4 +120,27 @@ namespace HC.DZWechat.Orders.Dtos
 
         public string UserName { get; set; }
     }
+    public class HomeInfo
+    {
+        /// <summary>
+        /// 会员数
+        /// </summary>
+        public int WeChatUsersTotal { get; set; }
+
+        /// <summary>
+        /// 积分数
+        /// </summary>
+        public int IntegralTotal { get; set; }
+
+        /// <summary>
+        /// 订单数
+        /// </summary>
+        public int OrderTotal { get; set; }
+
+        /// <summary>
+        /// 待处理订单数
+        /// </summary>
+        public int PendingOrderTotal { get; set; }
+    }
+
 }

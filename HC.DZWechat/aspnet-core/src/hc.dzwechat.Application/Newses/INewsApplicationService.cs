@@ -20,7 +20,7 @@ using Abp.Application.Services.Dto;
 
 using HC.DZWechat.Newses.Dtos;
 using HC.DZWechat.Newses;
-using static HC.DZWechat.DZEnums.DZEnums;
+using HC.DZWechat.DZEnums.DZCommonEnums;
 
 namespace HC.DZWechat.Newses
 {
@@ -68,7 +68,7 @@ namespace HC.DZWechat.Newses
         /// <summary>
         /// 导出News为excel表
         /// </summary> 
-        Task<NewsListDto> GetByIdAndType(EntityDto<Guid> id, NewsType newsType);
+        Task<NewsListDto> GetByIdAndType(EntityDto<Guid> id);
 
         /// <summary>
         /// 添加或者修改News的公共方法

@@ -73,6 +73,11 @@ namespace HC.DZWechat.Orders
 
 
         Task<PagedResultDto<OrderListDto>> GetPagedById(GetOrdersInput input);
+        /// <summary>
+        /// 主页数据统计
+        /// </summary>
+        /// <returns></returns>
+        Task<HomeInfo> GetHomeInfo();
 
     }
 }

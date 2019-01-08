@@ -23,6 +23,7 @@ using HC.DZWechat.Exchanges.Dtos;
 using HC.DZWechat.Exchanges.DomainService;
 using HC.DZWechat.OrderDetails;
 using HC.DZWechat.Orders;
+using HC.DZWechat.DZEnums.DZCommonEnums;
 
 namespace HC.DZWechat.Exchanges
 {
@@ -211,7 +212,7 @@ namespace HC.DZWechat.Exchanges
         protected virtual async Task UpdateOrderDetailStatus(Guid? id)
         {
             var entity = await _orderDetailRepository.GetAsync(id.Value);
-            entity.Status = DZEnums.DZEnums.ExchangeStatus.已兑换;
+            entity.Status = ExchangeStatus.已兑换;
             entity.ExchangeTime = DateTime.Now;
             await _orderDetailRepository.UpdateAsync(entity);
         }
@@ -226,7 +227,7 @@ namespace HC.DZWechat.Exchanges
             var list = await _orderDetailRepository.GetAll().Where(v => v.OrderId == id).ToListAsync();
             foreach (var item in list)
             {
-                if (item.Status != DZEnums.DZEnums.ExchangeStatus.已兑换)
+                if (item.Status != ExchangeStatus.已兑换)
                 {
                     return false;
                 }
@@ -242,7 +243,7 @@ namespace HC.DZWechat.Exchanges
         protected virtual async Task UpdateOrderStatus(Guid id)
         {
             var entity = await _orderRepository.GetAsync(id);
-            entity.Status = DZEnums.DZEnums.OrderStatus.已完成;
+            entity.Status = OrderStatus.已完成;
             entity.CompleteTime = DateTime.Now;
             await _orderRepository.UpdateAsync(entity);
         }

@@ -11,9 +11,7 @@ namespace HC.DZWechat.Goods.Dtos
 {
     [AutoMapFrom(typeof(Good))]
     public class GoodListDto : EntityDto<Guid>, IHasCreationTime, ICreationAudited
-    {
-
-        
+    {      
 		/// <summary>
 		/// Specification
 		/// </summary>
@@ -109,5 +107,58 @@ namespace HC.DZWechat.Goods.Dtos
         public bool IsBanner { get; set; }
 
         public string BannerUrl { get; set; }
+    }
+
+    public class GoodsGridDto : EntityDto<Guid>
+    {
+        public GoodsGridDto() { }
+
+        public GoodsGridDto(string _host)
+        {
+            host = _host;
+        }
+
+        [NonSerialized]
+        public string photoUrl;
+
+        [NonSerialized]
+        public string host;
+        /// <summary>
+        /// 商品名称
+        /// </summary>
+        public string name { get; set; }
+
+        //public string PhotoUrl { get; set; }
+
+        /// <summary>
+        /// 单位
+        /// </summary>
+        public string unit { get; set; }
+
+        /// <summary>
+        /// 所需积分
+        /// </summary>
+        public decimal? price { get; set; }
+
+        /// <summary>
+        /// 头像
+        /// </summary>
+        public string thumLogo
+        {
+            get
+            {
+                var arr = photoUrl.Split(',');
+                if (arr.Length > 0)
+                {
+                    return host + arr[0];
+                }
+                return string.Empty;
+            }
+        }
+
+        /// <summary>
+        /// 销量
+        /// </summary>
+        public int? saleCount { get; set; }
     }
 }
