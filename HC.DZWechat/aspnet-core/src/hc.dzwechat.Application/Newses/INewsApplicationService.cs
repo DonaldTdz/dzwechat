@@ -20,7 +20,7 @@ using Abp.Application.Services.Dto;
 
 using HC.DZWechat.Newses.Dtos;
 using HC.DZWechat.Newses;
-using static HC.DZWechat.DZEnums.DZEnums;
+using HC.DZWechat.DZEnums.DZCommonEnums;
 
 namespace HC.DZWechat.Newses
 {

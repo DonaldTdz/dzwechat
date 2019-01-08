@@ -21,8 +21,7 @@ using Abp.Linq.Extensions;
 using HC.DZWechat.Newses;
 using HC.DZWechat.Newses.Dtos;
 using HC.DZWechat.Newses.DomainService;
-using static HC.DZWechat.DZEnums.DZEnums;
-using HC.DZWechat.DZEnums;
+using HC.DZWechat.DZEnums.DZCommonEnums;
 
 namespace HC.DZWechat.Newses
 {

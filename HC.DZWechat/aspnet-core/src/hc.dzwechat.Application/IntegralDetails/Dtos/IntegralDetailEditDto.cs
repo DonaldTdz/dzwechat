@@ -3,7 +3,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using Abp.Domain.Entities.Auditing;
 using HC.DZWechat.IntegralDetails;
-using static HC.DZWechat.DZEnums.DZEnums;
+using HC.DZWechat.DZEnums.DZCommonEnums;
 
 namespace  HC.DZWechat.IntegralDetails.Dtos
 {

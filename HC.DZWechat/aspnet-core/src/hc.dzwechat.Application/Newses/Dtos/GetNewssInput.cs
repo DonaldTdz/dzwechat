@@ -2,7 +2,7 @@
 using Abp.Runtime.Validation;
 using HC.DZWechat.Dtos;
 using HC.DZWechat.Newses;
-using static HC.DZWechat.DZEnums.DZEnums;
+using HC.DZWechat.DZEnums.DZCommonEnums;
 
 namespace HC.DZWechat.Newses.Dtos
 {

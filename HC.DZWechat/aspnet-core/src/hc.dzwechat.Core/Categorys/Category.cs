@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
-using static HC.DZWechat.DZEnums.DZEnums;
+
 namespace HC.DZWechat.Categorys
 {
     [Table("Categorys")]
