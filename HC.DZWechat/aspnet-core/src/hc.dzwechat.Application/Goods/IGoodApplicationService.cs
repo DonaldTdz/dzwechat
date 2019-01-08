@@ -81,5 +81,7 @@ namespace HC.DZWechat.Goods
 
         
         Task<WxPagedResultDto<GoodsGridDto>> GetHeatGoodsAsync(WxPagedInputDto input);
+
+        Task<WxPagedResultDto<GoodsGridDto>> GetSearchGoodsAsync(GoodsSearchInputDto input);
     }
 }

@@ -229,6 +229,13 @@ namespace HC.DZWechat.Categorys
                                 }).OrderBy(v => v.seq).AsNoTracking().ToListAsync();
             return entity.MapTo<List<SelectGroup>>();
         }
+
+        [AbpAllowAnonymous]
+        public async Task<List<GoodsCategoryDto>> GetGoodsCategoriesAsync()
+        {
+            var gclist = await _entityRepository.GetAll().OrderBy(c => c.Seq).ToListAsync();
+            return gclist.MapTo<List<GoodsCategoryDto>>();
+        }
     }
 }
 
