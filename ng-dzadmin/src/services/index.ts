@@ -6,3 +6,5 @@ export * from './order/order.service';
 export * from './goods/goods.service';
 export * from './wechat-message/wechat-message.service';
 export * from './wechat-subscribe/wechat-subscribe.service';
+export * from './shop/shop.sercive';
+export * from './home/home.service';

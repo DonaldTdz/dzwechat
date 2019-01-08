@@ -10,6 +10,7 @@ import { VipComponent } from './vip/vip.component';
 import { MemberDetailComponent } from './member/member-detail/member-detail.component';
 import { GoodsDetailComponent } from './goods/goods-detail/goods-detail.component';
 import { OrderDetailComponent } from './order/order-detail/order-detail.component';
+import { ShopDetailComponent } from './shop/shop-detail/shop-detail.component';
 
 const routes: Routes = [
     {
@@ -50,6 +51,16 @@ const routes: Routes = [
     {
         path: 'shop',
         component: ShopComponent,
+        canActivate: [AppRouteGuard],
+    },
+    {
+        path: 'shop-detail',
+        component: ShopDetailComponent,
+        canActivate: [AppRouteGuard],
+    },
+    {
+        path: 'shop-detail/:id',
+        component: ShopDetailComponent,
         canActivate: [AppRouteGuard],
     },
     {

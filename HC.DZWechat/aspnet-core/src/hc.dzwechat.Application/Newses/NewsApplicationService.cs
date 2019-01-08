@@ -200,10 +200,10 @@ namespace HC.DZWechat.Newses
         //}
 
 
-        public async Task<NewsListDto> GetByIdAndType(EntityDto<Guid> Input, NewsType newsType)
+        public async Task<NewsListDto> GetByIdAndType(EntityDto<Guid> Input)
         {
             //var entity = await _entityRepository.GetAsync(input.Id);
-            var entity = await _entityRepository.GetAll().Where(n => n.Id == Input.Id && n.Type == newsType).FirstOrDefaultAsync();
+            var entity = await _entityRepository.GetAll().Where(n => n.Id == Input.Id).FirstOrDefaultAsync();
             return entity.MapTo<NewsListDto>();
         }
 

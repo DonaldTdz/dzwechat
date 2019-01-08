@@ -9,3 +9,5 @@ export * from './order-detail';
 export * from './exchange';
 export * from './wechatmessage';
 export * from './wechatsubscribe';
+export * from './shop';
+export * from './home-info';

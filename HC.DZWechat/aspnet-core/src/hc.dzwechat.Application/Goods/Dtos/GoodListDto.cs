@@ -103,6 +103,10 @@ namespace HC.DZWechat.Goods.Dtos
         /// CreatorUserId
         /// </summary>
         public long? CreatorUserId { get; set; }
+
+        public bool IsBanner { get; set; }
+
+        public string BannerUrl { get; set; }
     }
 
     public class GoodsGridDto : EntityDto<Guid>

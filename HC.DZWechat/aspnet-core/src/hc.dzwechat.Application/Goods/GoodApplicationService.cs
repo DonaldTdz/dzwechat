@@ -84,7 +84,8 @@ namespace HC.DZWechat.Goods
                                 //ExchangeCode = g.ExchangeCode,
                                 OnlineTime = g.OnlineTime,
                                 Integral = g.Integral,
-                                IsAction = g.IsAction
+                                IsAction = g.IsAction,
+                                SellCount = g.SellCount
                             };
                 var count = await query.CountAsync();
                 var entityList = await query
@@ -114,7 +115,8 @@ namespace HC.DZWechat.Goods
                                 //ExchangeCode = g.ExchangeCode,
                                 OnlineTime = g.OnlineTime,
                                 Integral = g.Integral,
-                                IsAction = g.IsAction
+                                IsAction = g.IsAction,
+                                SellCount = g.SellCount
                             };
                 var count = await query.CountAsync();
 
@@ -190,11 +192,12 @@ namespace HC.DZWechat.Goods
         /// <summary>
         /// 新增Good
         /// </summary>
-
         protected virtual async Task<GoodListDto> Create(GoodEditDto input)
         {
+            input.SellCount = 0;
             var entity = input.MapTo<Good>();
             entity = await _entityRepository.InsertAsync(entity);
+            await CurrentUnitOfWork.SaveChangesAsync();
             return entity.MapTo<GoodListDto>();
         }
 
@@ -233,7 +236,6 @@ namespace HC.DZWechat.Goods
         }
 
 
-
         /// <summary>
         /// 批量删除Good的方法
         /// </summary>
@@ -243,6 +245,21 @@ namespace HC.DZWechat.Goods
             // TODO:批量删除前的逻辑判断，是否允许删除
             await _entityRepository.DeleteAsync(s => input.Contains(s.Id));
         }
+
+
+        /// <summary>
+        /// 商品上架or下架
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task<GoodListDto> ChangeStatus(GoodEditDto input)
+        {
+            var entity = await _entityRepository.GetAsync(input.Id.Value);
+            entity.IsAction = input.IsAction;
+            await _entityRepository.UpdateAsync(entity);
+            return entity.MapTo<GoodListDto>();
+        }
+
 
         /// <summary>
         /// 热卖商品
@@ -268,6 +285,7 @@ namespace HC.DZWechat.Goods
             result.PageSize = input.Size;
             return result;
         }
+
         /// <summary>
         /// 商品搜索
         /// </summary>

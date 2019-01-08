@@ -47,12 +47,11 @@ export class CategoryDetailComponent {
 
     save(): void {
         this.loading = true;
-        // console.log(this.category);
-        this.goodsService.updateCategory(this.category).finally(() => { this.loading = false; })
-            .subscribe((result: Category) => {
-                this.notify.info('保存成功', '');
-                this.modalSelect.emit();
-                this.isVisible = false;
-            });
+        this.goodsService.updateCategory(this.category).subscribe((result: Category) => {
+            this.loading = false;
+            this.notify.info('保存成功', '');
+            this.modalSelect.emit();
+            this.isVisible = false;
+        });
     }
 }

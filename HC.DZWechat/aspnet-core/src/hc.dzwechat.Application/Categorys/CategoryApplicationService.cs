@@ -173,6 +173,7 @@ namespace HC.DZWechat.Categorys
         {
             var entity = input.MapTo<Category>();
             entity = await _entityRepository.InsertAsync(entity);
+            await CurrentUnitOfWork.SaveChangesAsync();
             return entity.MapTo<CategoryListDto>();
         }
 

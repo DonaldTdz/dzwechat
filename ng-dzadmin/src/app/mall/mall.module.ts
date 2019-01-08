@@ -10,13 +10,17 @@ import { OrderComponent } from './order/order.component';
 import { ShopComponent } from './shop/shop.component';
 import { VipComponent } from './vip/vip.component';
 import { MallRoutingModule } from './mall-routing.module';
-import { WechatUserService, IntegralDetailService, OrderService, GoodsService } from 'services';
+import { WechatUserService, IntegralDetailService, OrderService, GoodsService, ShopService } from 'services';
 import { MemberDetailComponent } from './member/member-detail/member-detail.component';
 import { CategoryComponent } from './goods/category/category.component';
 import { CategoryDetailComponent } from './goods/category/category-detail/category-detail.component';
 import { GoodsDetailComponent } from './goods/goods-detail/goods-detail.component';
 import { OrderDetailComponent } from './order/order-detail/order-detail.component';
 import { ExchangeDetailComponent } from './order/order-detail/exchange-detail/exchange-detail.component';
+import { ShopDetailComponent } from './shop/shop-detail/shop-detail.component';
+import { ImageCropperComponent } from 'ngx-img-cropper';
+import { CropperComponent } from './goods/goods-detail/cropper/cropper.component';
+import { BannerCropperComponent } from './goods/goods-detail/banner-cropper/banner-cropper.component';
 
 @NgModule({
     imports: [
@@ -40,6 +44,10 @@ import { ExchangeDetailComponent } from './order/order-detail/exchange-detail/ex
         GoodsDetailComponent,
         OrderDetailComponent,
         ExchangeDetailComponent,
+        ShopDetailComponent,
+        ImageCropperComponent,
+        CropperComponent,
+        BannerCropperComponent,
     ],
     entryComponents: [
         GoodsComponent,
@@ -53,7 +61,11 @@ import { ExchangeDetailComponent } from './order/order-detail/exchange-detail/ex
         GoodsDetailComponent,
         OrderDetailComponent,
         ExchangeDetailComponent,
+        ShopDetailComponent,
+        ImageCropperComponent,
+        CropperComponent,
+        BannerCropperComponent,
     ],
-    providers: [WechatUserService, IntegralDetailService, OrderService, GoodsService]
+    providers: [WechatUserService, IntegralDetailService, OrderService, GoodsService, ShopService]
 })
 export class MallModule { }
