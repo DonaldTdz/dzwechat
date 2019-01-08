@@ -1,14 +1,14 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
-using Abp.Domain.Entities.Auditing;
 using HC.DZWechat.WechatMessages;
 using HC.DZWechat.WechatSubscribes;
 using HC.DZWechat.DZEnums.DZCommonEnums;
+using Abp.Application.Services.Dto;
 
 namespace  HC.DZWechat.WechatMessages.Dtos
 {
-    public class WechatMessageEditDto:AuditedEntity<Guid?>
+    public class WechatMessageEditDto:AuditedEntityDto<Guid?>
     {
 
         ///// <summary>
