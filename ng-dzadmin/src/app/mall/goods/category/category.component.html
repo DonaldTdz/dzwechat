@@ -1,5 +1,5 @@
 <div style="padding-bottom: 10px;border-right-width: 10px;padding-right: 10px; padding-left: 10px;">
-    <button nz-button (click)="showCreate()" style="width:100%" nzType="primary">
+    <button nz-button (click)="goCreate()" style="width:100%" nzType="primary">
         <i class="anticon anticon-plus"></i>
         <span>添加分类</span>
     </button>
@@ -10,7 +10,7 @@
             <nz-tree #treeCom [nzData]="nodes" nzMultiple="true" (nzClick)="activeNode($event)" [nzSearchValue]="searchName" (nzSearchValueChange)="nzEvent($event)" (nzDblClick)="openFolder($event)">
                 <ng-template #contextTemplate>
                     <ul nz-menu nzInDropDown>
-                        <li nz-menu-item (click)="showEdit()">修改分类</li>
+                        <li nz-menu-item (click)="goDetail()">修改分类</li>
                     </ul>
                 </ng-template>
                 <ng-template #nzTreeTemplate let-node>
@@ -32,3 +32,4 @@
         </div>
     </div>
 </div>
+<category-detail #createModal (modalSelect)="getCreateData()"></category-detail>

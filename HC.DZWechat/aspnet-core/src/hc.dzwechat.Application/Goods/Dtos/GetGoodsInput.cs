@@ -7,7 +7,8 @@ namespace HC.DZWechat.Goods.Dtos
 {
     public class GetGoodsInput : PagedSortedAndFilteredInputDto, IShouldNormalize
     {
-
+        public string Filter { get; set; }
+        public string NodeKey { get; set; }
         /// <summary>
         /// 正常化排序使用
         /// </summary>

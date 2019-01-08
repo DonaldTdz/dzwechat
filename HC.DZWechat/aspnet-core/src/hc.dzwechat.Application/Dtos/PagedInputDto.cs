@@ -13,13 +13,6 @@ namespace HC.DZWechat.Dtos
         [Range(0, int.MaxValue)]
         public int SkipCount { get; set; }
 
-
-
-		 
-		 
-         
-
-
         public PagedInputDto()
         {
             MaxResultCount = AppLtmConsts.DefaultPageSize;

@@ -29,19 +29,24 @@
                         <th>订单编号</th>
                         <th>订单总积分</th>
                         <th>订单状态</th>
-                        <th>收货人姓名</th>
+                        <th>收货人</th>
                         <th>收货人电话</th>
-                        <th>备注</th>
+                        <th>收货地址</th>
+                        <!-- <th>备注</th> -->
                         <th>时间</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let data of nzTableO.data">
-                        <td>{{data.number}}</td>
+                        <td><a title="订单详情" style="text-decoration:underline;" (click)="goOrderDetail(data.id)">
+                                {{data.number}}
+                            </a></td>
                         <td>{{data.integral}}</td>
                         <td>{{data.statusName}}</td>
                         <td>{{data.deliveryName}}</td>
                         <td>{{data.deliveryPhone}}</td>
+                        <td>{{data.deliveryAddress}}</td>
+                        <!-- <td>{{data.desc}}</td> -->
                         <td>{{data.creationTime | _date}}</td>
                     </tr>
                 </tbody>

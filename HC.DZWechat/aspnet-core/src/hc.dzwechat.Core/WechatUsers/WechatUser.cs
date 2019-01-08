@@ -23,6 +23,8 @@ namespace HC.DZWechat.WechatUsers
         [StringLength(50)]
         [Required]
         public virtual string OpenId { get; set; }
+
+        public virtual string WxOpenId { get; set; }
         /// <summary>
         /// 开放平台全局Id
         /// </summary>

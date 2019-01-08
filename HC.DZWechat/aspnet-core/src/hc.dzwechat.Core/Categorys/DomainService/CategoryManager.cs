@@ -28,13 +28,13 @@ namespace HC.DZWechat.Categorys.DomainService
     public class CategoryManager :DZWechatDomainServiceBase, ICategoryManager
     {
 		
-		private readonly IRepository<Category,Guid> _repository;
+		private readonly IRepository<Category,int> _repository;
 
 		/// <summary>
 		/// Category的构造方法
 		///</summary>
 		public CategoryManager(
-			IRepository<Category, Guid> repository
+			IRepository<Category, int> repository
 		)
 		{
 			_repository =  repository;

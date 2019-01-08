@@ -39,7 +39,7 @@ namespace HC.DZWechat.Orders
 		/// <summary>
 		/// 通过指定id获取OrderListDto信息
 		/// </summary>
-		Task<OrderListDto> GetById(EntityDto<Guid> input);
+		Task<OrderListDto> GetById(Guid id);
 
 
         /// <summary>

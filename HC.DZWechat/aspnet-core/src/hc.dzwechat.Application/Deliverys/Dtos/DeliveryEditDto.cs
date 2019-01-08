@@ -15,7 +15,7 @@ namespace  HC.DZWechat.Deliverys.Dtos
         public Guid? Id { get; set; }
 
 
-        public string UnionId { get; set; }
+        public Guid UserId { get; set; }
 
         /// <summary>
         /// Name

@@ -58,7 +58,7 @@ namespace HC.DZWechat.Deliverys
         public async Task<List<DeliveryListDto>> GetNoPaged(GetDeliverysInput input)
 		{
 
-		    var query = _entityRepository.GetAll().Where(v=>v.UnionId == input.UnionId);
+		    var query = _entityRepository.GetAll().Where(v=>v.UserId == input.UserId);
 			var entityList = await query
 					.OrderByDescending(v=>v.IsDefault).AsNoTracking()
 					.ToListAsync();

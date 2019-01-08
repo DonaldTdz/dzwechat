@@ -1,1 +1,56 @@
 <page-header [title]="'订单管理'"></page-header>
+<nz-card>
+    <div nz-row class="mb-md">
+        <div nz-col nzSpan="18" style="padding-right:10px;">
+            <nz-input-group nzSearch [nzSuffix]="suffixButton">
+                <input type="text" [(ngModel)]="keyWord" nz-input placeholder="用户姓名或手机号码">
+            </nz-input-group>
+            <ng-template #suffixButton>
+                <button nz-button nzType="primary" [nzLoading]="isTableLoading" (click)="refreshData()" nzSearch>搜索</button>
+            </ng-template>
+        </div>
+        <div nz-col nzSpan="6" style="text-align:right;">
+            <button nz-button (click)="resetSearch()" nzShape="circle" nz-tooltip nzPlacement="top" nzTitle="刷新">
+                <i class="anticon anticon-reload"></i>
+            </button>
+        </div>
+    </div>
+    <ng-template #totalTemplate let-total>共 {{totalItems}} 条</ng-template>
+    <nz-table #ajaxTable nzShowSizeChanger [nzData]="dataList" [nzShowTotal]="totalTemplate" [nzTotal]="totalItems" [(nzPageIndex)]="pageNumber" [(nzPageSize)]="pageSize" [nzLoading]="isTableLoading" (nzPageIndexChange)="refresh()" (nzPageSizeChange)="refresh()"
+        [nzFrontPagination]="false">
+        <thead>
+            <tr>
+                <th>订单编号</th>
+                <th>会员昵称</th>
+                <th>会员手机号</th>
+                <th>订单积分</th>
+                <th>订单状态</th>
+                <th>支付时间</th>
+                <!-- <th>完成时间</th> -->
+                <th>收货人姓名</th>
+                <th>收货人电话</th>
+                <!-- <th>收货人地址</th> -->
+                <!-- <th>备注</th> -->
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of ajaxTable.data">
+                <td>{{item.number}}</td>
+                <td>{{item.nickName}}</td>
+                <td>{{item.phone}}</td>
+                <td>{{item.integral}}</td>
+                <td>{{item.statusName}}</td>
+                <td>{{item.payTime| _date}}</td>
+                <!-- <td>{{item.completeTime| _date}}</td> -->
+                <td>{{item.deliveryName}}</td>
+                <td>{{item.deliveryPhone}}</td>
+                <!-- <td>{{item.deliveryAddress| lengthLimit:9}}</td> -->
+                <!-- <td>{{item.remark}}</td> -->
+                <td>
+                    <a (click)="goDetail(item.id)">详情</a>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+</nz-card>

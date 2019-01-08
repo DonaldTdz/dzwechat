@@ -42,6 +42,8 @@ export class MemberDetailComponent implements OnInit {
         if (this.id) {
             this.getWechatUser();
             this.getOrderList();
+            this.getIntegralList();
+            this.getAddressList();
         }
     }
 
@@ -54,8 +56,6 @@ export class MemberDetailComponent implements OnInit {
             //     this.addressList = result.address.split(',');
             //     console.log(this.addressList);
             // }
-            this.getAddressList();
-            this.getIntegralList();
         });
     }
 
@@ -68,7 +68,7 @@ export class MemberDetailComponent implements OnInit {
             let params: any = {};
             params.SkipCount = this.queryI.skipCountI();
             params.MaxResultCount = this.queryI.pageSizeI;
-            params.UnionId = this.user.unionId;
+            params.UserId = this.id;
             this.integralService.getIntegralDetailById(params).subscribe((result: PagedResultDto) => {
                 this.loadingI = false;
                 this.integralList = result.items;
@@ -94,18 +94,18 @@ export class MemberDetailComponent implements OnInit {
     }
 
     getAddressList() {
-        if (this.user.unionId) {
-            this.loadingA = true;
-            let params: any = {};
-            params.UnionId = this.user.unionId;
-            this.orderService.getAddressById(params).subscribe((result: Delivery[]) => {
-                this.loadingA = false;
-                this.addressList = result;
-            });
-        }
+        this.loadingA = true;
+        let params: any = {};
+        params.UserId = this.id;
+        this.orderService.getAddressById(params).subscribe((result: Delivery[]) => {
+            this.loadingA = false;
+            this.addressList = result;
+        });
     }
-
+    goOrderDetail(id: string) {
+        this.router.navigate(['/app/mall/order-detail', id]);
+    }
     return() {
-        this.router.navigate(['/app/mall//member']);
+        this.router.navigate(['/app/mall/member']);
     }
 }

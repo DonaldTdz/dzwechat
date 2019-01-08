@@ -27,8 +27,7 @@ export class WechatUserService {
         let url_ = "/api/services/app/WechatUser/GetById";
         return this._commonhttp.get(url_, params).pipe(map(data => {
             return WechatUser.fromJS(data);
-        }))
-
+        }));
     }
 
 }

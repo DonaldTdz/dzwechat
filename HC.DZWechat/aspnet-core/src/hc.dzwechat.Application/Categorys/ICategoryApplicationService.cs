@@ -36,10 +36,10 @@ namespace HC.DZWechat.Categorys
         Task<PagedResultDto<CategoryListDto>> GetPaged(GetCategorysInput input);
 
 
-		/// <summary>
-		/// 通过指定id获取CategoryListDto信息
-		/// </summary>
-		Task<CategoryListDto> GetById(Guid id);
+        /// <summary>
+        /// 通过指定id获取CategoryListDto信息
+        /// </summary>
+        Task<CategoryListDto> GetById(EntityDto<int> input);
 
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace HC.DZWechat.Categorys
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        Task<GetCategoryForEditOutput> GetForEdit(NullableIdDto<Guid> input);
+        Task<GetCategoryForEditOutput> GetForEdit(NullableIdDto<int> input);
 
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace HC.DZWechat.Categorys
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        Task CreateOrUpdate(CreateOrUpdateCategoryInput input);
+        Task<CategoryListDto> CreateOrUpdate(CategoryEditDto input);
 
 
         /// <summary>
@@ -63,20 +63,14 @@ namespace HC.DZWechat.Categorys
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        Task Delete(EntityDto<Guid> input);
+        Task Delete(EntityDto<int> input);
 
 
         /// <summary>
         /// 批量删除Category
         /// </summary>
-        Task BatchDelete(List<Guid> input);
+        Task BatchDelete(List<int> input);
 
-
-		/// <summary>
-        /// 导出Category为excel表
-        /// </summary>
-        /// <returns></returns>
-		//Task<FileDto> GetToExcel();
-
+        Task<List<SelectGroup>> GetCategorySelectGroup();
     }
 }

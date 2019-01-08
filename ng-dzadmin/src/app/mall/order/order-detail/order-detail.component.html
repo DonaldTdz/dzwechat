@@ -1,0 +1,57 @@
+<nz-card [nzBordered]="false" *ngIf="order">
+    <div nz-row nzGutter="16" style="margin-bottom: 16px;">
+        <div nz-col nzXs="24" nzSm="24">
+            <!-- <sv-container size="small" col="4" class="mb-md"> -->
+            <sv-container class="mb-lg">
+                <sv label="订单编号">{{order.number}}</sv>
+                <sv label="会员昵称">{{order.nickName}}</sv>
+                <sv label="会员手机号">{{order.phone}}</sv>
+                <sv label="订单总积分">{{order.integral}}</sv>
+                <sv label="订单状态">{{order.statusName}}</sv>
+                <sv label="支付时间">{{order.payTime| _date}}</sv>
+                <sv label="收货人姓名">{{order.deliveryName}}</sv>
+                <sv label="收货人电话">{{order.deliveryPhone}}</sv>
+                <sv label="收货人地址">{{order.deliveryAddress}}</sv>
+                <sv label="完成时间">{{order.completeTime| _date}}</sv>
+                <sv label="取消时间">{{order.cancelTime| _date}}</sv>
+                <sv label="备注">{{order.remark}}</sv>
+            </sv-container>
+        </div>
+    </div>
+    <ng-template #totalTemplate let-total>共 {{totalItems}} 条</ng-template>
+    <nz-table #nzTable [nzData]="dataList" [nzFrontPagination]="false" [nzTotal]="totalItems" [nzShowTotal]="totalTemplate" [(nzPageIndex)]="pageNumber" [(nzPageSize)]="pageSize" [nzLoading]="isTableLoading" [nzShowSizeChanger]="true" (nzPageIndexChange)="refresh()"
+        (nzPageSizeChange)="refresh()">
+        <thead>
+            <tr>
+                <th>商品名称</th>
+                <th>商品数量</th>
+                <th>商品单位</th>
+                <th>所需积分</th>
+                <th>兑换状态</th>
+                <th>兑换时间</th>
+                <th>创建时间</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of nzTable.data">
+                <td>{{data.specification}}</td>
+                <td>{{data.num}}</td>
+                <td>{{data.unit}}</td>
+                <td>{{data.integral}}</td>
+                <td>{{data.statusName}}</td>
+                <td>{{data.exchangeTime | _date}}</td>
+                <td>{{data.creationTime | _date}}</td>
+                <td>
+                    <a (click)="goExchange(data.id)">邮寄信息</a>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+</nz-card>
+<footer-toolbar>
+    <button nz-button [nzType]="'default'" (click)="return()">
+        返回
+    </button>
+</footer-toolbar>
+<exchange-detail #createModal (modalSelect)="getCreateData()"></exchange-detail>

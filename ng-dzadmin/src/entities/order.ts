@@ -15,6 +15,8 @@ export class Order {
     deliveryPhone: string;
     deliveryAddress: string;
     statusName: string;
+    userName: string;
+    nickName: string;
     constructor(data?: any) {
         if (data) {
             for (var property in data) {
@@ -41,6 +43,8 @@ export class Order {
             this.deliveryPhone = data["deliveryPhone"];
             this.deliveryAddress = data["deliveryAddress"];
             this.statusName = data["statusName"];
+            this.userName = data["userName"];
+            this.nickName = data["nickName"];
         }
     }
     toJSON(data?: any) {

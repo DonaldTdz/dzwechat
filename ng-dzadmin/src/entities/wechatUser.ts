@@ -19,6 +19,7 @@ export class WechatUser {
     unBindTime: Date;
     userTypeName: string;
     bindStatusName: string;
+    wxOpenId: string;
     constructor(data?: any) {
         if (data) {
             for (var property in data) {
@@ -49,6 +50,7 @@ export class WechatUser {
             this.unBindTime = data["unBindTime"];
             this.userTypeName = data["userTypeName"];
             this.bindStatusName = data["bindStatusName"];
+            this.wxOpenId = data["wxOpenId"];
         }
     }
     toJSON(data?: any) {
@@ -71,6 +73,7 @@ export class WechatUser {
         data["bindStatus"] = this.bindStatus;
         data["bindTime"] = this.bindTime;
         data["unBindTime"] = this.unBindTime;
+        data["wxOpenId"] = this.wxOpenId;
         return data;
     }
     static fromJS(data: any): WechatUser {

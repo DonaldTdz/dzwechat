@@ -16,13 +16,9 @@ namespace HC.DZWechat.IntegralDetails
         /// 微信openId
         /// </summary>
         [StringLength(50)]
-        public virtual string OpenId { get; set; }
+        [ForeignKey("UserId")]
+        public virtual Guid UserId { get; set; }
 
-        /// <summary>
-        /// 外键
-        /// </summary>
-        [ForeignKey("UnionId")]
-        public virtual string UnionId { get; set; }
         /// <summary>
         /// 初始积分
         /// </summary>

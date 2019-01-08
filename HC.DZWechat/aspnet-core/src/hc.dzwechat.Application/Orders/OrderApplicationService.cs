@@ -93,10 +93,9 @@ namespace HC.DZWechat.Orders
         /// 通过指定id获取OrderListDto信息
         /// </summary>
 
-        public async Task<OrderListDto> GetById(EntityDto<Guid> input)
+        public async Task<OrderListDto> GetById(Guid id)
 		{
-			var entity = await _entityRepository.GetAsync(input.Id);
-
+			var entity = await _entityRepository.GetAsync(id);
 		    return entity.MapTo<OrderListDto>();
 		}
 

@@ -41,7 +41,7 @@
                 <tbody>
                     <tr *ngFor="let item of ajaxTable.data">
                         <td>
-                            <nz-avatar [nzSrc]="(item.coverPhoto|hostUrl)" style="width:80px;height: 80px;" (click)="handlePreview(item.coverPhoto)"
+                            <nz-avatar [nzSrc]="(item.showCoverPhoto)" style="width:80px;height: 80px;" (click)="handlePreview(item.showCoverPhoto)"
                                 [nzSize]="'large'" [nzShape]="'square'"></nz-avatar>
                         </td>
                         <td>{{item.title}}</td>
@@ -49,10 +49,10 @@
                         <!-- <td>{{item.typeName}}</td>
                         <td>{{item.content}}</td> -->
                         <td>{{item.pushStatusName}}</td>
-                        <td>{{item.pushTime| _date}}</td>
+                        <td>{{item.pushTime}}</td>
                         <!-- <td>{{item.linkTypeName}}</td>
                         <td>{{item.linkAddress}}</td> -->
-                        <td>{{item.creationTime| _date}}</td>
+                        <td>{{item.creationTime| _date: 'YYYY-MM-DD'}}</td>
                         <td>
                             <a (click)="edit(item)">详情</a>
                             <!-- <nz-divider nzType="vertical"></nz-divider> -->
@@ -64,7 +64,7 @@
         </div>
         <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null" (nzOnCancel)="previewVisible=false">
             <ng-template #modalContent>
-                <img [src]="(previewImage|hostUrl)" [ngStyle]="{ 'width': '100%' }" />
+                <img [src]="(previewImage)" [ngStyle]="{ 'width': '100%' }" />
             </ng-template>
         </nz-modal>
     </div>

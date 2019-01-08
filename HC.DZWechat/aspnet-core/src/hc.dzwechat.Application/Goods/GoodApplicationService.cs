@@ -21,8 +21,11 @@ using Abp.Linq.Extensions;
 using HC.DZWechat.Goods;
 using HC.DZWechat.Goods.Dtos;
 using HC.DZWechat.Goods.DomainService;
-
-
+using HC.DZWechat.Categorys;
+using HC.DZWechat.Dtos;
+using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Hosting;
+using HC.DZWechat.Configuration;
 
 namespace HC.DZWechat.Goods
 {
@@ -33,19 +36,24 @@ namespace HC.DZWechat.Goods
     public class GoodAppService : DZWechatAppServiceBase, IGoodAppService
     {
         private readonly IRepository<Good, Guid> _entityRepository;
-
+        private readonly IRepository<Category> _categoryRepository;
         private readonly IGoodManager _entityManager;
+        private readonly IConfigurationRoot _appConfiguration;
 
         /// <summary>
         /// 构造函数 
         ///</summary>
         public GoodAppService(
         IRepository<Good, Guid> entityRepository
-        ,IGoodManager entityManager
+        ,IRepository<Category> categoryRepository
+        , IGoodManager entityManager
+        , IHostingEnvironment env
         )
         {
-            _entityRepository = entityRepository; 
-             _entityManager=entityManager;
+            _entityRepository = entityRepository;
+            _categoryRepository = categoryRepository;
+            _entityManager = entityManager;
+            _appConfiguration = AppConfigurations.Get(env.ContentRootPath, env.EnvironmentName, env.IsDevelopment());
         }
 
 
@@ -57,22 +65,66 @@ namespace HC.DZWechat.Goods
 		 
         public async Task<PagedResultDto<GoodListDto>> GetPaged(GetGoodsInput input)
 		{
+            if(input.NodeKey == "root")
+            {
+                var goods = _entityRepository.GetAll().WhereIf(!string.IsNullOrEmpty(input.Filter), r => r.Specification.Contains(input.Filter) || r.BarCode.Contains(input.Filter));
+                var category = _categoryRepository.GetAll();
+                var query = from g in goods
+                            join c in category on g.CategoryId equals c.Id
+                            select new GoodListDto()
+                            {
+                                Id = g.Id,
+                                Specification = g.Specification,
+                                Unit = g.Unit,
+                                CategoryName = c.Name,
+                                PhotoUrl = g.PhotoUrl,
+                                //Stock = g.Stock,
+                                //BarCode = g.BarCode,
+                                //Desc = g.Desc,
+                                //ExchangeCode = g.ExchangeCode,
+                                OnlineTime = g.OnlineTime,
+                                Integral = g.Integral,
+                                IsAction = g.IsAction
+                            };
+                var count = await query.CountAsync();
+                var entityList = await query
+                        .OrderBy(input.Sorting).AsNoTracking()
+                        .PageBy(input)
+                        .ToListAsync();
+                var entityListDtos = entityList.MapTo<List<GoodListDto>>();
+                return new PagedResultDto<GoodListDto>(count, entityListDtos);
+            }
+            else
+            {
+                var goods = _entityRepository.GetAll().Where(v => v.CategoryId == Convert.ToInt32(input.NodeKey))
+                    .WhereIf(!string.IsNullOrEmpty(input.Filter), r => r.Specification.Contains(input.Filter) || r.BarCode.Contains(input.Filter));
+                var category = _categoryRepository.GetAll();
+                var query = from g in goods
+                            join c in category on g.CategoryId equals c.Id
+                            select new GoodListDto()
+                            {
+                                Id = g.Id,
+                                Specification = g.Specification,
+                                Unit = g.Unit,
+                                CategoryName = c.Name,
+                                PhotoUrl = g.PhotoUrl,
+                                //Stock = g.Stock,
+                                //BarCode = g.BarCode,
+                                //Desc = g.Desc,
+                                //ExchangeCode = g.ExchangeCode,
+                                OnlineTime = g.OnlineTime,
+                                Integral = g.Integral,
+                                IsAction = g.IsAction
+                            };
+                var count = await query.CountAsync();
 
-		    var query = _entityRepository.GetAll();
-			// TODO:根据传入的参数添加过滤条件
-            
-
-			var count = await query.CountAsync();
-
-			var entityList = await query
-					.OrderBy(input.Sorting).AsNoTracking()
-					.PageBy(input)
-					.ToListAsync();
-
-			// var entityListDtos = ObjectMapper.Map<List<GoodListDto>>(entityList);
-			var entityListDtos =entityList.MapTo<List<GoodListDto>>();
-
-			return new PagedResultDto<GoodListDto>(count,entityListDtos);
+                var entityList = await query
+                        .OrderBy(input.Sorting).AsNoTracking()
+                        .PageBy(input)
+                        .ToListAsync();
+                var entityListDtos = entityList.MapTo<List<GoodListDto>>();
+                return new PagedResultDto<GoodListDto>(count, entityListDtos);
+            }        
 		}
 
 
@@ -81,9 +133,8 @@ namespace HC.DZWechat.Goods
 		/// </summary>
 		 
 		public async Task<GoodListDto> GetById(Guid id)
-		{
+		{   
 			var entity = await _entityRepository.GetAsync(id);
-
 		    return entity.MapTo<GoodListDto>();
 		}
 
@@ -122,16 +173,16 @@ GoodEditDto editDto;
 		/// <param name="input"></param>
 		/// <returns></returns>
 		
-		public async Task CreateOrUpdate(CreateOrUpdateGoodInput input)
+		public async Task<GoodListDto> CreateOrUpdate(GoodEditDto input)
 		{
 
-			if (input.Good.Id.HasValue)
+			if (input.Id.HasValue)
 			{
-				await Update(input.Good);
+				return await Update(input);
 			}
 			else
 			{
-				await Create(input.Good);
+				return await Create(input);
 			}
 		}
 
@@ -140,42 +191,42 @@ GoodEditDto editDto;
 		/// 新增Good
 		/// </summary>
 		
-		protected virtual async Task<GoodEditDto> Create(GoodEditDto input)
+		protected virtual async Task<GoodListDto> Create(GoodEditDto input)
 		{
-			//TODO:新增前的逻辑判断，是否允许新增
-
-            // var entity = ObjectMapper.Map <Good>(input);
             var entity=input.MapTo<Good>();
-			
-
 			entity = await _entityRepository.InsertAsync(entity);
-			return entity.MapTo<GoodEditDto>();
+			return entity.MapTo<GoodListDto>();
 		}
 
 		/// <summary>
 		/// 编辑Good
 		/// </summary>
 		
-		protected virtual async Task Update(GoodEditDto input)
+		protected virtual async Task<GoodListDto> Update(GoodEditDto input)
 		{
-			//TODO:更新前的逻辑判断，是否允许更新
-
-			var entity = await _entityRepository.GetAsync(input.Id.Value);
+            if (input.IsAction == true)
+            {
+                input.OnlineTime = DateTime.Now;
+            }
+            else
+            {
+                input.OfflineTime = DateTime.Now;
+            }
+            var entity = await _entityRepository.GetAsync(input.Id.Value);
 			input.MapTo(entity);
-
-			// ObjectMapper.Map(input, entity);
 		    await _entityRepository.UpdateAsync(entity);
-		}
+            return entity.MapTo<GoodListDto>();
+        }
 
 
 
-		/// <summary>
-		/// 删除Good信息的方法
-		/// </summary>
-		/// <param name="input"></param>
-		/// <returns></returns>
-		
-		public async Task Delete(EntityDto<Guid> input)
+        /// <summary>
+        /// 删除Good信息的方法
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+
+        public async Task Delete(EntityDto<Guid> input)
 		{
 			//TODO:删除前的逻辑判断，是否允许删除
 			await _entityRepository.DeleteAsync(input.Id);
@@ -193,18 +244,42 @@ GoodEditDto editDto;
 			await _entityRepository.DeleteAsync(s => input.Contains(s.Id));
 		}
 
+        /// <summary>
+        /// 热卖商品
+        /// </summary>
+        [AbpAllowAnonymous]
+        public async Task<WxPagedResultDto<GoodsGridDto>> GetHeatGoodsAsync(WxPagedInputDto input)
+        {
+            var hostUrl = _appConfiguration["App:ServerRootAddress"];
+            var query = _entityRepository.GetAll().Where(e => e.IsAction == true).Select(e => new GoodsGridDto(hostUrl)
+            {
+                Id = e.Id,
+                name = e.Specification,
+                saleCount = e.SellCount??0,
+                price = e.Integral,
+                photoUrl = e.PhotoUrl,
+                unit = e.Unit
+            });
+            var count = await query.CountAsync();
+            var dataList = await query.OrderByDescending(o => o.saleCount)
+                        .PageBy(input)
+                        .ToListAsync();
+            var result = new WxPagedResultDto<GoodsGridDto>(count, dataList);
+            result.PageSize = input.Size;
+            return result;
+        }
 
-		/// <summary>
-		/// 导出Good为excel表,等待开发。
-		/// </summary>
-		/// <returns></returns>
-		//public async Task<FileDto> GetToExcel()
-		//{
-		//	var users = await UserManager.Users.ToListAsync();
-		//	var userListDtos = ObjectMapper.Map<List<UserListDto>>(users);
-		//	await FillRoleNames(userListDtos);
-		//	return _userListExcelExporter.ExportToFile(userListDtos);
-		//}
+        /// <summary>
+        /// 导出Good为excel表,等待开发。
+        /// </summary>
+        /// <returns></returns>
+        //public async Task<FileDto> GetToExcel()
+        //{
+        //	var users = await UserManager.Users.ToListAsync();
+        //	var userListDtos = ObjectMapper.Map<List<UserListDto>>(users);
+        //	await FillRoleNames(userListDtos);
+        //	return _userListExcelExporter.ExportToFile(userListDtos);
+        //}
 
     }
 }

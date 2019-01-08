@@ -9,7 +9,7 @@ using static HC.DZWechat.DZEnums.DZEnums;
 namespace HC.DZWechat.Categorys
 {
     [Table("Categorys")]
-    public class Category : Entity<Guid>, IHasCreationTime //注意修改主键Id数据类型
+    public class Category : Entity<int>, IHasCreationTime //注意修改主键Id数据类型
     {
         /// <summary>
         /// 分类名称

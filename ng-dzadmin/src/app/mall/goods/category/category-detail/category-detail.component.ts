@@ -1,54 +1,58 @@
-import { Component, OnInit, Input, Injector } from '@angular/core';
+import { Component, OnInit, Input, Injector, Output, EventEmitter } from '@angular/core';
 import { ModalComponentBase } from '@shared/component-base';
 import { Category } from 'entities';
 import { GoodsService } from 'services';
+import { NotifyService } from 'abp-ng2-module/dist/src/notify/notify.service';
 
 @Component({
     selector: 'category-detail',
     templateUrl: 'category-detail.component.html'
 })
-export class CategoryDetailComponent extends ModalComponentBase implements OnInit {
-    @Input() id: number;
+export class CategoryDetailComponent {
+    @Output() modalSelect: EventEmitter<any> = new EventEmitter<any>();
+    loading = false;
+    isVisible = false;
     category: Category = new Category();
     title: string;
-    constructor(
-        injector: Injector
-        , private goodsService: GoodsService
+    constructor(private goodsService: GoodsService
+        , private notify: NotifyService
 
     ) {
-        super(injector);
     }
 
-    ngOnInit() {
-        this.fetchData();
+    show(id?: number) {
+        this.isVisible = true;
+        console.log(id);
+
+        if (id) {
+            this.title = '修改分类';
+            let params: any = {};
+            params.Id = id;
+            this.goodsService.getCategoryById(params)
+                .subscribe((result) => {
+                    this.category = result;
+                });
+        } else {
+            this.category.name = null;
+            this.category.seq = null;
+            this.category.id = null;
+            this.title = '新增分类';
+        }
     }
 
-    fetchData(): void {
-        let params: any = {};
-        params.id = this.id;
-        this.goodsService.getCategoryById(params)
-            .subscribe((result) => {
-                this.category = result;
-            });
-    }
+    handleCancel = (e) => {
+        this.isVisible = false;
 
+    }
 
     save(): void {
-        //     let tmpRoleNames = [];
-        //     this.roleList.forEach((item) => {
-        //       if (item.checked) {
-        //         tmpRoleNames.push(item.value);
-        //       }
-        //     });
-        //     this.category.roleNames = tmpRoleNames;
-        //     this.category.surname = this.category.name;
-
-        //     this.goodsService.update(this.category)
-        //       .finally(() => { this.saving = false; })
-        //       .subscribe(() => {
-        //         this.notify.info(this.l('SavedSuccessfully'));
-        //         this.success();
-        //       });
-        //   }
+        this.loading = true;
+        // console.log(this.category);
+        this.goodsService.updateCategory(this.category).finally(() => { this.loading = false; })
+            .subscribe((result: Category) => {
+                this.notify.info('保存成功', '');
+                this.modalSelect.emit();
+                this.isVisible = false;
+            });
     }
 }

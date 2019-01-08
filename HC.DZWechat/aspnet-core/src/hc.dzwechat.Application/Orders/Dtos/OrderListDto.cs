@@ -6,9 +6,12 @@ using Abp.Domain.Entities.Auditing;
 using System.ComponentModel.DataAnnotations;
 using HC.DZWechat.Orders;
 using static HC.DZWechat.DZEnums.DZEnums;
+using Abp.AutoMapper;
 
 namespace HC.DZWechat.Orders.Dtos
 {
+    [AutoMapFrom(typeof(Order))]
+
     public class OrderListDto : EntityDto<Guid>, IHasCreationTime, ICreationAudited
     {
 
@@ -18,6 +21,7 @@ namespace HC.DZWechat.Orders.Dtos
         /// </summary>
         [Required(ErrorMessage = "Number不能为空")]
         public string Number { get; set; }
+        public string NickName { get; set; }
 
         /// <summary>
         /// UserId
@@ -114,8 +118,6 @@ namespace HC.DZWechat.Orders.Dtos
         /// </summary>
         public string DeliveryAddress { get; set; }
 
-
-
-
+        public string UserName { get; set; }
     }
 }
