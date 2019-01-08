@@ -58,7 +58,7 @@ namespace HC.DZWechat.Orders
         public async Task<PagedResultDto<OrderListDto>> GetPaged(GetOrdersInput input)
 		{
 
-		    var query = _entityRepository.GetAll();
+		    var query = _entityRepository.GetAll().WhereIf(!string.IsNullOrEmpty(input.FilterText), u => u.Phone.Contains(input.FilterText));
 			// TODO:根据传入的参数添加过滤条件
             
 

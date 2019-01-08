@@ -95,5 +95,10 @@ namespace HC.DZWechat.DZEnums
             文字消息 = 1,
             图文消息 = 2
         }
+
+        public enum ShopType
+        {
+            直营店 = 1
+        }
     }
 }

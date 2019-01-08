@@ -54,15 +54,11 @@ namespace HC.DZWechat.Exchanges.Dtos
 		public string LogisticsCompany { get; set; }
 
 
-        public string UnionId { get; set; }
+        public string WechatUserId { get; set; }
 
         /// <summary>
         /// LogisticsNo
         /// </summary>
         public string LogisticsNo { get; set; }
-
-
-
-
     }
 }

@@ -17,6 +17,8 @@ export class Goods {
     onlineTime: Date;
     offlineTime: Date;
     showPhotoUrl: string;
+    bannerUrl: string;
+    isBanner: boolean;
     constructor(data?: any) {
         if (data) {
             for (var property in data) {
@@ -44,6 +46,8 @@ export class Goods {
             this.categoryName = data["categoryName"];
             this.onlineTime = data["onlineTime"];
             this.offlineTime = data["offlineTime"];
+            this.bannerUrl = data["bannerUrl"];
+            this.isBanner = data["isBanner"];
         }
     }
     toJSON(data?: any) {
@@ -64,6 +68,8 @@ export class Goods {
         data["creatorUserId"] = this.creatorUserId;
         data["onlineTime"] = this.onlineTime;
         data["offlineTime"] = this.offlineTime;
+        data["bannerUrl"] = this.bannerUrl;
+        data["isBanner"] = this.isBanner;
         return data;
     }
     static fromJS(data: any): Goods {

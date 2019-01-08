@@ -1,1 +1,49 @@
 <page-header [title]="'直营店'"></page-header>
+<nz-card>
+    <div nz-row class="mb-md">
+        <div nz-col nzSpan="18" style="padding-right:10px;">
+            <nz-input-group nzSearch [nzSuffix]="suffixButton">
+                <input type="text" [(ngModel)]="keyWord" nz-input placeholder="店铺名称">
+            </nz-input-group>
+            <ng-template #suffixButton>
+                <button nz-button nzType="primary" [nzLoading]="isTableLoading" (click)="refreshData()" nzSearch>搜索</button>
+            </ng-template>
+        </div>
+        <div nz-col nzSpan="6" style="text-align:right;">
+            <button nz-button (click)="resetSearch()" nzShape="circle" nz-tooltip nzPlacement="top" nzTitle="刷新">
+                <i class="anticon anticon-reload"></i>
+            </button>
+            <button nz-button (click)="goCreate()" nzShape="circle" nzType="primary" nz-tooltip nzPlacement="top" nzTitle="新增">
+                <i class="anticon anticon-plus"></i>
+            </button>
+        </div>
+    </div>
+    <ng-template #totalTemplate let-total>共 {{totalItems}} 条</ng-template>
+    <nz-table #ajaxTable nzShowSizeChanger [nzData]="dataList" [nzShowTotal]="totalTemplate" [nzTotal]="totalItems" [(nzPageIndex)]="pageNumber" [(nzPageSize)]="pageSize" [nzLoading]="isTableLoading" (nzPageIndexChange)="refresh()" (nzPageSizeChange)="refresh()"
+        [nzFrontPagination]="false">
+        <thead>
+            <tr>
+                <th>店铺名称</th>
+                <th>店铺地址</th>
+                <th>店铺类型</th>
+                <th>店铺电话</th>
+                <th>授权码</th>
+                <th>创建时间</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of ajaxTable.data">
+                <td>{{item.name}}</td>
+                <td>{{item.address | lengthLimit:9}}</td>
+                <td>{{item.typeName}}</td>
+                <td>{{item.tel}}</td>
+                <td>{{item.verificationCode}}</td>
+                <td>{{item.creationTime | _date}}</td>
+                <td>
+                    <a (click)="goDetail(item.id)">详情</a>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+</nz-card>

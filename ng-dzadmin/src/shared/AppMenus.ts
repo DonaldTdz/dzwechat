@@ -32,22 +32,27 @@ export class AppMenus {
                 {
                     text: "会员管理",
                     link: "/app/mall/member",
+                    reuse: false
                 },
                 {
                     text: "VIP管理",
                     link: "/app/mall/vip",
+                    reuse: false
                 },
                 {
                     text: "直营店",
                     link: "/app/mall/shop",
+                    reuse: false
                 },
                 {
                     text: "商品管理",
                     link: "/app/mall/goods",
+                    reuse: false
                 },
                 {
                     text: "订单管理",
                     link: "/app/mall/order",
+                    reuse: false
                 },
             ]
         },

@@ -41,11 +41,11 @@ export class ExchangeDetailComponent {
         this.loading = true;
         this.exchange.orderDetailId = this.orderDetailId;
         this.exchange.exchangeCode = 2;
-        this.orderService.createExchange(this.exchange).finally(() => { this.loading = false; })
-            .subscribe((result: Exchange) => {
-                this.notify.info('保存成功', '');
-                this.modalSelect.emit();
-                this.isVisible = false;
-            });
+        this.orderService.createExchange(this.exchange).subscribe((result: Exchange) => {
+            this.loading = false;
+            this.notify.info('保存成功', '');
+            this.modalSelect.emit();
+            this.isVisible = false;
+        });
     }
 }

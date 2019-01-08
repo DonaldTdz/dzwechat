@@ -64,4 +64,17 @@ export class GoodsService {
             return Goods.fromJS(data);
         }));
     }
+    updateGoodsStatus(params: any): Observable<Goods> {
+        let url_ = "/api/services/app/Good/ChangeStatus";
+        return this._commonhttp.post(url_, params).pipe(map(data => {
+            return Goods.fromJS(data);
+        }));
+    }
+
+    filesPostsBase64(params: any): Observable<any> {
+        let url_ = "/WeChatFile/FilesPostsBase64";
+        return this._commonhttp.post(url_, params).pipe(map(data => {
+            return data;
+        }));
+    }
 }

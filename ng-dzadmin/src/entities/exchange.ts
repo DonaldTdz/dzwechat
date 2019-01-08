@@ -4,6 +4,7 @@ export class Exchange {
     exchangeCode: number;
     shopId: string;
     userId: string;
+    wechatUserId: string;
     creationTime: Date;
     logisticsCompany: string;
     logisticsNo: string;
@@ -25,6 +26,7 @@ export class Exchange {
             this.creationTime = data["creationTime"];
             this.logisticsCompany = data["logisticsCompany"];
             this.logisticsNo = data["logisticsNo"];
+            this.wechatUserId = data["wechatUserId"];
         }
     }
     toJSON(data?: any) {
@@ -37,6 +39,7 @@ export class Exchange {
         data["creationTime"] = this.creationTime;
         data["logisticsCompany"] = this.logisticsCompany;
         data["logisticsNo"] = this.logisticsNo;
+        data["wechatUserId"] = this.wechatUserId;
         return data;
     }
     static fromJS(data: any): Exchange {
