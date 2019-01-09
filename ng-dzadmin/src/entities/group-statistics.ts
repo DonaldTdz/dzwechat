@@ -2,6 +2,7 @@
 export class GroupStatistics {
     groupName: string;
     total: number;
+    integralTotal: number;
     constructor(data?: any) {
         if (data) {
             for (var property in data) {
@@ -14,12 +15,15 @@ export class GroupStatistics {
         if (data) {
             this.groupName = data["groupName"];
             this.total = data["total"];
+            this.integralTotal = data["integralTotal"];
+
         }
     }
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["groupName"] = this.groupName;
         data["total"] = this.total;
+        data["integralTotal"] = this.integralTotal;
         return data;
     }
     static fromJS(data: any): GroupStatistics {
