@@ -56,7 +56,7 @@ namespace HC.DZWechat.Goods
         [StringLength(50)]
         public virtual string BarCode { get; set; }
         /// <summary>
-        /// 搜索次数
+        /// 销售数量
         /// </summary>
         public virtual int? SellCount { get; set; }
         /// <summary>

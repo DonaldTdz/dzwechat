@@ -7,6 +7,7 @@ import { NzModalRef, NzModalService, NzMessageService, UploadFile } from 'ng-zor
 import { AppConsts } from '@shared/AppConsts';
 import { ImageCropperComponent, CropperSettings, Bounds, CropPosition } from 'ngx-img-cropper';
 import { CropperComponent } from './cropper/cropper.component';
+import { log } from 'util';
 
 @Component({
     selector: 'goods-detail',
@@ -220,36 +221,72 @@ export class GoodsDetailComponent implements OnInit {
     }
 
     handleRemove = (file: UploadFile) => {
-        if (file) {
-            let i = 0;
-            this.fileList.forEach(v => {
-                if (v.status == 'removed') {
-                    this.fileList.splice(i, 1);
-                    this.photoList[i].status = 'removed';
-                    // return;
-                    this.removeSavePoto();
+        this.confirmModal = this.modal.confirm({
+            nzContent: '是否删除当前图片?',
+            nzOnOk: () => {
+                if (file) {
+                    let tflist = JSON.parse(JSON.stringify(this.fileList));
+                    for (const key in tflist) {
+                        if (tflist[key].status == 'removed') {
+                            tflist.splice(parseInt(key), 1);
+                            this.photoList.splice(parseInt(key), 1);
+                            break;
+                        }
+                    }
+                    this.fileList = tflist;
+                    /*let i = 0;
+                    this.fileList.forEach((v) => {
+                        if (v.status == 'removed') {
+                            // const temp = v;
+                            // const list = this.fileList;
+                            this.fileList.splice(i, 1);
+                            this.photoList.splice(i, 1);
+                            return;
+                            // this.photoList[i].status = 'removed';
+                            // this.removeSavePoto();
+                        }
+                        i++
+                    });*/
                 }
-                i++
-            });
-        }
-    }
-
-    removeSavePoto() {
-        let i = 0;
-        this.photoList.forEach(v => {
+            }
+        });
+        /*let i = 0;
+        this.fileList.forEach(v => {
             if (v.status == 'removed') {
+                // const temp = v;
+                // const list = this.fileList;
+                this.fileList.splice(i, 1);
                 this.photoList.splice(i, 1);
                 return;
+                // this.photoList[i].status = 'removed';
+                // this.removeSavePoto();
             }
             i++
-        });
+        });*/
+        //return true;
     }
 
+    // removeSavePoto() {
+    //     let i = 0;
+    //     this.photoList.forEach(v => {
+    //         if (v.status == 'removed') {
+    //             this.photoList.splice(i, 1);
+    //             return;
+    //         }
+    //         i++
+    //     });
+    // }
+
     bannerRemove = (file: UploadFile) => {
-        if (file) {
-            this.bannerFile = [];
-            this.bannerList = [];
-        }
+        this.confirmModal = this.modal.confirm({
+            nzContent: '是否删除当前图片?',
+            nzOnOk: () => {
+                if (file) {
+                    this.bannerFile = [];
+                    this.bannerList = [];
+                }
+            }
+        });
     }
 
     goCreate(): void {

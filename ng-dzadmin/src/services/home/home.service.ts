@@ -2,7 +2,7 @@ import { Inject, Optional, Injectable } from "@angular/core";
 import { Observer, Observable } from "rxjs";
 import { CommonHttpClient } from "services/common-httpclient";
 import { map } from "rxjs/operators";
-import { HomeInfo } from "entities";
+import { HomeInfo, GroupStatistics } from "entities";
 
 @Injectable()
 export class HomeService {
@@ -16,6 +16,26 @@ export class HomeService {
         let _url = '/api/services/app/Order/GetHomeInfo';
         return this._commonhttp.get(_url).pipe(map(data => {
             return HomeInfo.fromJS(data);
+        }));
+    }
+
+    /**
+     * 获取积分销售统计（按规格）
+     */
+    getIntegralStatisByGoods(): Observable<GroupStatistics[]> {
+        let _url = '/api/services/app/Good/GetIntegralStatisByGoods';
+        return this._commonhttp.get(_url).pipe(map((data) => {
+            return GroupStatistics.fromJSArray(data);
+        }));
+    }
+
+    /**
+     * 获取商品销售统计
+     */
+    getGoodsStatis(): Observable<GroupStatistics[]> {
+        let _url = '/api/services/app/Good/GetGoodsStatis';
+        return this._commonhttp.get(_url).pipe(map((data) => {
+            return GroupStatistics.fromJSArray(data);
         }));
     }
 }
