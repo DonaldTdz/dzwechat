@@ -173,6 +173,7 @@ namespace HC.DZWechat.Categorys
         {
             var entity = input.MapTo<Category>();
             entity = await _entityRepository.InsertAsync(entity);
+            await CurrentUnitOfWork.SaveChangesAsync();
             return entity.MapTo<CategoryListDto>();
         }
 
@@ -228,6 +229,13 @@ namespace HC.DZWechat.Categorys
                                     seq = pt.Seq
                                 }).OrderBy(v => v.seq).AsNoTracking().ToListAsync();
             return entity.MapTo<List<SelectGroup>>();
+        }
+
+        [AbpAllowAnonymous]
+        public async Task<List<GoodsCategoryDto>> GetGoodsCategoriesAsync()
+        {
+            var gclist = await _entityRepository.GetAll().OrderBy(c => c.Seq).ToListAsync();
+            return gclist.MapTo<List<GoodsCategoryDto>>();
         }
     }
 }

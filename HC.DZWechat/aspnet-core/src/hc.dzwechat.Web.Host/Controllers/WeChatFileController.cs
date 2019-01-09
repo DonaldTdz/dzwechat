@@ -13,6 +13,9 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using HC.DZWechat.Dtos;
+using System.Text.RegularExpressions;
+using Abp.Authorization;
+using HC.DZWechat.Models.WeChat;
 
 namespace HC.DZWechat.Web.Host.Controllers
 {
@@ -71,6 +74,51 @@ namespace HC.DZWechat.Web.Host.Controllers
             }
             return await Task.FromResult((IActionResult)Json(new APIResultDto() { Code = 0, Msg = "上传数据成功", Data = imageName }));
             //return Ok(new { imageName });
+        }
+
+        [HttpPost]
+        [AbpAllowAnonymous]
+        //public async Task<IActionResult> FilesPostsBase64([FromBody]WechatImgBase64 input)
+        public Task<IActionResult> FilesPostsBase64([FromBody]WechatImgBase64 input)
+        {
+            if (!string.IsNullOrWhiteSpace(input.imageBase64))
+            {
+                var reg = new Regex("data:image/(.*);base64,");
+                input.imageBase64 = reg.Replace(input.imageBase64, "");
+                byte[] imageByte = Convert.FromBase64String(input.imageBase64);
+                //var memorystream = new MemoryStream(imageByte);
+
+                string webRootPath = _hostingEnvironment.WebRootPath;
+                string contentRootPath = _hostingEnvironment.ContentRootPath;
+                string fileExt = Path.GetExtension(input.fileName); //文件扩展名，不含“.”
+                string newFileName = Guid.NewGuid().ToString() + fileExt; //随机生成新的文件名
+                var fileDire = webRootPath + "/upload/goods/";
+                if (!Directory.Exists(fileDire))
+                {
+                    Directory.CreateDirectory(fileDire);
+                }
+
+                var filePath = fileDire + newFileName;
+                //2018-7-6 压缩后保存
+                using (Image<Rgba32> image = SixLabors.ImageSharp.Image.Load(imageByte))
+                {
+                    //如果高度大于200 就需要压缩
+                    //if (image.Height > 200)
+                    //{
+                    //    var width = (int)((200 / image.Height) * image.Width);
+                    //    image.Mutate(x => x.Resize(width, 200));
+                    //}
+                    image.Save(filePath);
+                }
+
+                //using (var stream = new FileStream(filePath, FileMode.Create))
+                //{
+                //    await memorystream.CopyToAsync(stream);
+                //}
+                var saveUrl = filePath.Substring(webRootPath.Length);
+                return Task.FromResult((IActionResult)Json(new APIResultDto() { Code = 0, Msg = "上传数据成功", Data = saveUrl }));
+            }
+            return Task.FromResult((IActionResult)Json(new APIResultDto() { Code = 901, Msg = "上传数据不能为空" }));
         }
     }
 }

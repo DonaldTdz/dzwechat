@@ -6,6 +6,7 @@ using Abp.Domain.Entities.Auditing;
 using System.ComponentModel.DataAnnotations;
 using HC.DZWechat.Categorys;
 using System.Collections.Generic;
+using Abp.AutoMapper;
 
 namespace HC.DZWechat.Categorys.Dtos
 {
@@ -53,5 +54,13 @@ namespace HC.DZWechat.Categorys.Dtos
     {
         public string text { get; set; }
         public int value { get; set; }
+    }
+
+    [AutoMapFrom(typeof(Category))]
+    public class GoodsCategoryDto
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; }
     }
 }

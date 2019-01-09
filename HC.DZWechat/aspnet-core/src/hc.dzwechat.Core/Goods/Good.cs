@@ -74,6 +74,9 @@ namespace HC.DZWechat.Goods
         /// 创建人
         /// </summary>
         public virtual long? CreatorUserId { get; set; }
+        public virtual bool IsBanner { get; set; }
+
+        public virtual string BannerUrl { get; set; }
     }
 
 }

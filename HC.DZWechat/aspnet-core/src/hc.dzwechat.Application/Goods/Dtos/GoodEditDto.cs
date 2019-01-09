@@ -108,8 +108,8 @@ namespace  HC.DZWechat.Goods.Dtos
         /// </summary>
         public long? CreatorUserId { get; set; }
 
+        public bool IsBanner { get; set; }
 
-
-
+        public string BannerUrl { get; set; }
     }
 }

@@ -72,5 +72,7 @@ namespace HC.DZWechat.Categorys
         Task BatchDelete(List<int> input);
 
         Task<List<SelectGroup>> GetCategorySelectGroup();
+
+        Task<List<GoodsCategoryDto>> GetGoodsCategoriesAsync();
     }
 }

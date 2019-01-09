@@ -32,9 +32,9 @@ namespace HC.DZWechat.Exchanges
         /// 兑换时间
         /// </summary>
         public virtual DateTime CreationTime { get; set; }
-        public virtual string LogisticsCompany{ get; set; }
+        public virtual string LogisticsCompany { get; set; }
         public virtual string LogisticsNo { get; set; }
-        public virtual string UnionId { get; set; }
+        public virtual string WechatUserId { get; set; }
 
     }
 

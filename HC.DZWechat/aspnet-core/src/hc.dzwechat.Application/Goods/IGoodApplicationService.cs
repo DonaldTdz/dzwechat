@@ -72,12 +72,7 @@ namespace HC.DZWechat.Goods
         /// </summary>
         Task BatchDelete(List<Guid> input);
 
-
-        /// <summary>
-        /// 导出Good为excel表
-        /// </summary>
-        /// <returns></returns>
-        //Task<FileDto> GetToExcel();
+        Task<GoodListDto> ChangeStatus(GoodEditDto input);
 
         
         Task<WxPagedResultDto<GoodsGridDto>> GetHeatGoodsAsync(WxPagedInputDto input);
@@ -92,5 +87,7 @@ namespace HC.DZWechat.Goods
         /// </summary>
         /// <returns></returns>
         Task<List<IntegralStatisDto>> GetGoodsStatis();
+        
+        Task<WxPagedResultDto<GoodsGridDto>> GetSearchGoodsAsync(GoodsSearchInputDto input);
     }
 }

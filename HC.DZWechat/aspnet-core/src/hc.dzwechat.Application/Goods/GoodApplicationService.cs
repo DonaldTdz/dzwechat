@@ -45,7 +45,7 @@ namespace HC.DZWechat.Goods
         ///</summary>
         public GoodAppService(
         IRepository<Good, Guid> entityRepository
-        ,IRepository<Category> categoryRepository
+        , IRepository<Category> categoryRepository
         , IGoodManager entityManager
         , IHostingEnvironment env
         )
@@ -62,10 +62,10 @@ namespace HC.DZWechat.Goods
         ///</summary>
         /// <param name="input"></param>
         /// <returns></returns>
-		 
+
         public async Task<PagedResultDto<GoodListDto>> GetPaged(GetGoodsInput input)
-		{
-            if(input.NodeKey == "root")
+        {
+            if (input.NodeKey == "root")
             {
                 var goods = _entityRepository.GetAll().WhereIf(!string.IsNullOrEmpty(input.Filter), r => r.Specification.Contains(input.Filter) || r.BarCode.Contains(input.Filter));
                 var category = _categoryRepository.GetAll();
@@ -84,7 +84,8 @@ namespace HC.DZWechat.Goods
                                 //ExchangeCode = g.ExchangeCode,
                                 OnlineTime = g.OnlineTime,
                                 Integral = g.Integral,
-                                IsAction = g.IsAction
+                                IsAction = g.IsAction,
+                                SellCount = g.SellCount
                             };
                 var count = await query.CountAsync();
                 var entityList = await query
@@ -114,7 +115,8 @@ namespace HC.DZWechat.Goods
                                 //ExchangeCode = g.ExchangeCode,
                                 OnlineTime = g.OnlineTime,
                                 Integral = g.Integral,
-                                IsAction = g.IsAction
+                                IsAction = g.IsAction,
+                                SellCount = g.SellCount
                             };
                 var count = await query.CountAsync();
 
@@ -124,86 +126,87 @@ namespace HC.DZWechat.Goods
                         .ToListAsync();
                 var entityListDtos = entityList.MapTo<List<GoodListDto>>();
                 return new PagedResultDto<GoodListDto>(count, entityListDtos);
-            }        
-		}
+            }
+        }
 
 
-		/// <summary>
-		/// 通过指定id获取GoodListDto信息
-		/// </summary>
-		 
-		public async Task<GoodListDto> GetById(Guid id)
-		{   
-			var entity = await _entityRepository.GetAsync(id);
-		    return entity.MapTo<GoodListDto>();
-		}
+        /// <summary>
+        /// 通过指定id获取GoodListDto信息
+        /// </summary>
 
-		/// <summary>
-		/// 获取编辑 Good
-		/// </summary>
-		/// <param name="input"></param>
-		/// <returns></returns>
-		
-		public async Task<GetGoodForEditOutput> GetForEdit(NullableIdDto<Guid> input)
-		{
-			var output = new GetGoodForEditOutput();
-GoodEditDto editDto;
+        public async Task<GoodListDto> GetById(Guid id)
+        {
+            var entity = await _entityRepository.GetAsync(id);
+            return entity.MapTo<GoodListDto>();
+        }
 
-			if (input.Id.HasValue)
-			{
-				var entity = await _entityRepository.GetAsync(input.Id.Value);
+        /// <summary>
+        /// 获取编辑 Good
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
 
-				editDto = entity.MapTo<GoodEditDto>();
+        public async Task<GetGoodForEditOutput> GetForEdit(NullableIdDto<Guid> input)
+        {
+            var output = new GetGoodForEditOutput();
+            GoodEditDto editDto;
 
-				//goodEditDto = ObjectMapper.Map<List<goodEditDto>>(entity);
-			}
-			else
-			{
-				editDto = new GoodEditDto();
-			}
+            if (input.Id.HasValue)
+            {
+                var entity = await _entityRepository.GetAsync(input.Id.Value);
 
-			output.Good = editDto;
-			return output;
-		}
+                editDto = entity.MapTo<GoodEditDto>();
 
+                //goodEditDto = ObjectMapper.Map<List<goodEditDto>>(entity);
+            }
+            else
+            {
+                editDto = new GoodEditDto();
+            }
 
-		/// <summary>
-		/// 添加或者修改Good的公共方法
-		/// </summary>
-		/// <param name="input"></param>
-		/// <returns></returns>
-		
-		public async Task<GoodListDto> CreateOrUpdate(GoodEditDto input)
-		{
-
-			if (input.Id.HasValue)
-			{
-				return await Update(input);
-			}
-			else
-			{
-				return await Create(input);
-			}
-		}
+            output.Good = editDto;
+            return output;
+        }
 
 
-		/// <summary>
-		/// 新增Good
-		/// </summary>
-		
-		protected virtual async Task<GoodListDto> Create(GoodEditDto input)
-		{
-            var entity=input.MapTo<Good>();
-			entity = await _entityRepository.InsertAsync(entity);
-			return entity.MapTo<GoodListDto>();
-		}
+        /// <summary>
+        /// 添加或者修改Good的公共方法
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
 
-		/// <summary>
-		/// 编辑Good
-		/// </summary>
-		
-		protected virtual async Task<GoodListDto> Update(GoodEditDto input)
-		{
+        public async Task<GoodListDto> CreateOrUpdate(GoodEditDto input)
+        {
+
+            if (input.Id.HasValue)
+            {
+                return await Update(input);
+            }
+            else
+            {
+                return await Create(input);
+            }
+        }
+
+
+        /// <summary>
+        /// 新增Good
+        /// </summary>
+        protected virtual async Task<GoodListDto> Create(GoodEditDto input)
+        {
+            input.SellCount = 0;
+            var entity = input.MapTo<Good>();
+            entity = await _entityRepository.InsertAsync(entity);
+            await CurrentUnitOfWork.SaveChangesAsync();
+            return entity.MapTo<GoodListDto>();
+        }
+
+        /// <summary>
+        /// 编辑Good
+        /// </summary>
+
+        protected virtual async Task<GoodListDto> Update(GoodEditDto input)
+        {
             if (input.IsAction == true)
             {
                 input.OnlineTime = DateTime.Now;
@@ -213,8 +216,8 @@ GoodEditDto editDto;
                 input.OfflineTime = DateTime.Now;
             }
             var entity = await _entityRepository.GetAsync(input.Id.Value);
-			input.MapTo(entity);
-		    await _entityRepository.UpdateAsync(entity);
+            input.MapTo(entity);
+            await _entityRepository.UpdateAsync(entity);
             return entity.MapTo<GoodListDto>();
         }
 
@@ -227,22 +230,36 @@ GoodEditDto editDto;
         /// <returns></returns>
 
         public async Task Delete(EntityDto<Guid> input)
-		{
-			//TODO:删除前的逻辑判断，是否允许删除
-			await _entityRepository.DeleteAsync(input.Id);
-		}
+        {
+            //TODO:删除前的逻辑判断，是否允许删除
+            await _entityRepository.DeleteAsync(input.Id);
+        }
 
 
+        /// <summary>
+        /// 批量删除Good的方法
+        /// </summary>
 
-		/// <summary>
-		/// 批量删除Good的方法
-		/// </summary>
-		
-		public async Task BatchDelete(List<Guid> input)
-		{
-			// TODO:批量删除前的逻辑判断，是否允许删除
-			await _entityRepository.DeleteAsync(s => input.Contains(s.Id));
-		}
+        public async Task BatchDelete(List<Guid> input)
+        {
+            // TODO:批量删除前的逻辑判断，是否允许删除
+            await _entityRepository.DeleteAsync(s => input.Contains(s.Id));
+        }
+
+
+        /// <summary>
+        /// 商品上架or下架
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task<GoodListDto> ChangeStatus(GoodEditDto input)
+        {
+            var entity = await _entityRepository.GetAsync(input.Id.Value);
+            entity.IsAction = input.IsAction;
+            await _entityRepository.UpdateAsync(entity);
+            return entity.MapTo<GoodListDto>();
+        }
+
 
         /// <summary>
         /// 热卖商品
@@ -255,7 +272,7 @@ GoodEditDto editDto;
             {
                 Id = e.Id,
                 name = e.Specification,
-                saleCount = e.SellCount??0,
+                saleCount = e.SellCount ?? 0,
                 price = e.Integral,
                 photoUrl = e.PhotoUrl,
                 unit = e.Unit
@@ -270,17 +287,60 @@ GoodEditDto editDto;
         }
 
         /// <summary>
-        /// 导出Good为excel表,等待开发。
+        /// 商品搜索
         /// </summary>
-        /// <returns></returns>
-        //public async Task<FileDto> GetToExcel()
-        //{
-        //	var users = await UserManager.Users.ToListAsync();
-        //	var userListDtos = ObjectMapper.Map<List<UserListDto>>(users);
-        //	await FillRoleNames(userListDtos);
-        //	return _userListExcelExporter.ExportToFile(userListDtos);
-        //}
+        [AbpAllowAnonymous]
+        public async Task<WxPagedResultDto<GoodsGridDto>> GetSearchGoodsAsync(GoodsSearchInputDto input)
+        {
+            var hostUrl = _appConfiguration["App:ServerRootAddress"];
+            var query = _entityRepository.GetAll().Where(e => e.IsAction == true)
+                .WhereIf(!string.IsNullOrEmpty(input.KeyWord), e => e.Specification.Contains(input.KeyWord) || e.Desc.Contains(input.KeyWord))
+                .WhereIf(input.CategoryId != 0, e => e.CategoryId == input.CategoryId);
 
+            switch (input.SortType)
+            {
+                case SortTypeEnum.None:
+                    {
+                        query = query.OrderByDescending(q => q.SellCount).OrderBy(q => q.Integral);
+                    }
+                    break;
+                case SortTypeEnum.ZongHe:
+                    {
+                        query = query.OrderByDescending(q => q.SellCount).OrderBy(q => q.Integral);
+                    }
+                    break;
+                case SortTypeEnum.Sale:
+                    {
+                        query = query.OrderByDescending(q => q.SellCount);
+                    }
+                    break;
+                case SortTypeEnum.PriceAsc:
+                    {
+                        query = query.OrderBy(q => q.Integral);
+                    }
+                    break;
+                case SortTypeEnum.PriceDesc:
+                    {
+                        query = query.OrderByDescending(q => q.Integral);
+                    }
+                    break;
+            }
+            var selectQuery = query.Select(e => new GoodsGridDto(hostUrl)
+            {
+                Id = e.Id,
+                name = e.Specification,
+                saleCount = e.SellCount ?? 0,
+                price = e.Integral,
+                photoUrl = e.PhotoUrl,
+                unit = e.Unit
+            });
+            var count = await selectQuery.CountAsync();
+            var dataList = await selectQuery.PageBy(input)
+                        .ToListAsync();
+            var result = new WxPagedResultDto<GoodsGridDto>(count, dataList);
+            result.PageSize = input.Size;
+            return result;
+        }
 
         /// <summary>
         /// 按规格统计积分销售
@@ -321,7 +381,6 @@ GoodEditDto editDto;
             }).OrderByDescending(i => i.Total).Take(10).ToListAsync();
             return result;
         }
-
     }
 }
 
