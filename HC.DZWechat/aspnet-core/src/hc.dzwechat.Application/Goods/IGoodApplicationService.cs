@@ -81,5 +81,16 @@ namespace HC.DZWechat.Goods
 
         
         Task<WxPagedResultDto<GoodsGridDto>> GetHeatGoodsAsync(WxPagedInputDto input);
+
+        /// <summary>
+        /// 按规格统计积分销售
+        /// </summary>
+        Task<List<IntegralStatisDto>> GetIntegralStatisByGoods();
+
+        /// <summary>
+        /// 按规格统计销售
+        /// </summary>
+        /// <returns></returns>
+        Task<List<IntegralStatisDto>> GetGoodsStatis();
     }
 }

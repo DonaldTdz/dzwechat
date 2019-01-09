@@ -10,3 +10,4 @@ export * from './exchange';
 export * from './wechatmessage';
 export * from './wechatsubscribe';
 export * from './home-info';
+export * from './group-statistics';

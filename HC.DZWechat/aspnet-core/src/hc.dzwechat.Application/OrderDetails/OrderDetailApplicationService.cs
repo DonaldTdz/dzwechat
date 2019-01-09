@@ -22,6 +22,7 @@ using HC.DZWechat.OrderDetails;
 using HC.DZWechat.OrderDetails.Dtos;
 using HC.DZWechat.OrderDetails.DomainService;
 using HC.DZWechat.Goods;
+using HC.DZWechat.DZEnums.DZCommonEnums;
 
 namespace HC.DZWechat.OrderDetails
 {
@@ -206,17 +207,17 @@ OrderDetailEditDto editDto;
 		}
 
 
-		/// <summary>
-		/// 导出OrderDetail为excel表,等待开发。
-		/// </summary>
-		/// <returns></returns>
-		//public async Task<FileDto> GetToExcel()
-		//{
-		//	var users = await UserManager.Users.ToListAsync();
-		//	var userListDtos = ObjectMapper.Map<List<UserListDto>>(users);
-		//	await FillRoleNames(userListDtos);
-		//	return _userListExcelExporter.ExportToFile(userListDtos);
-		//}
+        /// <summary>
+        /// 导出OrderDetail为excel表,等待开发。
+        /// </summary>
+        /// <returns></returns>
+        //public async Task<FileDto> GetToExcel()
+        //{
+        //	var users = await UserManager.Users.ToListAsync();
+        //	var userListDtos = ObjectMapper.Map<List<UserListDto>>(users);
+        //	await FillRoleNames(userListDtos);
+        //	return _userListExcelExporter.ExportToFile(userListDtos);
+        //}
 
     }
 }

@@ -157,4 +157,15 @@ namespace HC.DZWechat.Goods.Dtos
         /// </summary>
         public int? saleCount { get; set; }
     }
+
+
+    /// <summary>
+    /// 统计
+    /// </summary>
+    public class IntegralStatisDto
+    {
+        public string GroupName { get; set; }
+        public decimal? IntegralTotal { get; set; }
+        public int? Total { get; set; }
+    }
 }

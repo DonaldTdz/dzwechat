@@ -281,6 +281,47 @@ GoodEditDto editDto;
         //	return _userListExcelExporter.ExportToFile(userListDtos);
         //}
 
+
+        /// <summary>
+        /// 按规格统计积分销售
+        /// </summary>
+        public async Task<List<IntegralStatisDto>> GetIntegralStatisByGoods()
+        {
+            var result = await _entityRepository.GetAll().GroupBy(g => g.Specification).Select(g => new IntegralStatisDto
+            {
+                GroupName = g.Key,
+                IntegralTotal = g.Sum(i => i.SellCount * i.Integral)
+            }).Where(i => i.Total > 0).OrderByDescending(i => i.Total).Take(10).ToListAsync();
+            return result;
+        }
+
+        /// <summary>
+        /// 按规格统计销售
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<IntegralStatisDto>> GetGoodsStatis()
+        {
+            //var query = from g in _entityRepository.GetAll()
+            //            join i in _entityRepository.GetAll().Where(i => i.Status == ExchangeStatus.已兑换) on g.BarCode equals i.Specification
+            //            select new
+            //            {
+            //                g.Specification,
+            //                BarCode = i.Specification,
+            //                i.Integral
+            //            };
+            //var list = await query.GroupBy(ig => new { ig.Specification, ig.BarCode }).Select(ig => new IntegralStatisDto
+            //{
+            //    GroupName = ig.Key.Specification,
+            //    Total = ig.Count()
+            //}).Where(i => i.Total > 0).OrderByDescending(i => i.Total).Take(10).ToListAsync();
+            var result = await  _entityRepository.GetAll().Where(o => o.SellCount > 0).GroupBy(g => g.Specification).Select(g => new IntegralStatisDto
+            {
+                GroupName = g.Key,
+                Total = g.Sum(i => i.SellCount*1)
+            }).OrderByDescending(i => i.Total).Take(10).ToListAsync();
+            return result;
+        }
+
     }
 }
 
