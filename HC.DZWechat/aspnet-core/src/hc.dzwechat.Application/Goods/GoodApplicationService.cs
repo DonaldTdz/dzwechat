@@ -347,11 +347,11 @@ namespace HC.DZWechat.Goods
         /// </summary>
         public async Task<List<IntegralStatisDto>> GetIntegralStatisByGoods()
         {
-            var result = await _entityRepository.GetAll().GroupBy(g => g.Specification).Select(g => new IntegralStatisDto
+            var result = await _entityRepository.GetAll().Where(g=>g.SellCount>0).GroupBy(g => g.Specification).Select(g => new IntegralStatisDto
             {
                 GroupName = g.Key,
                 IntegralTotal = g.Sum(i => i.SellCount * i.Integral)
-            }).Where(i => i.Total > 0).OrderByDescending(i => i.Total).Take(10).ToListAsync();
+            }).OrderByDescending(i => i.IntegralTotal).Take(10).ToListAsync();
             return result;
         }
 

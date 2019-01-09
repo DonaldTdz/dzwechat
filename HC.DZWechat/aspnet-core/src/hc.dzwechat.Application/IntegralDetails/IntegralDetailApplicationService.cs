@@ -33,19 +33,20 @@ namespace HC.DZWechat.IntegralDetails
     public class IntegralDetailAppService : DZWechatAppServiceBase, IIntegralDetailAppService
     {
         private readonly IRepository<IntegralDetail, Guid> _entityRepository;
-
+        private readonly IIntegralDetailsRepository _integralDetailsRepository;
         private readonly IIntegralDetailManager _entityManager;
 
         /// <summary>
         /// 构造函数 
         ///</summary>
         public IntegralDetailAppService(
-        IRepository<IntegralDetail, Guid> entityRepository
-        ,IIntegralDetailManager entityManager
+        IRepository<IntegralDetail, Guid> entityRepository, IIntegralDetailsRepository integralDetailsRepository
+        , IIntegralDetailManager entityManager
         )
         {
             _entityRepository = entityRepository; 
              _entityManager=entityManager;
+            _integralDetailsRepository = integralDetailsRepository;
         }
 
 
@@ -206,17 +207,42 @@ IntegralDetailEditDto editDto;
 		}
 
 
-		/// <summary>
-		/// 导出IntegralDetail为excel表,等待开发。
-		/// </summary>
-		/// <returns></returns>
-		//public async Task<FileDto> GetToExcel()
-		//{
-		//	var users = await UserManager.Users.ToListAsync();
-		//	var userListDtos = ObjectMapper.Map<List<UserListDto>>(users);
-		//	await FillRoleNames(userListDtos);
-		//	return _userListExcelExporter.ExportToFile(userListDtos);
-		//}
+        /// <summary>
+        /// 导出IntegralDetail为excel表,等待开发。
+        /// </summary>
+        /// <returns></returns>
+        //public async Task<FileDto> GetToExcel()
+        //{
+        //	var users = await UserManager.Users.ToListAsync();
+        //	var userListDtos = ObjectMapper.Map<List<UserListDto>>(users);
+        //	await FillRoleNames(userListDtos);
+        //	return _userListExcelExporter.ExportToFile(userListDtos);
+        //}
+
+
+        /// <summary>
+        /// 获取积分变化统计（按月）
+        /// </summary>
+        /// <returns></returns>   
+        public async Task<List<IntegralDetailDto>> GetIntegralDetailByMonthAsync(int searchMonth)
+        {
+            var timeNow = DateTime.Today;
+            DateTime startTime;
+            DateTime endTime;
+            if (searchMonth == 2)
+            {
+                startTime = timeNow.AddDays(1 - timeNow.Day).AddMonths(-11);
+                endTime = timeNow.AddDays(1 - timeNow.Day).AddMonths(1).AddDays(-1);
+            }
+            else
+            {
+                startTime = timeNow.AddDays(1 - timeNow.Day).AddMonths(-5);
+                endTime = timeNow.AddDays(1 - timeNow.Day).AddMonths(1).AddDays(-1);
+            }
+
+            var list = await _integralDetailsRepository.GetIntegralDetailByMonthAsync(startTime, endTime);
+            return list;
+        }
 
     }
 }
