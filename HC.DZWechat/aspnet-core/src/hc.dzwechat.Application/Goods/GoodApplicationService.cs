@@ -342,6 +342,27 @@ namespace HC.DZWechat.Goods
             result.PageSize = input.Size;
             return result;
         }
+
+        [AbpAllowAnonymous]
+        public async Task<List<GoodsGridDto>> GetGroupGoodsAsync(int groupId, int top)
+        {
+            top = top == 0 ? 50 : top;
+            var hostUrl = _appConfiguration["App:ServerRootAddress"];
+            var goodsList = await _entityRepository.GetAll()
+                .Where(e => e.IsAction == true && e.CategoryId == groupId)
+                .OrderByDescending(o => o.CreationTime)
+                .Take(top)
+                .Select(e => new GoodsGridDto(hostUrl)
+                {
+                    Id = e.Id,
+                    name = e.Specification,
+                    saleCount = e.SellCount ?? 0,
+                    price = e.Integral,
+                    photoUrl = e.PhotoUrl,
+                    unit = e.Unit
+                }).ToListAsync();
+            return goodsList;
+        }
     }
 }
 
