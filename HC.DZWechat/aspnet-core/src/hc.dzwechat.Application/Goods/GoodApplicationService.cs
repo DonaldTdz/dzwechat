@@ -342,16 +342,37 @@ namespace HC.DZWechat.Goods
             return result;
         }
 
+        [AbpAllowAnonymous]
+        public async Task<List<GoodsGridDto>> GetGroupGoodsAsync(int groupId, int top)
+        {
+            top = top == 0 ? 50 : top;
+            var hostUrl = _appConfiguration["App:ServerRootAddress"];
+            var goodsList = await _entityRepository.GetAll()
+                .Where(e => e.IsAction == true && e.CategoryId == groupId)
+                .OrderByDescending(o => o.CreationTime)
+                .Take(top)
+                .Select(e => new GoodsGridDto(hostUrl)
+                {
+                    Id = e.Id,
+                    name = e.Specification,
+                    saleCount = e.SellCount ?? 0,
+                    price = e.Integral,
+                    photoUrl = e.PhotoUrl,
+                    unit = e.Unit
+                }).ToListAsync();
+            return goodsList;
+        }
+
         /// <summary>
         /// 按规格统计积分销售
         /// </summary>
         public async Task<List<IntegralStatisDto>> GetIntegralStatisByGoods()
         {
-            var result = await _entityRepository.GetAll().GroupBy(g => g.Specification).Select(g => new IntegralStatisDto
+            var result = await _entityRepository.GetAll().Where(g=>g.SellCount>0).GroupBy(g => g.Specification).Select(g => new IntegralStatisDto
             {
                 GroupName = g.Key,
                 IntegralTotal = g.Sum(i => i.SellCount * i.Integral)
-            }).Where(i => i.Total > 0).OrderByDescending(i => i.Total).Take(10).ToListAsync();
+            }).OrderByDescending(i => i.IntegralTotal).Take(10).ToListAsync();
             return result;
         }
 

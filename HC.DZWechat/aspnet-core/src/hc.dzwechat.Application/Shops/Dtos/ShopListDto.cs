@@ -5,7 +5,7 @@ using Abp.Application.Services.Dto;
 using Abp.Domain.Entities.Auditing;
 using System.ComponentModel.DataAnnotations;
 using HC.DZWechat.Shops;
-using static HC.DZWechat.DZEnums.DZEnums;
+using HC.DZWechat.DZEnums.DZCommonEnums;
 
 namespace HC.DZWechat.Shops.Dtos
 {
@@ -31,7 +31,7 @@ namespace HC.DZWechat.Shops.Dtos
         /// <summary>
         /// Type
         /// </summary>
-        public ShopType? Type { get; set; }
+        public ShopTypeEnum? Type { get; set; }
         public string TypeName
         {
             get

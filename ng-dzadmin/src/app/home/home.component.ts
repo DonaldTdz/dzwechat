@@ -18,10 +18,17 @@ export class HomeComponent extends AppComponentBase implements OnInit {
   homeInfo: HomeInfo = new HomeInfo();
   integralStatis: GroupStatistics[] = [];
   goodsStatis: GroupStatistics[] = [];
+  integralMoth: GroupStatistics[] = [];
   integralStatisData = [];
   goodsStatisData = [];
-  inTotal = 0;
+  inTotal: number;
   goodTotal: number;
+  inMoth = { growthTotal: null, depleteTotal: null }
+  searchMoth = 1;
+  tags = [
+    { value: 1, text: '近半年' },
+    { value: 2, text: '近一年' },
+  ];
   constructor(
     injector: Injector, private http: _HttpClient, public msg: NzMessageService,
     private aclService: ACLService, private homeService: HomeService,
@@ -38,6 +45,7 @@ export class HomeComponent extends AppComponentBase implements OnInit {
       this.homeInfo = data;
     });
   }
+  //#region 商品销售前十
   getGoodsStatis() {
     this.homeService.getGoodsStatis().subscribe((data) => {
       this.goodsStatis = data;
@@ -45,32 +53,45 @@ export class HomeComponent extends AppComponentBase implements OnInit {
       data.forEach(i => {
         this.goodTotal += i.total;
       });
+      const goodsData = [];
+      this.goodsStatis.forEach(item => {
+        goodsData.push({
+          x: item.groupName,
+          y: item.total
+        });
+      })
+      this.goodsStatisData = goodsData;
     });
-    const goodsData = [];
-    this.goodsStatis.forEach(item => {
-      goodsData.push({
-        x: item.groupName,
-        y: item.total
-      });
-    })
-    this.goodsStatisData = goodsData;
   }
+  //#endregion
+
+  //#region 积分销售前十
   getIntegralStatisByGoods() {
     this.homeService.getIntegralStatisByGoods().subscribe((data) => {
       this.integralStatis = data;
+      this.inTotal = 0;
       data.forEach(i => {
-        this.inTotal += i.total;
+        this.inTotal += i.integralTotal;
       });
+      const interalData = [];
+      this.integralStatis.forEach(item => {
+        interalData.push({
+          x: item.groupName,
+          y: item.integralTotal
+        });
+      })
+      this.integralStatisData = interalData;
     });
-    const interalData = [];
-    this.integralStatis.forEach(item => {
-      interalData.push({
-        x: item.groupName,
-        y: item.total
-      });
-    })
-    this.integralStatisData = interalData;
+
   }
+  //#endregion
+
+  //#region   积分统计（按月）
+  changeCategory() {
+
+  }
+  //#endregion
+
 
   // showAdvertising() {
   // }

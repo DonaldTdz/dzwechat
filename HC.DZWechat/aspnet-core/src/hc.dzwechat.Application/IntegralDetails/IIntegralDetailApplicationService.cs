@@ -74,5 +74,11 @@ namespace HC.DZWechat.IntegralDetails
 
         Task<PagedResultDto<IntegralDetailListDto>> GetPagedById(GetIntegralDetailsInput input);
 
+        /// <summary>
+        /// 获取积分变化统计（按月）
+        /// </summary>
+        /// <returns></returns> 
+        Task<List<IntegralDetailDto>> GetIntegralDetailByMonthAsync(int searchMonth);
+
     }
 }
