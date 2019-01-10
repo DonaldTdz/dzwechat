@@ -2,7 +2,7 @@ import { Inject, Optional, Injectable } from "@angular/core";
 import { Observer, Observable } from "rxjs";
 import { CommonHttpClient } from "services/common-httpclient";
 import { map } from "rxjs/operators";
-import { HomeInfo, GroupStatistics } from "entities";
+import { HomeInfo, GroupStatistics, IntegralStatic } from "entities";
 
 @Injectable()
 export class HomeService {
@@ -37,5 +37,17 @@ export class HomeService {
         return this._commonhttp.get(_url).pipe(map((data) => {
             return GroupStatistics.fromJSArray(data);
         }));
+    }
+
+    /**
+     * 获取积分变化统计（按月）
+     * @param input （半年、一年）
+     */
+    getIntegralByMonth(input: string): Observable<IntegralStatic[]> {
+        let _url = '/api/services/app/IntegralDetail/GetIntegralDetailByMonthAsync';
+        let params = { 'searchMonth': input }
+        return this._commonhttp.get(_url, params).pipe(map((data) => {
+            return IntegralStatic.fromJSArray(data);
+        }))
     }
 }

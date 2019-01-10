@@ -13,10 +13,10 @@ namespace HC.DZWechat.IntegralDetails
         /// <summary>
         /// 增长积分
         /// </summary>
-        public int? GrowIntegral { get; set; }
+        public decimal GrowIntegral { get; set; }
         /// <summary>
         /// 消耗积分
         /// </summary>
-        public int? DepleteIntegral { get; set; }
+        public decimal DepleteIntegral { get; set; }
     }
 }
