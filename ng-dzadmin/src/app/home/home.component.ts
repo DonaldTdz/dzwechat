@@ -5,7 +5,7 @@ import { _HttpClient } from '@delon/theme';
 import { NzMessageService } from 'ng-zorro-antd';
 import { ACLService } from '@delon/acl';
 import { HomeService } from 'services';
-import { HomeInfo, GroupStatistics } from 'entities';
+import { HomeInfo, GroupStatistics, IntegralStatic } from 'entities';
 
 @Component({
   templateUrl: './home.component.html',
@@ -18,17 +18,19 @@ export class HomeComponent extends AppComponentBase implements OnInit {
   homeInfo: HomeInfo = new HomeInfo();
   integralStatis: GroupStatistics[] = [];
   goodsStatis: GroupStatistics[] = [];
-  integralMoth: GroupStatistics[] = [];
+  integralMoth: IntegralStatic[] = [];
   integralStatisData = [];
   goodsStatisData = [];
+  integralMothData = [];
   inTotal: number;
   goodTotal: number;
   inMoth = { growthTotal: null, depleteTotal: null }
-  searchMoth = 1;
+  searchMoth = 2;
   tags = [
     { value: 1, text: '近半年' },
     { value: 2, text: '近一年' },
   ];
+  colors = ['#1890ff', '#eb2f96'];
   constructor(
     injector: Injector, private http: _HttpClient, public msg: NzMessageService,
     private aclService: ACLService, private homeService: HomeService,
@@ -39,6 +41,7 @@ export class HomeComponent extends AppComponentBase implements OnInit {
     this.getHomeInfo();
     this.getGoodsStatis();
     this.getIntegralStatisByGoods();
+    this.getIntegralByMonth();
   }
   getHomeInfo() {
     this.homeService.getHomeInfo().subscribe((data) => {
@@ -87,8 +90,32 @@ export class HomeComponent extends AppComponentBase implements OnInit {
   //#endregion
 
   //#region   积分统计（按月）
-  changeCategory() {
 
+  getIntegralByMonth() {
+    this.homeService.getIntegralByMonth(this.searchMoth.toString()).subscribe((data) => {
+      this.integralMoth = data;
+      data.forEach(i => {
+        this.inMoth.growthTotal += i.growIntegral;
+        this.inMoth.depleteTotal += i.depleteIntegral;
+      });
+      let mothData = [];
+      this.integralMoth.forEach(item => {
+        mothData.push({
+          name: '增加积分',
+          x: item.groupName,
+          y: item.growIntegral
+        });
+        mothData.push({
+          name: '消耗积分',
+          x: item.groupName,
+          y: item.depleteIntegral
+        });
+      });
+      this.integralMothData = mothData;
+    });
+  }
+  changeCategory() {
+    this.getIntegralByMonth();
   }
   //#endregion
 

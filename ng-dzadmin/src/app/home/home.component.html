@@ -105,22 +105,15 @@
       </nz-table>
     </nz-card>
   </div>
-  <div nz-col nzXs="24" nzMd="12">
-    <nz-card [nzTitle]="title3" [nzBordered]="false">
+  <div nz-col nzXs="24" nzMd="24">
+    <nz-card [nzTitle]="'积分统计（按月）'" [nzExtra]="title3" [nzBordered]="false">
       <ng-template #title3>
-        <div nz-row>
-          <div nz-col nzSpan="8">
-            积分统计（按月）
-          </div>
-          <div nz-col nzSpan="8" nzOffset="8">
-            <nz-radio-group [(ngModel)]="searchMoth" (ngModelChange)="changeCategory()">
-              <label nz-radio-button *ngFor="let item of tags" [nzValue]="item.value">{{item.text}}</label>
-            </nz-radio-group>
-          </div>
-        </div>
+        <nz-radio-group [(ngModel)]="searchMoth" (ngModelChange)="changeCategory()">
+          <label nz-radio-button *ngFor="let item of tags" [nzValue]="item.value">{{item.text}}</label>
+        </nz-radio-group>
       </ng-template>
-      <!-- <g2-group-bar height="275" [colors]="colors" [data]="sheduMothData" groupName="name">
-      </g2-group-bar> -->
+      <g2-group-bar height="275" [colors]="colors" [data]="integralMothData" groupName="name">
+      </g2-group-bar>
       <nz-table #nzTablew [nzData]="integralMoth" [nzShowPagination]="false" [nzShowSizeChanger]="true">
         <thead>
           <tr>
@@ -128,7 +121,7 @@
               <span>单位</span>
             </th>
             <th *ngFor="let intMoth of nzTablew.data">
-              <span>{{sheMoth.groupName}}</span>
+              <span>{{intMoth.groupName}}</span>
             </th>
             <th>
               <span class="bgcorlor">总数</span>
@@ -138,17 +131,19 @@
         </thead>
         <tbody>
           <tr>
-            <td class="countsty">增长</td>
-            <td *ngFor="let sheMoth of nzTablew.data">{{intMoth.total}}</td>
+            <td class="countsty">增加</td>
+            <td *ngFor="let intMoth of nzTablew.data">{{intMoth.growIntegral}}</td>
             <td class="bgcorlor">{{inMoth.growthTotal}}</td>
           </tr>
           <tr>
             <td class="countsty">消耗 </td>
-            <td *ngFor="let sheMoth of nzTablew.data">{{intMoth.completed}}</td>
+            <td *ngFor="let intMoth of nzTablew.data">{{intMoth.depleteIntegral}}</td>
             <td class="bgcorlor">{{inMoth.depleteTotal}}</td>
           </tr>
         </tbody>
       </nz-table>
     </nz-card>
   </div>
+
+
 </div>

@@ -7,6 +7,7 @@ import { HomeComponent } from '@app/home/home.component';
 import { SharedModule } from '@shared/shared.module';
 import { HttpClientModule } from '@angular/common/http';
 import { HomeService } from 'services';
+import { G2GroupBarModule } from '../../packages/group-bar';
 
 @NgModule({
   imports: [
@@ -17,6 +18,7 @@ import { HomeService } from 'services';
     AppRoutingModule,
     LayoutModule,
     SharedModule,
+    G2GroupBarModule,
   ],
   declarations: [
     HomeComponent,
