@@ -164,6 +164,8 @@ namespace HC.DZWechat.Goods.Dtos
         /// 销量
         /// </summary>
         public int? saleCount { get; set; }
+
+        public string desc { get; set; }
     }
 
 
@@ -175,5 +177,63 @@ namespace HC.DZWechat.Goods.Dtos
         public string GroupName { get; set; }
         public decimal? IntegralTotal { get; set; }
         public int? Total { get; set; }
+    }
+
+    public class GoodsDetailDto : EntityDto<Guid>
+    {
+        public GoodsDetailDto() { }
+
+        public GoodsDetailDto(string _host)
+        {
+            host = _host;
+        }
+
+        [NonSerialized]
+        public string photoUrl;
+
+        [NonSerialized]
+        public string host;
+        /// <summary>
+        /// 商品名称
+        /// </summary>
+        public string name { get; set; }
+
+        /// <summary>
+        /// 单位
+        /// </summary>
+        public string unit { get; set; }
+
+        /// <summary>
+        /// 所需积分
+        /// </summary>
+        public decimal? price { get; set; }
+
+        /// <summary>
+        /// 头像
+        /// </summary>
+        public string[] photoList
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(photoUrl))
+                {
+                    var arr = photoUrl.Split(',');
+                    if (arr.Length > 0)
+                    {
+                        for (int i = 0; i < arr.Length; i++)
+                        {
+                            arr[i] = host + arr[i];
+                        }
+                    }
+                    return arr;
+                }
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 销量
+        /// </summary>
+        public int? saleCount { get; set; }
     }
 }

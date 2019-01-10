@@ -1,11 +1,12 @@
 ﻿using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using HC.DZWechat.DZEnums.DZCommonEnums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
-using static HC.DZWechat.DZEnums.DZEnums;
+
 
 namespace HC.DZWechat.Shops
 {
@@ -26,7 +27,7 @@ namespace HC.DZWechat.Shops
         /// <summary>
         /// 店铺类型（枚举：直营店 目前只支持直营店）
         /// </summary>
-        public virtual ShopType? Type { get; set; }
+        public virtual ShopTypeEnum? Type { get; set; }
         /// <summary>
         /// 店铺电话
         /// </summary>

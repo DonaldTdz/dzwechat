@@ -93,4 +93,9 @@ namespace HC.DZWechat.DZEnums.DZCommonEnums
         文字消息 = 1,
         图文消息 = 2
     }
+
+    public enum ShopTypeEnum
+    {
+        直营店 = 1
+    }
 }
