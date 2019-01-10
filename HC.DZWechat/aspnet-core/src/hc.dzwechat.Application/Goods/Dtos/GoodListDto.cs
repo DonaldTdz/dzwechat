@@ -141,7 +141,7 @@ namespace HC.DZWechat.Goods.Dtos
         public decimal? price { get; set; }
 
         /// <summary>
-        /// 头像
+        /// 图片
         /// </summary>
         public string thumLogo
         {
@@ -163,9 +163,7 @@ namespace HC.DZWechat.Goods.Dtos
         /// <summary>
         /// 销量
         /// </summary>
-        public int? saleCount { get; set; }
-
-        public string desc { get; set; }
+        public int? saleCount { get; set; } 
     }
 
 
@@ -179,50 +177,55 @@ namespace HC.DZWechat.Goods.Dtos
         public int? Total { get; set; }
     }
 
+    [AutoMapFrom(typeof(Good))]
     public class GoodsDetailDto : EntityDto<Guid>
     {
         public GoodsDetailDto() { }
 
         public GoodsDetailDto(string _host)
         {
-            host = _host;
+            Host = _host;
         }
 
         [NonSerialized]
-        public string photoUrl;
+        public string PhotoUrl;
 
         [NonSerialized]
-        public string host;
+        public string Host;
+
+        [NonSerialized]
+        public string ExchangeCode;
+
         /// <summary>
         /// 商品名称
         /// </summary>
-        public string name { get; set; }
+        public string Specification { get; set; }
 
         /// <summary>
         /// 单位
         /// </summary>
-        public string unit { get; set; }
+        public string Unit { get; set; }
 
         /// <summary>
         /// 所需积分
         /// </summary>
-        public decimal? price { get; set; }
+        public decimal? Integral { get; set; }
 
         /// <summary>
-        /// 头像
+        /// 图片
         /// </summary>
-        public string[] photoList
+        public string[] PhotoList
         {
             get
             {
-                if (!string.IsNullOrEmpty(photoUrl))
+                if (!string.IsNullOrEmpty(PhotoUrl))
                 {
-                    var arr = photoUrl.Split(',');
+                    var arr = PhotoUrl.Split(',');
                     if (arr.Length > 0)
                     {
                         for (int i = 0; i < arr.Length; i++)
                         {
-                            arr[i] = host + arr[i];
+                            arr[i] = Host + arr[i];
                         }
                     }
                     return arr;
@@ -234,6 +237,61 @@ namespace HC.DZWechat.Goods.Dtos
         /// <summary>
         /// 销量
         /// </summary>
-        public int? saleCount { get; set; }
+        public int? SellCount { get; set; }
+
+        public string Desc { get; set; }
+
+        public string[] ExchangeList
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(ExchangeCode))
+                {
+                    var arr = ExchangeCode.Split(',');
+                    string[] exchangearr = new string[arr.Length];
+                    if (arr.Length > 0)
+                    {
+                        for (int i = 0; i < arr.Length; i++)
+                        {
+                            if (arr[i] == "1")
+                            {
+                                exchangearr[i] = "线下兑换";
+                            } else if (arr[i] == "2")
+                            {
+                                exchangearr[i] = "邮寄兑换";
+                            }
+                        }
+                    }
+                    return exchangearr;
+                }
+                return null;
+            }
+        }
+
+        public string CategoryName { get; set; }
+
+        public decimal? Stock { get; set; }
+
+        public bool? IsAction { get; set; }
+
+        /// <summary>
+        /// 封面
+        /// </summary>
+        public string ThumLogo
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(PhotoUrl))
+                {
+                    var arr = PhotoUrl.Split(',');
+                    if (arr.Length > 0)
+                    {
+                        return Host + arr[0];
+                    }
+                }
+
+                return string.Empty;
+            }
+        }
     }
 }

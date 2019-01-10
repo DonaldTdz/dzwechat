@@ -91,5 +91,7 @@ namespace HC.DZWechat.Goods
         Task<WxPagedResultDto<GoodsGridDto>> GetSearchGoodsAsync(GoodsSearchInputDto input);
 
         Task<List<GoodsGridDto>> GetGroupGoodsAsync(int groupId, int top);
+
+        Task<GoodsDetailDto> GetGoodsDetailAsync(Guid id);
     }
 }
