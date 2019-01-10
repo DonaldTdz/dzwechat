@@ -10,6 +10,8 @@ import { HeaderUserComponent } from './default/header/components/user.component'
 import { YoYoSidebarNavComponent } from './default/sidebar/components/yoyo-sidebar-nav.component';
 import { LayoutDefaultComponent } from './default/layout-default.component';
 import { ChangePasswordComponent } from './default/change-password/change-password.component';
+import { HeaderNotifyComponent } from '@layout/default/header/components/notify.component';
+import { OrderService } from 'services';
 
 const COMPONENTS = [
   HeaderComponent,
@@ -23,6 +25,7 @@ const HEADERCOMPONENTS = [
   HeaderStorageComponent,
   HeaderUserComponent,
   ChangePasswordComponent,
+  HeaderNotifyComponent,
 ];
 
 const SIDEBARCOMPONENTS = [
@@ -44,5 +47,6 @@ const SIDEBARCOMPONENTS = [
   exports: [
     ...COMPONENTS
   ],
+  providers: [OrderService],
 })
 export class LayoutModule { }

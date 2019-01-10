@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using HC.DZWechat.Orders;
 using HC.DZWechat.DZEnums.DZCommonEnums;
 using Abp.AutoMapper;
+using System.Collections.Generic;
 
 namespace HC.DZWechat.Orders.Dtos
 {
@@ -141,6 +142,18 @@ namespace HC.DZWechat.Orders.Dtos
         /// 待处理订单数
         /// </summary>
         public int PendingOrderTotal { get; set; }
+    }
+    public class ProcesseingOrderListDto
+    {
+        /// <summary>
+        /// 订单信息
+        /// </summary>
+        public List<OrderListDto> Orders { get; set; }
+
+        /// <summary>
+        /// 订单条数
+        /// </summary>
+        public int Count { get; set; }
     }
 
 }

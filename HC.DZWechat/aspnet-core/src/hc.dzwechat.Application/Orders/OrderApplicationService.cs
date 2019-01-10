@@ -65,7 +65,7 @@ namespace HC.DZWechat.Orders
         public async Task<PagedResultDto<OrderListDto>> GetPaged(GetOrdersInput input)
         {
 
-		    var query = _entityRepository.GetAll().WhereIf(!string.IsNullOrEmpty(input.FilterText), u => u.Phone.Contains(input.FilterText));
+            var query = _entityRepository.GetAll().WhereIf(!string.IsNullOrEmpty(input.FilterText), u => u.Phone.Contains(input.FilterText));
             var count = await query.CountAsync();
             var entityList = await query
                     .OrderBy(input.Sorting).AsNoTracking()
@@ -230,9 +230,22 @@ namespace HC.DZWechat.Orders
             var homeInfo = new HomeInfo();
             homeInfo.WeChatUsersTotal = await _wechatUserRepository.GetAll().CountAsync();
             homeInfo.IntegralTotal = (int)await _wechatUserRepository.GetAll().SumAsync(i => i.Integral);
-            homeInfo.OrderTotal = await _entityRepository.GetAll().Where(o=>o.Status!=OrderStatus.已取消).CountAsync();
+            homeInfo.OrderTotal = await _entityRepository.GetAll().Where(o => o.Status != OrderStatus.已取消).CountAsync();
             homeInfo.PendingOrderTotal = await _entityRepository.GetAll().Where(o => o.Status == OrderStatus.已支付).CountAsync();
             return homeInfo;
+        }
+
+        /// <summary>
+        /// 获取最新支付待处理的前6条数据
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ProcesseingOrderListDto> GetOrderTopSix()
+        {
+            var result = new ProcesseingOrderListDto();
+            var list = await _entityRepository.GetAll().Where(o => o.Status == OrderStatus.已支付).OrderByDescending(o => o.PayTime).Take(6).ToListAsync();
+            result.Orders = list.MapTo<List<OrderListDto>>();
+            result.Count = await _entityRepository.GetAll().Where(o => o.Status == OrderStatus.已支付).CountAsync();
+            return result;
         }
     }
 }

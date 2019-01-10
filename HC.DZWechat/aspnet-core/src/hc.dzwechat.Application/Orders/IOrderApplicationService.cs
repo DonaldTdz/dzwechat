@@ -79,5 +79,11 @@ namespace HC.DZWechat.Orders
         /// <returns></returns>
         Task<HomeInfo> GetHomeInfo();
 
+        /// <summary>
+        /// 获取最新支付待处理的前6条数据
+        /// </summary>
+        /// <returns></returns>
+        Task<ProcesseingOrderListDto> GetOrderTopSix();
+
     }
 }
