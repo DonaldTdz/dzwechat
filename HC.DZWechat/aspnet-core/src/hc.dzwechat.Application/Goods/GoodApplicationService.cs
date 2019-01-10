@@ -402,6 +402,18 @@ namespace HC.DZWechat.Goods
             }).OrderByDescending(i => i.Total).Take(10).ToListAsync();
             return result;
         }
+
+        [AbpAllowAnonymous]
+        public async Task<GoodsDetailDto> GetGoodsDetailAsync(Guid id)
+        {
+            var query = await _entityRepository.GetAsync(id);
+            var cat = await _categoryRepository.GetAsync(query.CategoryId.Value);
+            var hostUrl = _appConfiguration["App:ServerRootAddress"];
+            var result = query.MapTo<GoodsDetailDto>();
+            result.Host = hostUrl;
+            result.CategoryName = cat.Name;
+            return result;
+        }
     }
 }
 
