@@ -1,22 +1,22 @@
 ﻿using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using HC.DZWechat.DZEnums.DZCommonEnums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
-using HC.DZWechat.DZEnums.DZCommonEnums;
 
-namespace HC.DZWechat.OrderDetails
+namespace HC.DZWechat.ShopCarts
 {
-    [Table("OrderDetails")]
-    public class OrderDetail : Entity<Guid>, IHasCreationTime //注意修改主键Id数据类型
+    [Table("ShopCarts")]
+    public class ShopCart : Entity<Guid>, IHasCreationTime //注意修改主键Id数据类型
     {
         /// <summary>
-        /// 订单Id 外键
+        /// 用户Id
         /// </summary>
-        [Required]
-        public virtual Guid OrderId { get; set; }
+        public virtual Guid? UserId { get; set; }
+
         /// <summary>
         /// 商品Id
         /// </summary>
@@ -42,18 +42,13 @@ namespace HC.DZWechat.OrderDetails
         /// </summary>
         public virtual decimal? Num { get; set; }
         /// <summary>
-        /// 兑换状态（枚举：1、未兑换 2、已兑换）
+        /// 兑换方式
         /// </summary>
-        public virtual ExchangeStatus? Status { get; set; }
-        /// <summary>
-        /// 兑换时间
-        /// </summary>
-        public virtual DateTime? ExchangeTime { get; set; }
+        public virtual ExchangeCode ExchangeCode { get; set; }
         /// <summary>
         /// 
         /// </summary>
         public virtual DateTime CreationTime { get; set; }
-        public virtual string UserChooseType { get; set; }
     }
 
 }
