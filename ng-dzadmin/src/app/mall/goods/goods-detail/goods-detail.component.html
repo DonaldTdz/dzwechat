@@ -71,6 +71,7 @@
                             <ng-container *ngIf="stock.control.hasError('pattern')">请输入正确的数字</ng-container>
                         </nz-form-explain>
                     </nz-form-control>
+                    <nz-alert nzType="info" nzMessage="如果不填则库存不限量" nzShowIcon></nz-alert>
                 </nz-form-item>
                 <nz-form-item nz-row>
                     <nz-form-label nz-col [nzSm]="4">条码</nz-form-label>

@@ -22,8 +22,6 @@ export class CategoryDetailComponent {
 
     show(id?: number) {
         this.isVisible = true;
-        console.log(id);
-
         if (id) {
             this.title = '修改分类';
             let params: any = {};

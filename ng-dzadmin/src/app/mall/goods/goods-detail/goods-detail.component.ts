@@ -250,20 +250,6 @@ export class GoodsDetailComponent implements OnInit {
                 }
             }
         });
-        /*let i = 0;
-        this.fileList.forEach(v => {
-            if (v.status == 'removed') {
-                // const temp = v;
-                // const list = this.fileList;
-                this.fileList.splice(i, 1);
-                this.photoList.splice(i, 1);
-                return;
-                // this.photoList[i].status = 'removed';
-                // this.removeSavePoto();
-            }
-            i++
-        });*/
-        //return true;
     }
 
     // removeSavePoto() {

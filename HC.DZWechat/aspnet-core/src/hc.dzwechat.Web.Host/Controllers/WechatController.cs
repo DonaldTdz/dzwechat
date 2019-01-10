@@ -146,7 +146,16 @@ namespace HC.DZWechat.Web.Host.Controllers
                         //url = host + "/Wechat/MarketingStrategyAsync";
                         return Redirect(AuthorizationPageUrl.MarketingStrategyUrl);
                     }
-                    //break;
+                case AuthorizationPageEnum.MarketingExchange: //扫码兑换
+                    {
+                        //if (!string.IsNullOrEmpty(UserOpenId))
+                        //{
+                        //    return Redirect(AuthorizationPageUrl.MarketingExchangeUrl);
+                        //}
+                        //url = host + "/Wechat/MarketingStrategyAsync";
+                        return Redirect(AuthorizationPageUrl.MarketingExchangeUrl);
+                    }
+                //break;
                 default:
                     {
                         return Redirect("/dzwechat/index.html");
@@ -177,6 +186,19 @@ namespace HC.DZWechat.Web.Host.Controllers
 
             return Redirect(AuthorizationPageUrl.MarketingStrategyUrl);
         }
+
+        /// <summary>
+        /// 扫码兑换
+        /// </summary>
+        /// <param name="code"></param>
+        /// <param name="state"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> MarketingExchange(string code, string state)
+        {
+            await SetUserOpenId(code);
+
+            return Redirect(AuthorizationPageUrl.MarketingExchangeUrl);
+        }
     }
 
 
@@ -186,7 +208,8 @@ namespace HC.DZWechat.Web.Host.Controllers
         NewsLaunch = 2,
         NewsProduct = 3,
 
-        MarketingStrategy = 101
+        MarketingStrategy = 101,
+        MarketingExchange = 102,
     }
 
     public class AuthorizationPageUrl
@@ -196,5 +219,6 @@ namespace HC.DZWechat.Web.Host.Controllers
         public static string NewsProductUrl = "/dzwechat/index.html#/news-product/product";
 
         public static string MarketingStrategyUrl = "/dzwechat/index.html#/marketing-strategy/strategy";
+        public static string MarketingExchangeUrl = "/dzwechat/index.html#/marketing-exchange/exchange";
     }
 }

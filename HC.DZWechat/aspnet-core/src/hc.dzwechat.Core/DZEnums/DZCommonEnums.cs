@@ -17,7 +17,8 @@ namespace HC.DZWechat.DZEnums.DZCommonEnums
     public enum UserType
     {
         普通会员 = 1,
-        Vip会员 = 2
+        Vip会员 = 2,
+        取消关注 = 3
     }
 
     public enum BindStatus
