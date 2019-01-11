@@ -18,28 +18,29 @@ using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 
 
-using HC.DZWechat.Orders.Dtos;
-using HC.DZWechat.Orders;
+using HC.DZWechat.ShopCarts.Dtos;
+using HC.DZWechat.ShopCarts;
+using HC.DZWechat.DZEnums.DZCommonEnums;
 
-namespace HC.DZWechat.Orders
+namespace HC.DZWechat.ShopCarts
 {
     /// <summary>
-    /// Order应用层服务的接口方法
+    /// ShopCart应用层服务的接口方法
     ///</summary>
-    public interface IOrderAppService : IApplicationService
+    public interface IShopCartAppService : IApplicationService
     {
         /// <summary>
-		/// 获取Order的分页列表信息
+		/// 获取ShopCart的分页列表信息
 		///</summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        Task<PagedResultDto<OrderListDto>> GetPaged(GetOrdersInput input);
+        Task<PagedResultDto<ShopCartListDto>> GetPaged(GetShopCartsInput input);
 
 
 		/// <summary>
-		/// 通过指定id获取OrderListDto信息
+		/// 通过指定id获取ShopCartListDto信息
 		/// </summary>
-		Task<OrderListDto> GetById(Guid id);
+		Task<ShopCartListDto> GetById(EntityDto<Guid> input);
 
 
         /// <summary>
@@ -47,19 +48,19 @@ namespace HC.DZWechat.Orders
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        Task<GetOrderForEditOutput> GetForEdit(NullableIdDto<Guid> input);
+        Task<GetShopCartForEditOutput> GetForEdit(NullableIdDto<Guid> input);
 
 
         /// <summary>
-        /// 添加或者修改Order的公共方法
+        /// 添加或者修改ShopCart的公共方法
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        Task CreateOrUpdate(CreateOrUpdateOrderInput input);
+        Task CreateOrUpdate(CreateOrUpdateShopCartInput input);
 
 
         /// <summary>
-        /// 删除Order信息的方法
+        /// 删除ShopCart信息的方法
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
@@ -67,23 +68,18 @@ namespace HC.DZWechat.Orders
 
 
         /// <summary>
-        /// 批量删除Order
+        /// 批量删除ShopCart
         /// </summary>
         Task BatchDelete(List<Guid> input);
 
 
-        Task<PagedResultDto<OrderListDto>> GetPagedById(GetOrdersInput input);
         /// <summary>
-        /// 主页数据统计
+        /// 导出ShopCart为excel表
         /// </summary>
         /// <returns></returns>
-        Task<HomeInfo> GetHomeInfo();
+        //Task<FileDto> GetToExcel();
 
-        /// <summary>
-        /// 获取最新支付待处理的前6条数据
-        /// </summary>
-        /// <returns></returns>
-        Task<ProcesseingOrderListDto> GetOrderTopSix();
+        Task AddCartAsync(ShopCartInputDto input);
 
     }
 }

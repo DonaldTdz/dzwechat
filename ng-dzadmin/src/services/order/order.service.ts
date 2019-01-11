@@ -71,6 +71,19 @@ export class OrderService {
             return Exchange.fromJS(data);
         }));
     }
+
+    /**
+     * 获取待处理的最新前六条数据
+     */
+    getGetOrderTopSix(): Observable<PagedResultDto> {
+        let _url = "/api/services/app/Order/GetOrderTopSix";
+        return this._commonhttp.get(_url).pipe(map(data => {
+            const result = new PagedResultDto();
+            result.totalCount = data.count;
+            result.items = data.orders;
+            return result;
+        }));
+    }
 }
 
 

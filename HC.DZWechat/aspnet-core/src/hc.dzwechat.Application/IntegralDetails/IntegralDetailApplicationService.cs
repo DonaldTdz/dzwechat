@@ -44,8 +44,8 @@ namespace HC.DZWechat.IntegralDetails
         , IIntegralDetailManager entityManager
         )
         {
-            _entityRepository = entityRepository; 
-             _entityManager=entityManager;
+            _entityRepository = entityRepository;
+            _entityManager = entityManager;
             _integralDetailsRepository = integralDetailsRepository;
         }
 
@@ -55,26 +55,26 @@ namespace HC.DZWechat.IntegralDetails
         ///</summary>
         /// <param name="input"></param>
         /// <returns></returns>
-		 
+
         public async Task<PagedResultDto<IntegralDetailListDto>> GetPaged(GetIntegralDetailsInput input)
-		{
+        {
 
-		    var query = _entityRepository.GetAll();
-			// TODO:根据传入的参数添加过滤条件
-            
+            var query = _entityRepository.GetAll();
+            // TODO:根据传入的参数添加过滤条件
 
-			var count = await query.CountAsync();
 
-			var entityList = await query
-					.OrderBy(input.Sorting).AsNoTracking()
-					.PageBy(input)
-					.ToListAsync();
+            var count = await query.CountAsync();
 
-			// var entityListDtos = ObjectMapper.Map<List<IntegralDetailListDto>>(entityList);
-			var entityListDtos =entityList.MapTo<List<IntegralDetailListDto>>();
+            var entityList = await query
+                    .OrderBy(input.Sorting).AsNoTracking()
+                    .PageBy(input)
+                    .ToListAsync();
 
-			return new PagedResultDto<IntegralDetailListDto>(count,entityListDtos);
-		}
+            // var entityListDtos = ObjectMapper.Map<List<IntegralDetailListDto>>(entityList);
+            var entityListDtos = entityList.MapTo<List<IntegralDetailListDto>>();
+
+            return new PagedResultDto<IntegralDetailListDto>(count, entityListDtos);
+        }
 
         public async Task<PagedResultDto<IntegralDetailListDto>> GetPagedById(GetIntegralDetailsInput input)
         {
@@ -94,117 +94,117 @@ namespace HC.DZWechat.IntegralDetails
         /// </summary>
 
         public async Task<IntegralDetailListDto> GetById(EntityDto<Guid> input)
-		{
-			var entity = await _entityRepository.GetAsync(input.Id);
+        {
+            var entity = await _entityRepository.GetAsync(input.Id);
 
-		    return entity.MapTo<IntegralDetailListDto>();
-		}
+            return entity.MapTo<IntegralDetailListDto>();
+        }
 
-		/// <summary>
-		/// 获取编辑 IntegralDetail
-		/// </summary>
-		/// <param name="input"></param>
-		/// <returns></returns>
-		
-		public async Task<GetIntegralDetailForEditOutput> GetForEdit(NullableIdDto<Guid> input)
-		{
-			var output = new GetIntegralDetailForEditOutput();
-IntegralDetailEditDto editDto;
+        /// <summary>
+        /// 获取编辑 IntegralDetail
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
 
-			if (input.Id.HasValue)
-			{
-				var entity = await _entityRepository.GetAsync(input.Id.Value);
+        public async Task<GetIntegralDetailForEditOutput> GetForEdit(NullableIdDto<Guid> input)
+        {
+            var output = new GetIntegralDetailForEditOutput();
+            IntegralDetailEditDto editDto;
 
-				editDto = entity.MapTo<IntegralDetailEditDto>();
+            if (input.Id.HasValue)
+            {
+                var entity = await _entityRepository.GetAsync(input.Id.Value);
 
-				//integralDetailEditDto = ObjectMapper.Map<List<integralDetailEditDto>>(entity);
-			}
-			else
-			{
-				editDto = new IntegralDetailEditDto();
-			}
+                editDto = entity.MapTo<IntegralDetailEditDto>();
 
-			output.IntegralDetail = editDto;
-			return output;
-		}
+                //integralDetailEditDto = ObjectMapper.Map<List<integralDetailEditDto>>(entity);
+            }
+            else
+            {
+                editDto = new IntegralDetailEditDto();
+            }
 
-
-		/// <summary>
-		/// 添加或者修改IntegralDetail的公共方法
-		/// </summary>
-		/// <param name="input"></param>
-		/// <returns></returns>
-		
-		public async Task CreateOrUpdate(CreateOrUpdateIntegralDetailInput input)
-		{
-
-			if (input.IntegralDetail.Id.HasValue)
-			{
-				await Update(input.IntegralDetail);
-			}
-			else
-			{
-				await Create(input.IntegralDetail);
-			}
-		}
+            output.IntegralDetail = editDto;
+            return output;
+        }
 
 
-		/// <summary>
-		/// 新增IntegralDetail
-		/// </summary>
-		
-		protected virtual async Task<IntegralDetailEditDto> Create(IntegralDetailEditDto input)
-		{
-			//TODO:新增前的逻辑判断，是否允许新增
+        /// <summary>
+        /// 添加或者修改IntegralDetail的公共方法
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+
+        public async Task CreateOrUpdate(CreateOrUpdateIntegralDetailInput input)
+        {
+
+            if (input.IntegralDetail.Id.HasValue)
+            {
+                await Update(input.IntegralDetail);
+            }
+            else
+            {
+                await Create(input.IntegralDetail);
+            }
+        }
+
+
+        /// <summary>
+        /// 新增IntegralDetail
+        /// </summary>
+
+        protected virtual async Task<IntegralDetailEditDto> Create(IntegralDetailEditDto input)
+        {
+            //TODO:新增前的逻辑判断，是否允许新增
 
             // var entity = ObjectMapper.Map <IntegralDetail>(input);
-            var entity=input.MapTo<IntegralDetail>();
-			
-
-			entity = await _entityRepository.InsertAsync(entity);
-			return entity.MapTo<IntegralDetailEditDto>();
-		}
-
-		/// <summary>
-		/// 编辑IntegralDetail
-		/// </summary>
-		
-		protected virtual async Task Update(IntegralDetailEditDto input)
-		{
-			//TODO:更新前的逻辑判断，是否允许更新
-
-			var entity = await _entityRepository.GetAsync(input.Id.Value);
-			input.MapTo(entity);
-
-			// ObjectMapper.Map(input, entity);
-		    await _entityRepository.UpdateAsync(entity);
-		}
+            var entity = input.MapTo<IntegralDetail>();
 
 
+            entity = await _entityRepository.InsertAsync(entity);
+            return entity.MapTo<IntegralDetailEditDto>();
+        }
 
-		/// <summary>
-		/// 删除IntegralDetail信息的方法
-		/// </summary>
-		/// <param name="input"></param>
-		/// <returns></returns>
-		
-		public async Task Delete(EntityDto<Guid> input)
-		{
-			//TODO:删除前的逻辑判断，是否允许删除
-			await _entityRepository.DeleteAsync(input.Id);
-		}
+        /// <summary>
+        /// 编辑IntegralDetail
+        /// </summary>
+
+        protected virtual async Task Update(IntegralDetailEditDto input)
+        {
+            //TODO:更新前的逻辑判断，是否允许更新
+
+            var entity = await _entityRepository.GetAsync(input.Id.Value);
+            input.MapTo(entity);
+
+            // ObjectMapper.Map(input, entity);
+            await _entityRepository.UpdateAsync(entity);
+        }
 
 
 
-		/// <summary>
-		/// 批量删除IntegralDetail的方法
-		/// </summary>
-		
-		public async Task BatchDelete(List<Guid> input)
-		{
-			// TODO:批量删除前的逻辑判断，是否允许删除
-			await _entityRepository.DeleteAsync(s => input.Contains(s.Id));
-		}
+        /// <summary>
+        /// 删除IntegralDetail信息的方法
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+
+        public async Task Delete(EntityDto<Guid> input)
+        {
+            //TODO:删除前的逻辑判断，是否允许删除
+            await _entityRepository.DeleteAsync(input.Id);
+        }
+
+
+
+        /// <summary>
+        /// 批量删除IntegralDetail的方法
+        /// </summary>
+
+        public async Task BatchDelete(List<Guid> input)
+        {
+            // TODO:批量删除前的逻辑判断，是否允许删除
+            await _entityRepository.DeleteAsync(s => input.Contains(s.Id));
+        }
 
 
         /// <summary>
@@ -241,7 +241,8 @@ IntegralDetailEditDto editDto;
             }
 
             var list = await _integralDetailsRepository.GetIntegralDetailByMonthAsync(startTime, endTime);
-            return list;
+
+            return list.OrderBy(r => r.GroupName).ToList();
         }
 
     }

@@ -54,7 +54,6 @@ export class NewsComponent extends PagedListingComponentBase<any> {
         this.refresh();
     }
     create() {
-        console.log('aa')
         this.router.navigate(['app/news/news-detail', this.param.newsType]);
     }
     edit(item: News) {
