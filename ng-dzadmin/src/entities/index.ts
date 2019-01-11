@@ -13,3 +13,4 @@ export * from './shop';
 export * from './home-info';
 export * from './group-statistics';
 export * from './integral-statis';
+export * from './drop-down';

@@ -21,6 +21,7 @@ import { ShopDetailComponent } from './shop/shop-detail/shop-detail.component';
 import { ImageCropperComponent } from 'ngx-img-cropper';
 import { CropperComponent } from './goods/goods-detail/cropper/cropper.component';
 import { BannerCropperComponent } from './goods/goods-detail/banner-cropper/banner-cropper.component';
+import { ExchangeComponent } from '@app/mall/exchange/exchange.component';
 
 @NgModule({
     imports: [
@@ -48,6 +49,7 @@ import { BannerCropperComponent } from './goods/goods-detail/banner-cropper/bann
         ImageCropperComponent,
         CropperComponent,
         BannerCropperComponent,
+        ExchangeComponent,
     ],
     entryComponents: [
         GoodsComponent,
@@ -65,6 +67,7 @@ import { BannerCropperComponent } from './goods/goods-detail/banner-cropper/bann
         ImageCropperComponent,
         CropperComponent,
         BannerCropperComponent,
+        ExchangeComponent,
     ],
     providers: [WechatUserService, IntegralDetailService, OrderService, GoodsService, ShopService]
 })

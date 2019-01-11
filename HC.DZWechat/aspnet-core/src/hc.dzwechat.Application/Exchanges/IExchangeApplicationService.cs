@@ -72,11 +72,18 @@ namespace HC.DZWechat.Exchanges
         Task BatchDelete(List<Guid> input);
 
 
-		/// <summary>
+        /// <summary>
         /// 导出Exchange为excel表
         /// </summary>
         /// <returns></returns>
-		//Task<FileDto> GetToExcel();
+        //Task<FileDto> GetToExcel();
+
+        /// <summary>
+        /// 获取兑换明细
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task<PagedResultDto<ExchangeListDto>> GetExchangeDetail(ExchangeInput input);
 
     }
 }
