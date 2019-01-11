@@ -54,12 +54,10 @@ namespace HC.DZWechat.ShopCarts.Dtos
 		public decimal? Num { get; set; }
 
 
-
 		/// <summary>
 		/// ExchangeCode
 		/// </summary>
 		public ExchangeCodeEnum ExchangeCode { get; set; }
-
 
 
 		/// <summary>
@@ -67,8 +65,92 @@ namespace HC.DZWechat.ShopCarts.Dtos
 		/// </summary>
 		public DateTime CreationTime { get; set; }
 
+    }
+
+    public class UserCartDto : EntityDto<Guid>
+    {
+        public UserCartDto() { }
+
+        public UserCartDto(string host)
+        {
+            Host = host;
+        }
+
+        /// <summary>
+        /// UserId
+        /// </summary>
+        public Guid? UserId { get; set; }
+
+        /// <summary>
+        /// GoodsId
+        /// </summary>
+        public Guid GoodsId { get; set; }
+
+        /// <summary>
+        /// Specification
+        /// </summary>
+        public string Specification { get; set; }
+
+        /// <summary>
+        /// Integral
+        /// </summary>
+        public decimal? Integral { get; set; }
+
+        /// <summary>
+        /// Unit
+        /// </summary>
+        public string Unit { get; set; }
 
 
+        /// <summary>
+        /// Num
+        /// </summary>
+        public decimal? Num { get; set; }
+
+        /// <summary>
+        /// ExchangeCode
+        /// </summary>
+        public ExchangeCodeEnum ExchangeCode { get; set; }
+
+        public string ExchangeCodeDesc
+        {
+            get
+            {
+                return ExchangeCode.ToString();
+            }
+        }
+
+        [NonSerialized]
+        public string PhotoUrl;
+
+        [NonSerialized]
+        public string Host;
+
+        /// <summary>
+        /// 封面
+        /// </summary>
+        public string ThumLogo
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(PhotoUrl))
+                {
+                    var arr = PhotoUrl.Split(',');
+                    if (arr.Length > 0)
+                    {
+                        return Host + arr[0];
+                    }
+                }
+
+                return string.Empty;
+            }
+        }
+
+        public string CategoryName { get; set; }
+
+        public decimal? Stock { get; set; }
+
+        public bool? IsAction { get; set; }
 
     }
 }
