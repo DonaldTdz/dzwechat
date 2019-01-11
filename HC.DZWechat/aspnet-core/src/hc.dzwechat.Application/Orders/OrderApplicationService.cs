@@ -24,6 +24,7 @@ using HC.DZWechat.Orders.DomainService;
 using HC.DZWechat.WechatUsers;
 using HC.DZWechat.IntegralDetails;
 using HC.DZWechat.DZEnums.DZCommonEnums;
+using HC.DZWechat.OrderDetails;
 
 namespace HC.DZWechat.Orders
 {
@@ -36,6 +37,7 @@ namespace HC.DZWechat.Orders
         private readonly IRepository<Order, Guid> _entityRepository;
         private readonly IRepository<WechatUser, Guid> _wechatUserRepository;
         private readonly IRepository<IntegralDetail, Guid> _integralRepository;
+        private readonly IRepository<OrderDetail, Guid> _orderdetailRepository;
 
         private readonly IOrderManager _entityManager;
 
@@ -46,13 +48,14 @@ namespace HC.DZWechat.Orders
         public OrderAppService(
         IRepository<Order, Guid> entityRepository
         , IOrderManager entityManager, IRepository<WechatUser, Guid> wechatUserRepository
-        , IRepository<IntegralDetail, Guid> integralRepository
+        , IRepository<IntegralDetail, Guid> integralRepository, IRepository<OrderDetail, Guid> orderdetailRepository
         )
         {
             _entityRepository = entityRepository;
             _entityManager = entityManager;
             _wechatUserRepository = wechatUserRepository;
             _integralRepository = integralRepository;
+            _orderdetailRepository = orderdetailRepository;
         }
 
 
@@ -242,9 +245,21 @@ namespace HC.DZWechat.Orders
         public async Task<ProcesseingOrderListDto> GetOrderTopSix()
         {
             var result = new ProcesseingOrderListDto();
-            var list = await _entityRepository.GetAll().Where(o => o.Status == OrderStatus.已支付).OrderByDescending(o => o.PayTime).Take(6).ToListAsync();
+            var query = from o in _entityRepository.GetAll().Where(o => o.Status == OrderStatus.已支付)
+                        join od in _orderdetailRepository.GetAll().Where(od=>od.exchangeCode== ExchangeCodeEnum.邮寄兑换 && od.Status == ExchangeStatus.未兑换) on o.Id equals od.OrderId
+                        select new OrderListDto
+                        {
+                            Id = o.Id,
+                            Number = o.Number,
+                            NickName = o.NickName,
+                            UserId=o.UserId,
+                            Phone=o.Phone,
+                            Status=o.Status,
+                            PayTime=o.PayTime,
+                        };
+            var list =await query.OrderByDescending(o => o.PayTime).Take(6).ToListAsync();
             result.Orders = list.MapTo<List<OrderListDto>>();
-            result.Count = await _entityRepository.GetAll().Where(o => o.Status == OrderStatus.已支付).CountAsync();
+            result.Count =await query.CountAsync();
             return result;
         }
     }

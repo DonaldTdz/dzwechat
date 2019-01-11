@@ -24,9 +24,9 @@ import { AppComponentBase } from '@shared/component-base';
 export class HeaderNotifyComponent extends AppComponentBase implements OnInit {
     data: NoticeItem[] = [
         {
-            title: '待处理订单',
+            title: '待邮寄订单',
             list: [],
-            emptyText: '你已完成所有待处理订单',
+            emptyText: '你已完成所有待邮寄订单',
             emptyImage:
                 'https://gw.alipayobjects.com/zos/rmsportal/HsIsxMZiWKrNUavQUXqx.svg',
             clearText: '更多',
