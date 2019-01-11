@@ -54,6 +54,11 @@ export class AppMenus {
                     link: "/app/mall/order",
                     reuse: false
                 },
+                {
+                    text: "兑换明细",
+                    link: "/app/mall/exchange",
+                    reuse: false
+                },
             ]
         },
         {

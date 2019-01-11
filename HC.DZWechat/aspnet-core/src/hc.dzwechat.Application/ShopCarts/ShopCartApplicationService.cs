@@ -24,6 +24,10 @@ using HC.DZWechat.ShopCarts.DomainService;
 using HC.DZWechat.DZEnums.DZCommonEnums;
 using HC.DZWechat.WechatUsers;
 using HC.DZWechat.Goods;
+using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Hosting;
+using HC.DZWechat.Configuration;
+using HC.DZWechat.Categorys;
 
 namespace HC.DZWechat.ShopCarts
 {
@@ -36,8 +40,12 @@ namespace HC.DZWechat.ShopCarts
         private readonly IRepository<ShopCart, Guid> _entityRepository;
         private readonly IRepository<WechatUser, Guid> _wechatUserRepository;
         private readonly IRepository<Good, Guid> _goodsRepository;
+        private readonly IRepository<Category> _categoryRepository;
+        private readonly IConfigurationRoot _appConfiguration;
 
         private readonly IShopCartManager _entityManager;
+
+        private string _hostUrl;
 
         /// <summary>
         /// 构造函数 
@@ -46,13 +54,18 @@ namespace HC.DZWechat.ShopCarts
         IRepository<ShopCart, Guid> entityRepository
         , IRepository<WechatUser, Guid> wechatUserRepository
         , IRepository<Good, Guid> goodsRepository
+        , IRepository<Category> categoryRepository
         , IShopCartManager entityManager
+        , IHostingEnvironment env
         )
         {
             _entityRepository = entityRepository;
             _wechatUserRepository = wechatUserRepository;
             _goodsRepository = goodsRepository;
-            _entityManager =entityManager;
+            _categoryRepository = categoryRepository;
+            _entityManager = entityManager;
+            _appConfiguration = AppConfigurations.Get(env.ContentRootPath, env.EnvironmentName, env.IsDevelopment());
+            _hostUrl = _appConfiguration["App:ServerRootAddress"];
         }
 
 
@@ -234,18 +247,31 @@ ShopCartEditDto editDto;
             }
         }
 
-        /// <summary>
-        /// 导出ShopCart为excel表,等待开发。
-        /// </summary>
-        /// <returns></returns>
-        //public async Task<FileDto> GetToExcel()
-        //{
-        //	var users = await UserManager.Users.ToListAsync();
-        //	var userListDtos = ObjectMapper.Map<List<UserListDto>>(users);
-        //	await FillRoleNames(userListDtos);
-        //	return _userListExcelExporter.ExportToFile(userListDtos);
-        //}
-
+        [AbpAllowAnonymous]
+        public async Task<List<UserCartDto>> GetUserCartListAsync(string wxopenid)
+        {
+            var userId = await _wechatUserRepository.GetAll().Where(w => w.WxOpenId == wxopenid).Select(w => w.Id).FirstAsync();
+            var query = from c in _entityRepository.GetAll().Where(e => e.UserId == userId)
+                        join g in _goodsRepository.GetAll() on c.GoodsId equals g.Id
+                        join t in _categoryRepository.GetAll() on g.CategoryId equals t.Id
+                        select new UserCartDto()
+                        {
+                            UserId = c.UserId,
+                            CategoryName = t.Name,
+                            ExchangeCode = c.ExchangeCode,
+                            Id = c.Id,
+                            Integral = c.Integral,
+                            GoodsId = c.GoodsId,
+                            Host = _hostUrl,
+                            IsAction = g.IsAction,
+                            Num = c.Num,
+                            PhotoUrl = g.PhotoUrl,
+                            Specification = c.Specification,
+                            Stock = g.Stock,
+                            Unit = c.Unit
+                        };
+            return await query.ToListAsync();
+        }
     }
 }
 

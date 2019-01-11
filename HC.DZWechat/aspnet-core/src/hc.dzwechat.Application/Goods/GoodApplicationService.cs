@@ -40,6 +40,8 @@ namespace HC.DZWechat.Goods
         private readonly IGoodManager _entityManager;
         private readonly IConfigurationRoot _appConfiguration;
 
+        private string _hostUrl;
+
         /// <summary>
         /// 构造函数 
         ///</summary>
@@ -54,6 +56,7 @@ namespace HC.DZWechat.Goods
             _categoryRepository = categoryRepository;
             _entityManager = entityManager;
             _appConfiguration = AppConfigurations.Get(env.ContentRootPath, env.EnvironmentName, env.IsDevelopment());
+            _hostUrl = _appConfiguration["App:ServerRootAddress"];
         }
 
 
@@ -267,8 +270,7 @@ namespace HC.DZWechat.Goods
         [AbpAllowAnonymous]
         public async Task<WxPagedResultDto<GoodsGridDto>> GetHeatGoodsAsync(WxPagedInputDto input)
         {
-            var hostUrl = _appConfiguration["App:ServerRootAddress"];
-            var query = _entityRepository.GetAll().Where(e => e.IsAction == true).Select(e => new GoodsGridDto(hostUrl)
+            var query = _entityRepository.GetAll().Where(e => e.IsAction == true).Select(e => new GoodsGridDto(_hostUrl)
             {
                 Id = e.Id,
                 name = e.Specification,
@@ -292,7 +294,6 @@ namespace HC.DZWechat.Goods
         [AbpAllowAnonymous]
         public async Task<WxPagedResultDto<GoodsGridDto>> GetSearchGoodsAsync(GoodsSearchInputDto input)
         {
-            var hostUrl = _appConfiguration["App:ServerRootAddress"];
             var query = _entityRepository.GetAll().Where(e => e.IsAction == true)
                 .WhereIf(!string.IsNullOrEmpty(input.KeyWord), e => e.Specification.Contains(input.KeyWord) || e.Desc.Contains(input.KeyWord))
                 .WhereIf(input.CategoryId != 0, e => e.CategoryId == input.CategoryId);
@@ -325,7 +326,7 @@ namespace HC.DZWechat.Goods
                     }
                     break;
             }
-            var selectQuery = query.Select(e => new GoodsGridDto(hostUrl)
+            var selectQuery = query.Select(e => new GoodsGridDto(_hostUrl)
             {
                 Id = e.Id,
                 name = e.Specification,
@@ -346,12 +347,11 @@ namespace HC.DZWechat.Goods
         public async Task<List<GoodsGridDto>> GetGroupGoodsAsync(int groupId, int top)
         {
             top = top == 0 ? 50 : top;
-            var hostUrl = _appConfiguration["App:ServerRootAddress"];
             var goodsList = await _entityRepository.GetAll()
                 .Where(e => e.IsAction == true && e.CategoryId == groupId)
                 .OrderByDescending(o => o.CreationTime)
                 .Take(top)
-                .Select(e => new GoodsGridDto(hostUrl)
+                .Select(e => new GoodsGridDto(_hostUrl)
                 {
                     Id = e.Id,
                     name = e.Specification,
@@ -408,9 +408,8 @@ namespace HC.DZWechat.Goods
         {
             var query = await _entityRepository.GetAsync(id);
             var cat = await _categoryRepository.GetAsync(query.CategoryId.Value);
-            var hostUrl = _appConfiguration["App:ServerRootAddress"];
             var result = query.MapTo<GoodsDetailDto>();
-            result.Host = hostUrl;
+            result.Host = _hostUrl;
             result.CategoryName = cat.Name;
             return result;
         }

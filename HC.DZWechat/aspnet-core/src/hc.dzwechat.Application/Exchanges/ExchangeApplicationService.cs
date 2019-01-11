@@ -24,6 +24,7 @@ using HC.DZWechat.Exchanges.DomainService;
 using HC.DZWechat.OrderDetails;
 using HC.DZWechat.Orders;
 using HC.DZWechat.DZEnums.DZCommonEnums;
+using HC.DZWechat.Shops;
 using HC.DZWechat.ScanExchange;
 using HC.DZWechat.CommonDto;
 using HC.DZWechat.Orders.Dtos;
@@ -40,6 +41,8 @@ namespace HC.DZWechat.Exchanges
         private readonly IRepository<Exchange, Guid> _entityRepository;
         private readonly IRepository<OrderDetail, Guid> _orderDetailRepository;
         private readonly IRepository<Order, Guid> _orderRepository;
+        private readonly IRepository<Shop, Guid> _shopRepository;
+
         private readonly IExchangeManager _entityManager;
         private readonly IScanExchangeManager _scanExchangeManager;
 
@@ -50,7 +53,7 @@ namespace HC.DZWechat.Exchanges
         public ExchangeAppService(
         IRepository<Exchange, Guid> entityRepository
         , IRepository<OrderDetail, Guid> orderDetailRepository
-                    , IRepository<Order, Guid> orderRepository
+        , IRepository<Order, Guid> orderRepository, IRepository<Shop, Guid> shopRepository
         , IExchangeManager entityManager
                         , IScanExchangeManager scanExchangeManager
         )
@@ -59,6 +62,7 @@ namespace HC.DZWechat.Exchanges
             _orderDetailRepository = orderDetailRepository;
             _orderRepository = orderRepository;
             _entityManager = entityManager;
+            _shopRepository = shopRepository;
             _scanExchangeManager = scanExchangeManager;
         }
 
@@ -268,6 +272,47 @@ namespace HC.DZWechat.Exchanges
         }
 
         /// <summary>
+        /// 获取兑换明细
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task<PagedResultDto<ExchangeListDto>> GetExchangeDetail(ExchangeInput input)
+        {
+            var queryE = _entityRepository.GetAll().WhereIf(input.ShopId.HasValue, e => e.ShopId == input.ShopId)
+                                                  .WhereIf(input.ExchangeStyle.HasValue,e=>e.ExchangeCode==input.ExchangeStyle)
+                                                  .WhereIf(input.StartTime.HasValue,e=>e.CreationTime>=input.StartTime)
+                                                  .WhereIf(input.EndTime.HasValue,e=>e.CreationTime<=input.EndTime);
+            var queryOD = _orderDetailRepository.GetAll().WhereIf(!string.IsNullOrEmpty(input.GoodsName), o => o.Specification.Contains(input.GoodsName));
+            var queryO = _orderRepository.GetAll().WhereIf(!string.IsNullOrEmpty(input.OrderId), o => o.Number.Contains(input.OrderId));
+            var query = from e in queryE
+                        join od in queryOD on e.OrderDetailId equals od.Id
+                        join o in queryO on od.OrderId equals o.Id
+                        join s in _shopRepository.GetAll() on e.ShopId equals s.Id
+                        select new ExchangeListDto
+                        {
+                            Id = e.Id,
+                            OrderDetailId = e.OrderDetailId,
+                            ExchangeCode = e.ExchangeCode,
+                            ShopId = e.ShopId,
+                            CreationTime = e.CreationTime,
+                            LogisticsCompany = e.LogisticsCompany,
+                            LogisticsNo = e.LogisticsNo,
+                            ShopName = s.Name,
+                            OrderNumber = o.Number,
+                            Specification = od.Specification
+                        };
+
+            var count = await query.CountAsync();
+
+            var entityList = await query
+                    .OrderByDescending(e=>e.CreationTime).AsNoTracking()
+                    .PageBy(input)
+                    .ToListAsync();
+
+            // var entityListDtos = ObjectMapper.Map<List<ExchangeListDto>>(entityList);
+            var entityListDtos = entityList.MapTo<List<ExchangeListDto>>();
+            return new PagedResultDto<ExchangeListDto>(count, entityListDtos);
+        } 
         /// 兑换商品
         /// </summary>
         /// <param name="orderId"></param>

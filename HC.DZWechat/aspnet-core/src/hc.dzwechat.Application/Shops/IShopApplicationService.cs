@@ -73,6 +73,12 @@ namespace HC.DZWechat.Shops
         Task BatchDelete(List<Guid> input);
 
         Task<List<ShopListDto>> GetShopList();
+
+        /// <summary>
+        /// 获取直营店（用于DropDown）
+        /// </summary>
+        /// <returns></returns>
+        Task<List<ShopListDto>> GetShopListForDropDown();
         Task<ShopListDto> GetShopInfoById(Guid shopId);
         Task<List<OrderDetailDto>> GetExchangeGoodsByIdAsync(Guid orderId, string openId);
     }

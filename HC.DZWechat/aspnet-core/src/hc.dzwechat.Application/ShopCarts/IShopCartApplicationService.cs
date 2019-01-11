@@ -76,10 +76,11 @@ namespace HC.DZWechat.ShopCarts
         /// <summary>
         /// 导出ShopCart为excel表
         /// </summary>
-        /// <returns></returns>
         //Task<FileDto> GetToExcel();
 
         Task AddCartAsync(ShopCartInputDto input);
+
+        Task<List<UserCartDto>> GetUserCartListAsync(string wxopenid);
 
     }
 }

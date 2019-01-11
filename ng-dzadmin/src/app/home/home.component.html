@@ -34,7 +34,7 @@
     <div nz-row nzType="flex" nzAlign="middle" class="bg-magenta rounded-md">
       <div nz-col nzSpan="24" class="p-md text-white">
         <div class="h2 mt0">{{homeInfo.pendingOrderTotal}}单</div>
-        <p class="text-nowrap mb0">待处理订单</p>
+        <p class="text-nowrap mb0">未完成订单</p>
       </div>
     </div>
   </div>
@@ -46,7 +46,7 @@
   <div nz-col nzXs="24" nzMd="12">
     <nz-card [nzBordered]="false" [nzTitle]="title1">
       <ng-template #title1>
-        商品销售前十
+        商品兑换数量前十
       </ng-template>
       <g2-bar height="275" [data]="goodsStatisData">
       </g2-bar>
@@ -77,10 +77,12 @@
   <div nz-col nzXs="24" nzMd="12">
     <nz-card [nzBordered]="false" [nzTitle]="title2">
       <ng-template #title2>
-        积分销售前十
+        商品兑换积分前十
       </ng-template>
-      <g2-bar height="275" [data]="integralStatisData">
-      </g2-bar>
+      <!-- <g2-bar height="275" [color]="'#52c41a'" [data]="integralStatisData">
+      </g2-bar> -->
+      <g2-group-bar height="275" [color]="'#52c41a'" [unit]="' 积分'" [data]="integralStatisData">
+      </g2-group-bar>
       <nz-table #nzTable2 [nzData]="integralStatis" nzShowSizeChanger [nzShowPagination]="false">
         <thead>
           <tr>
@@ -97,7 +99,7 @@
         </thead>
         <tbody>
           <tr>
-            <td class="countsty">数量</td>
+            <td class="countsty">积分</td>
             <td *ngFor="let integral of nzTable2.data">{{integral.integralTotal}}</td>
             <td class="bgcorlor">{{inTotal}}</td>
           </tr>
@@ -112,7 +114,7 @@
           <label nz-radio-button *ngFor="let item of tags" [nzValue]="item.value">{{item.text}}</label>
         </nz-radio-group>
       </ng-template>
-      <g2-group-bar height="275" [colors]="colors" [data]="integralMothData" groupName="name">
+      <g2-group-bar height="275" [colors]="colors" [unit]="' 积分'" [data]="integralMothData" groupName="name">
       </g2-group-bar>
       <nz-table #nzTablew [nzData]="integralMoth" [nzShowPagination]="false" [nzShowSizeChanger]="true">
         <thead>
