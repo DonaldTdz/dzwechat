@@ -1,10 +1,10 @@
 <Page [ngClass]="'list'" [title]="'扫码兑换'" [showTitle]="false" [spacing]="false">
     <div class="weui-cells" *ngIf="shop" style="margin-top: 0px;">
-        <!-- <div class="weui-cell" style=" padding-bottom: 0px; padding-top: 0px; padding-left: 0px; padding-right: 0px;">
+        <div class="weui-cell" style=" padding-bottom: 0px; padding-top: 0px; padding-left: 0px; padding-right: 0px;">
             <div style="text-align: center; width: 100%;">
-                <img src="./assets/images/scan/scan.jpg" style="width:100%;">
+                <img src="./assets/images/swiper-1.png" style="width:100%;">
             </div>
-        </div> -->
+        </div>
         <div class="weui-cell">
             <div class="weui-cell__bd">
                 <p>店铺名称</p>
@@ -19,38 +19,31 @@
         </div>
     </div>
 
-    <div class="weui-cells__title">商品扫一扫</div>
-    <div class="weui-cells">
-        <div class="weui-cell">
-            <div class="weui-cell__hd">
-                <label for="" class="weui-label">商品码</label>
-            </div>
-            <div class="weui-cell__bd">
-                <input class="weui-input" type="text" [(ngModel)]="goodsBarCode" name="goodsBarCode" placeholder="扫一扫商品包码或条码">
-            </div>
-            <a class="weui-cell__ft weui-cell_access" (click)="scanGoodsBarCode()">
-                <img class="weui-icon-h18" src="./assets/images/scan/scan-o-2.png" alt="">
-            </a>
-        </div>
-    </div>
-    <div class="weui-cells__title">订单列表</div>
-    <div class="weui-cells">
-        <div class="weui-cell" *ngFor="let g of goods">
-            <a class="weui-cell__hd weui-cell_access" (click)="onRemoveProduct(g.id)">
-                <i class="weui-icon-cancel"></i>
-            </a>
-            <div class="weui-cell__bd">
-                <p>{{g.specification}}</p>
-                <p style="color:#999999;font-size:12px;">建议零售价(包):￥{{g.price}}</p>
-            </div>
-            <div class="weui-cell__ft">
-                <weui-stepper [(ngModel)]="g.num" [min]="1" name="num" [max]="1000"></weui-stepper>
-            </div>
-        </div>
-        <weui-loadmore type="line" *ngIf="!goods || goods.length == 0"></weui-loadmore>
-    </div>
+    <div class="weui-cells__title">商品兑换</div>
     <div class="weui-btn-area">
-        <button class="weui-btn weui-btn_primary" [disabled]="!cardNum || !goodsBarCode" (click)="onSave()" [ngClass]="{'weui-btn_disabled': !cardNum || !goodsBarCode}">确定兑换</button>
+        <button class="weui-btn weui-btn_primary" (click)="setOrderBarCode('ed09f7b3-8bd3-421b-ad6d-46d17672cbf1')">扫一扫</button>
+    </div>
+    <div *ngIf="orderBarCode" class="weui-cells__title">订单列表</div>
+    <div *ngIf="orderBarCode" class="weui-cells">
+        <div class="weui-cell" *ngFor="let o of orderDetailList">
+            <div class="weui-cell__bd">
+                <p>{{o.specification}}</p>
+                <div style="color:#999999;font-size:12px;">
+                    <div style="float:left;">
+                        <!-- <p>数量:{{o.num}} {{o.unit}}</p> -->
+                        <label for="male">Male</label>
+                    </div>
+                    <div style="color:green; float:right;border-width:1px; border-style:solid;border-radius:3px;margin-left:10px;padding: 2px;">
+                        <p>兑换状态:{{o.statusName}}</p>
+                    </div>
+                </div>
+                <!-- <p style="color:#999999;font-size:12px;">数量:{{o.num}} {{o.unit}}丨 兑换状态:{{o.statusName}}</p> -->
+            </div>
+        </div>
+        <weui-loadmore type="line" *ngIf="!orderDetailList || orderDetailList.length == 0"></weui-loadmore>
+    </div>
+    <div *ngIf="orderBarCode" class="weui-btn-area">
+        <button class="weui-btn weui-btn_primary" [disabled]="!orderDetailList || orderDetailList.length == 0" (click)="onShowBySrv()" [ngClass]="{'weui-btn_disabled': !orderDetailList || orderDetailList == 0}">确定兑换</button>
     </div>
     <weui-dialog #delconfirm [config]="config"></weui-dialog>
 </Page>

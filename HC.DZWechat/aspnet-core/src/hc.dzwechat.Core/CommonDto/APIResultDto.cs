@@ -4,7 +4,7 @@ using System.Text;
 
 namespace HC.DZWechat.CommonDto
 {
-    [Serializable]
+    //[Serializable]
     public class APIResultDto
     {
         public int Code { get; set; }
