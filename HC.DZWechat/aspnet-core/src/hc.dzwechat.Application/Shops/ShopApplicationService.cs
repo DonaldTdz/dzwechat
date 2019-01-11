@@ -19,6 +19,8 @@ using Abp.Linq.Extensions;
 using HC.DZWechat.Shops.Dtos;
 using HC.DZWechat.Shops.DomainService;
 using System.Text;
+using HC.DZWechat.ScanExchange;
+using HC.DZWechat.ScanExchange.Dtos;
 
 namespace HC.DZWechat.Shops
 {
@@ -31,6 +33,7 @@ namespace HC.DZWechat.Shops
         private readonly IRepository<Shop, Guid> _entityRepository;
 
         private readonly IShopManager _entityManager;
+        private readonly IScanExchangeManager _scanExchangeManager;
 
         /// <summary>
         /// 构造函数 
@@ -38,10 +41,12 @@ namespace HC.DZWechat.Shops
         public ShopAppService(
         IRepository<Shop, Guid> entityRepository
         ,IShopManager entityManager
+            , IScanExchangeManager scanExchangeManager
         )
         {
             _entityRepository = entityRepository; 
-             _entityManager=entityManager;
+             _entityManager = entityManager;
+            _scanExchangeManager = scanExchangeManager;
         }
 
 
@@ -207,6 +212,7 @@ ShopEditDto editDto;
         /// </summary>
         /// <param name="shopId"></param>
         /// <returns></returns>
+        [AbpAllowAnonymous]
         public async Task<ShopListDto> GetShopInfoById(Guid shopId)
         {
             var result = await _entityRepository.GetAll().Where(v => v.Id == shopId).Select(v => new ShopListDto()
@@ -215,6 +221,19 @@ ShopEditDto editDto;
                 Name = v.Name,
                 Address = v.Address
             }).FirstOrDefaultAsync();
+            return result;
+        }
+
+        /// <summary>
+        /// 获取订单信息
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <param name="openId"></param>
+        /// <returns></returns>
+        [AbpAllowAnonymous]
+        public async Task<List<OrderDetailDto>> GetExchangeGoodsByIdAsync(Guid orderId, string openId)
+        {
+            var result = await _scanExchangeManager.GetExchangeGoodsByIdAsync(orderId,openId);
             return result;
         }
     }

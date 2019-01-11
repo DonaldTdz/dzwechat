@@ -20,7 +20,7 @@ namespace  HC.DZWechat.Orders.Dtos
         /// <summary>
         /// Number
         /// </summary>
-        [Required(ErrorMessage="Number不能为空")]
+        //[Required(ErrorMessage="Number不能为空")]
 		public string Number { get; set; }
 
 

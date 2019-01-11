@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Abp;
 using Abp.Domain.Services;
 using HC.DZWechat.CommonDto;
-using HC.DZWechat.Orders;
 using HC.DZWechat.ScanExchange.Dtos;
 
 namespace HC.DZWechat.ScanExchange
