@@ -82,7 +82,7 @@ export class HeaderNotifyComponent extends AppComponentBase implements OnInit {
                                 description: '昵称:' + i.nickName + '  支付时间：' + this.dateFormatHH(i.payTime),
                                 extra: i.statusName,
                                 status: 'processing',
-                                type: '待处理订单',
+                                type: '待邮寄订单',//与上面的的title的值保持一致
                             }
                         );
                     });
