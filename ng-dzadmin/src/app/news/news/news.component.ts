@@ -32,7 +32,6 @@ export class NewsComponent extends PagedListingComponentBase<any> {
     ): void {
         this.param.skipCount = request.skipCount;
         this.param.maxResultCount = request.maxResultCount;
-        console.log(this.param);
         this.newsService.getNewsPage(this.param).finally(() => {
             finishedCallback();
         })
@@ -41,10 +40,6 @@ export class NewsComponent extends PagedListingComponentBase<any> {
                     i.showCoverPhoto = AppConsts.remoteServiceBaseUrl + i.coverPhoto;
                     return i;
                 });
-                //     .pipe(map(i => {
-                //     i.showCoverPhoto = AppConsts.remoteServiceBaseUrl + i.coverPhoto;
-                // });
-                console.table(this.dataList);
                 this.totalItems = result.totalCount;
             })
     }
