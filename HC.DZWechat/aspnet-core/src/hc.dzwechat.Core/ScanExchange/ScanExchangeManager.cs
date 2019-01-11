@@ -67,7 +67,7 @@ namespace HC.DZWechat.ScanExchange
         /// <returns></returns>
         public async Task<List<OrderDetailDto>> GetExchangeGoodsByIdAsync(Guid orderId, string openId)
         {
-            var exchangeList = await _orderDetailRepository.GetAll().Where(v => v.OrderId == orderId && v.Status != DZEnums.DZCommonEnums.ExchangeStatus.未兑换).Select
+            var exchangeList = await _orderDetailRepository.GetAll().Where(v => v.OrderId == orderId && v.Status == DZEnums.DZCommonEnums.ExchangeStatus.未兑换).Select
                 (v => new OrderDetailDto()
                 {
                     Id = v.Id,
@@ -130,6 +130,23 @@ namespace HC.DZWechat.ScanExchange
             entity.Status = DZEnums.DZCommonEnums.OrderStatus.已完成;
             entity.CompleteTime = DateTime.Now;
             await _repository.UpdateAsync(entity);
+        }
+
+        /// <summary>
+        /// 获取订单信息
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        public async Task<OrderDto> GetOrderByIdAsync(Guid orderId)
+        {
+            var result = await _repository.GetAll().Where(v => v.Id == orderId).Select
+                (v => new OrderDto()
+                {
+                    Id = v.Id,
+                    Number = v.Number,
+                    Status = v.Status
+                }).FirstOrDefaultAsync();
+            return result;
         }
     }
 }

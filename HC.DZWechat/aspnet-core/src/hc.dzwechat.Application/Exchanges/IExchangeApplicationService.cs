@@ -22,6 +22,7 @@ using HC.DZWechat.Exchanges.Dtos;
 using HC.DZWechat.Exchanges;
 using HC.DZWechat.CommonDto;
 using HC.DZWechat.Orders.Dtos;
+using HC.DZWechat.ScanExchange.Dtos;
 
 namespace HC.DZWechat.Exchanges
 {
@@ -88,5 +89,6 @@ namespace HC.DZWechat.Exchanges
         Task<PagedResultDto<ExchangeListDto>> GetExchangeDetail(ExchangeInput input);
 
         Task<APIResultDto> ExchangeGoods(OrderEditDto input);
+        Task<OrderDto> GetOrderByIdAsync(Guid orderId);
     }
 }

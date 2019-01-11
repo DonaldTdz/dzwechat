@@ -168,10 +168,51 @@ namespace HC.DZWechat.Web.Host.Controllers
             //return Redirect(pageUrl);
         }
 
+
         /// <summary>
-        /// 烟雨课堂
+        /// 推广码
         /// </summary>
-        public async Task<IActionResult> NewsStudy(string code, string state)
+        public IActionResult ExchangeAuth(string code, string state)
+        {
+            ////如果code为null 跳转获取code, 注：state需要传入 shopId
+            //if (string.IsNullOrEmpty(UserOpenId) && string.IsNullOrEmpty(code))
+            //{
+            //    var url = host + "/GAWX/ShopAuth";
+            //    var pageUrl = _weChatOAuthAppService.GetAuthorizeUrl(url, state, Senparc.Weixin.MP.OAuthScope.snsapi_base);
+            //    return Redirect(pageUrl);
+            //}
+            //else
+            //{
+            //    //存储openId 避免重复提交
+            //    SetUserOpenId(code);
+            //    var isExist = _weChatUserAppService.GetWeChatUserIsExsit(UserOpenId).Result;
+            //    if (isExist)
+            //    {
+            //        //店铺页面
+            //        if (curIsShopKeeper == true)
+            //        {
+            //            return Redirect(string.Format(GAAuthorizationPageUrl.ShopUrl, state));
+            //        }
+            //        else
+            //        {
+            //            return Redirect(string.Format(GAAuthorizationPageUrl.ShopUrlNotOpen, state, isShowWindows));
+            //        }
+            //    }
+            //    else
+            //    {
+            //        //二维码关注页面
+            //        var url = host + _shopAppService.GetShopQrCodeURL(shopId).Result;
+            return RedirectToAction("QrCode");
+            //    }
+            //}
+            //}
+        }
+
+
+    /// <summary>
+    /// 烟雨课堂
+    /// </summary>
+    public async Task<IActionResult> NewsStudy(string code, string state)
         {
             await SetUserOpenId(code);
 
