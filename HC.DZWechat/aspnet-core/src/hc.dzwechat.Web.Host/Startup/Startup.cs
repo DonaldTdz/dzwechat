@@ -83,6 +83,9 @@ namespace HC.DZWechat.Web.Host.Startup
                     In = "header",
                     Type = "apiKey"
                 });
+
+                //处理类型相同命名空间不同错误
+                options.CustomSchemaIds(v => v.FullName);
             });
 
             //微信开发相关配置

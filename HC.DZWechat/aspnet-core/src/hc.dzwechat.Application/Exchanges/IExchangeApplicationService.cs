@@ -20,6 +20,8 @@ using Abp.Application.Services.Dto;
 
 using HC.DZWechat.Exchanges.Dtos;
 using HC.DZWechat.Exchanges;
+using HC.DZWechat.CommonDto;
+using HC.DZWechat.Orders.Dtos;
 
 namespace HC.DZWechat.Exchanges
 {
@@ -85,5 +87,6 @@ namespace HC.DZWechat.Exchanges
         /// <returns></returns>
         Task<PagedResultDto<ExchangeListDto>> GetExchangeDetail(ExchangeInput input);
 
+        Task<APIResultDto> ExchangeGoods(OrderEditDto input);
     }
 }

@@ -25,6 +25,9 @@ using HC.DZWechat.OrderDetails;
 using HC.DZWechat.Orders;
 using HC.DZWechat.DZEnums.DZCommonEnums;
 using HC.DZWechat.Shops;
+using HC.DZWechat.ScanExchange;
+using HC.DZWechat.CommonDto;
+using HC.DZWechat.Orders.Dtos;
 
 namespace HC.DZWechat.Exchanges
 {
@@ -40,6 +43,8 @@ namespace HC.DZWechat.Exchanges
         private readonly IRepository<Shop, Guid> _shopRepository;
 
         private readonly IExchangeManager _entityManager;
+        private readonly IScanExchangeManager _scanExchangeManager;
+
 
         /// <summary>
         /// 构造函数 
@@ -49,6 +54,7 @@ namespace HC.DZWechat.Exchanges
         , IRepository<OrderDetail, Guid> orderDetailRepository
         , IRepository<Order, Guid> orderRepository, IRepository<Shop, Guid> shopRepository
         , IExchangeManager entityManager
+                        , IScanExchangeManager scanExchangeManager
         )
         {
             _entityRepository = entityRepository;
@@ -56,6 +62,7 @@ namespace HC.DZWechat.Exchanges
             _orderRepository = orderRepository;
             _entityManager = entityManager;
             _shopRepository = shopRepository;
+            _scanExchangeManager = scanExchangeManager;
         }
 
 
@@ -305,6 +312,16 @@ namespace HC.DZWechat.Exchanges
             var entityListDtos = entityList.MapTo<List<ExchangeListDto>>();
             return new PagedResultDto<ExchangeListDto>(count, entityListDtos);
         } 
+        /// 兑换商品
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        [AbpAllowAnonymous]
+        public async Task<APIResultDto> ExchangeGoods(OrderEditDto input)
+        {
+                var result = await _scanExchangeManager.ExchangeGoods(input.Id.Value);
+            return result;
+        }
     }
 }
 

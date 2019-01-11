@@ -18,9 +18,8 @@ namespace HC.DZWechat.ScanExchange
         private readonly IRepository<WechatUser, Guid> _wechatuserRepository;
         private readonly IRepository<OrderDetail, Guid> _orderDetailRepository;
 
-        public ScanExchangeManager(
-            IRepository<Order, Guid> repository
-                , IRepository<OrderDetail, Guid> orderDetailRepository
+        public ScanExchangeManager(IRepository<Order, Guid> repository
+            , IRepository<OrderDetail, Guid> orderDetailRepository
             , IRepository<WechatUser, Guid> wechatuserRepository
         )
         {
@@ -88,7 +87,7 @@ namespace HC.DZWechat.ScanExchange
         /// <returns></returns>
         public async Task<APIResultDto> ExchangeGoods(Guid orderId)
         {
-            var orderDetails = await _orderDetailRepository.GetAll().Where(v => v.OrderId == orderId && v.Status==DZEnums.DZCommonEnums.ExchangeStatus.未兑换).ToListAsync();
+            var orderDetails = await _orderDetailRepository.GetAll().Where(v => v.OrderId == orderId && v.Status == DZEnums.DZCommonEnums.ExchangeStatus.未兑换).ToListAsync();
             foreach (var item in orderDetails)
             {
                 item.Status = DZEnums.DZCommonEnums.ExchangeStatus.已兑换;

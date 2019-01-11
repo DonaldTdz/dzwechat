@@ -20,6 +20,7 @@ using Abp.Application.Services.Dto;
 
 using HC.DZWechat.Shops.Dtos;
 using HC.DZWechat.Shops;
+using HC.DZWechat.ScanExchange.Dtos;
 
 namespace HC.DZWechat.Shops
 {
@@ -78,5 +79,7 @@ namespace HC.DZWechat.Shops
         /// </summary>
         /// <returns></returns>
         Task<List<ShopListDto>> GetShopListForDropDown();
+        Task<ShopListDto> GetShopInfoById(Guid shopId);
+        Task<List<OrderDetailDto>> GetExchangeGoodsByIdAsync(Guid orderId, string openId);
     }
 }
