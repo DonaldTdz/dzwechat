@@ -248,7 +248,7 @@ ShopCartEditDto editDto;
         }
 
         [AbpAllowAnonymous]
-        public async Task<List<UserCartDto>> GetUserCartListAsync(string wxopenid)
+        public async Task<UserCart> GetUserCartListAsync(string wxopenid)
         {
             var userId = await _wechatUserRepository.GetAll().Where(w => w.WxOpenId == wxopenid).Select(w => w.Id).FirstAsync();
             var query = from c in _entityRepository.GetAll().Where(e => e.UserId == userId)
@@ -270,7 +270,34 @@ ShopCartEditDto editDto;
                             Stock = g.Stock,
                             Unit = c.Unit
                         };
-            return await query.ToListAsync();
+            var dataList = await query.ToListAsync();
+            var totalPrice = dataList.Sum(d => d.Integral * d.Num);
+            return new UserCart() { Items = dataList, TotalPrice = totalPrice };
+        }
+
+        [AbpAllowAnonymous]
+        public async Task<UserCartDto> GetCheckCartGoodsAsync(Guid id)
+        {
+            var query = from c in _entityRepository.GetAll().Where(e => e.Id == id)
+                        join g in _goodsRepository.GetAll() on c.GoodsId equals g.Id
+                        join t in _categoryRepository.GetAll() on g.CategoryId equals t.Id
+                        select new UserCartDto()
+                        {
+                            UserId = c.UserId,
+                            CategoryName = t.Name,
+                            ExchangeCode = c.ExchangeCode,
+                            Id = c.Id,
+                            Integral = c.Integral,
+                            GoodsId = c.GoodsId,
+                            Host = _hostUrl,
+                            IsAction = g.IsAction,
+                            Num = c.Num,
+                            PhotoUrl = g.PhotoUrl,
+                            Specification = c.Specification,
+                            Stock = g.Stock,
+                            Unit = c.Unit
+                        };
+            return await query.FirstOrDefaultAsync();
         }
     }
 }
