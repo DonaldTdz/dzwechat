@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CommonHttpClient } from '../common-httpclient';
 import { map } from 'rxjs/operators';
-import { News, WechatUser, ApiResult, Shop, OrderDetail } from '../../entities';
+import { News, WechatUser, ApiResult, Shop, OrderDetail, Order } from '../../entities';
 import { Observable } from 'rxjs';
 
 @Injectable()
@@ -28,6 +28,13 @@ export class ExchangeService {
         let url_ = "/api/services/app/Shop/GetExchangeGoodsByIdAsync";
         return this.commonHttpClient.get(url_, params).pipe(map(data => {
             return OrderDetail.fromJSArray(data.result);
+        }));
+    }
+
+    getOrderInfo(params: any): Observable<Order> {
+        let url_ = "/api/services/app/Exchange/GetOrderByIdAsync";
+        return this.commonHttpClient.get(url_, params).pipe(map(data => {
+            return Order.fromJS(data.result);
         }));
     }
 

@@ -27,6 +27,7 @@ using HC.DZWechat.DZEnums.DZCommonEnums;
 using HC.DZWechat.ScanExchange;
 using HC.DZWechat.CommonDto;
 using HC.DZWechat.Orders.Dtos;
+using HC.DZWechat.ScanExchange.Dtos;
 
 namespace HC.DZWechat.Exchanges
 {
@@ -274,7 +275,14 @@ namespace HC.DZWechat.Exchanges
         [AbpAllowAnonymous]
         public async Task<APIResultDto> ExchangeGoods(OrderEditDto input)
         {
-                var result = await _scanExchangeManager.ExchangeGoods(input.Id.Value);
+            var result = await _scanExchangeManager.ExchangeGoods(input.Id.Value);
+            return result;
+        }
+        [AbpAllowAnonymous]
+
+        public async Task<OrderDto> GetOrderByIdAsync(Guid orderId)
+        {
+            var result = await _scanExchangeManager.GetOrderByIdAsync(orderId);
             return result;
         }
     }

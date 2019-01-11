@@ -2,7 +2,7 @@ import { Component, Injector, OnInit } from '@angular/core';
 import { JWeiXinService, ToptipsService, DialogService, SkinType, DialogConfig } from 'ngx-weui';
 import { AppComponentBase } from '../../../shared/app-component-base';
 import { Router } from '@angular/router';
-import { Shop, WechatUser, OrderDetail } from '../../../entities';
+import { Shop, WechatUser, OrderDetail, Order } from '../../../entities';
 import { ExchangeService } from '../../../services';
 
 @Component({
@@ -13,6 +13,7 @@ export class ScanExchangeComponent extends AppComponentBase implements OnInit {
     shop: Shop;
     user: WechatUser;
     orderDetailList: OrderDetail[] = [];
+    order: Order = new Order();
     orderBarCode: string;// 订单码
     public DEFCONFIG: DialogConfig = <DialogConfig>{
         skin: 'ios',
@@ -145,6 +146,15 @@ export class ScanExchangeComponent extends AppComponentBase implements OnInit {
         //     }
         // this.orderBarCode = resarry[1];
         this.orderBarCode = res;
+        let param: any = {};
+        param.orderId = this.orderBarCode;
+        this.exchangeService.getOrderInfo(param).subscribe(result => {
+            if (result) {
+                this.order = result;
+            } else {
+                this.srv['warn']('没找到匹配订单');
+            }
+        });
         //获取订单详情
         let params: any = {};
         params.orderId = this.orderBarCode;
