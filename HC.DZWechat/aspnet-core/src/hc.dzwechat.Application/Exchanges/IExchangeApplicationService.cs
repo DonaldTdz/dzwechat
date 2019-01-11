@@ -22,6 +22,7 @@ using HC.DZWechat.Exchanges.Dtos;
 using HC.DZWechat.Exchanges;
 using HC.DZWechat.CommonDto;
 using HC.DZWechat.Orders.Dtos;
+using HC.DZWechat.ScanExchange.Dtos;
 
 namespace HC.DZWechat.Exchanges
 {
@@ -74,6 +75,20 @@ namespace HC.DZWechat.Exchanges
         Task BatchDelete(List<Guid> input);
 
 
+        /// <summary>
+        /// 导出Exchange为excel表
+        /// </summary>
+        /// <returns></returns>
+        //Task<FileDto> GetToExcel();
+
+        /// <summary>
+        /// 获取兑换明细
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task<PagedResultDto<ExchangeListDto>> GetExchangeDetail(ExchangeInput input);
+
         Task<APIResultDto> ExchangeGoods(OrderEditDto input);
+        Task<OrderDto> GetOrderByIdAsync(Guid orderId);
     }
 }

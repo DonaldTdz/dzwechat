@@ -19,6 +19,7 @@ using Abp.Linq.Extensions;
 using HC.DZWechat.Shops.Dtos;
 using HC.DZWechat.Shops.DomainService;
 using System.Text;
+using HC.DZWechat.DZEnums.DZCommonEnums;
 using HC.DZWechat.ScanExchange;
 using HC.DZWechat.ScanExchange.Dtos;
 
@@ -208,6 +209,18 @@ ShopEditDto editDto;
         }
 
         /// <summary>
+        /// 获取直营店（用于DropDown）
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<ShopListDto>> GetShopListForDropDown()
+        {
+            var list = await _entityRepository.GetAll().Where(s=>s.Type== ShopTypeEnum.直营店).Select(v => new ShopListDto()
+            {
+                Id = v.Id,
+                Name = v.Name
+            }).OrderByDescending(v => v.Name).ToListAsync();
+            return list;
+        }
         /// 微信获取店铺信息
         /// </summary>
         /// <param name="shopId"></param>

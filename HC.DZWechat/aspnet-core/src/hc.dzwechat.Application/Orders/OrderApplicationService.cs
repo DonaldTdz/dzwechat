@@ -245,7 +245,7 @@ namespace HC.DZWechat.Orders
         public async Task<ProcesseingOrderListDto> GetOrderTopSix()
         {
             var result = new ProcesseingOrderListDto();
-            var query = from o in _entityRepository.GetAll().Where(o => o.Status == OrderStatus.已支付)
+            var query = from o in _entityRepository.GetAll().Where(o => o.Status != OrderStatus.已支付 && o.Status != OrderStatus.已取消)
                         join od in _orderdetailRepository.GetAll().Where(od=>od.exchangeCode== ExchangeCodeEnum.邮寄兑换 && od.Status == ExchangeStatus.未兑换) on o.Id equals od.OrderId
                         select new OrderListDto
                         {

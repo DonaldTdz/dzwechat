@@ -46,7 +46,8 @@ export class G2GroupBarComponent implements OnDestroy, OnChanges {
 
     @Input() color = 'rgba(24, 144, 255, 0.85)';
     @Input() groupName = '';
-    @Input() colors: any[];
+    @Input() colors: any[] = [];
+    @Input() unit = '';
 
     @HostBinding('style.height.px')
     @Input()
@@ -84,7 +85,7 @@ export class G2GroupBarComponent implements OnDestroy, OnChanges {
     private install() {
         const canvasWidth = this.el.nativeElement.clientWidth;
         const minWidth = this.data.length * 30;
-
+        const that = this;
         if (canvasWidth <= minWidth) {
             if (!this.autoHideXLabels) {
                 this.autoHideXLabels = true;
@@ -146,7 +147,14 @@ export class G2GroupBarComponent implements OnDestroy, OnChanges {
                 .adjust([{
                     type: 'dodge',
                     marginRatio: 1 / 32
-                }]);
+                }])
+                .tooltip('x*y', function (item, y) {//数据后加单位
+                    y = y + that.unit;
+                    return {
+                        name: item,
+                        value: y
+                    };
+                });
         } else {
             chart.interval()
                 .position('x*y')
@@ -154,7 +162,14 @@ export class G2GroupBarComponent implements OnDestroy, OnChanges {
                 .adjust([{
                     type: 'dodge',
                     marginRatio: 1 / 32
-                }]);
+                }])
+                .tooltip('x*y', function (item, y, c) {//数据后加单位
+                    y = y + that.unit;
+                    return {
+                        name: item,
+                        value: y
+                    };
+                });
         }
 
         chart.render();

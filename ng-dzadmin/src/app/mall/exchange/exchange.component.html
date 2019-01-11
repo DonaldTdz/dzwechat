@@ -1,0 +1,84 @@
+<!--component html goes here -->
+<nz-card>
+    <div nz-row class="mb-md">
+        <div nz-col [nzSpan]="7">
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="goodsName">商品名称</nz-form-label>
+            <nz-form-control [nzSm]="18">
+                <input nz-input name="goodsName" #goodsName="ngModel" [(ngModel)]="search.goodsName" [placeholder]="'请输入商品名称'">
+            </nz-form-control>
+        </div>
+        <div nz-col [nzSpan]="7">
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="orderId">订单编号</nz-form-label>
+            <nz-form-control [nzSm]="18">
+                <input nz-input name="orderId" #orderId="ngModel" [(ngModel)]="search.orderId" [placeholder]="'请输入订单编号'">
+            </nz-form-control>
+        </div>
+        <div nz-col [nzSpan]="7">
+            <nz-form-label nz-col [nzSm]="6" [nzXs]="24" nzFor="shop">店铺</nz-form-label>
+            <nz-form-control nz-col [nzSm]="18">
+                <nz-select style="width: 100%;" name="shop" #shop="ngModel" [(ngModel)]="search.shop">
+                    <nz-option *ngFor="let i of shops" [nzLabel]="i.name" [nzValue]="i.id">
+                    </nz-option>
+                </nz-select>
+            </nz-form-control>
+        </div>
+        <div nz-col [nzSpan]="7">
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="dateRange">时间范围</nz-form-label>
+            <nz-form-control [nzSm]="18">
+                <nz-range-picker name="dateRange" [(ngModel)]="dateRange" [nzFormat]="shedateFormatDe" (ngModelChange)="changeTime($event)"></nz-range-picker>
+            </nz-form-control>
+        </div>
+        <div nz-col [nzSpan]="7">
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="type">兑换方式</nz-form-label>
+            <nz-form-control [nzSm]="18">
+                <nz-select name="exchangeStyle" style="width: 100%;" #exchangeStyle="ngModel" [(ngModel)]="search.exchangeStyle">
+                    <nz-option *ngFor="let i of excahngeStyles" [nzLabel]="i.text" [nzValue]="i.value">
+                    </nz-option>
+                </nz-select>
+            </nz-form-control>
+        </div>
+        <div nz-col [nzSpan]="7" style="float:right;text-align: right; padding-left:0px">
+            <button nz-button (click)="refresh()" nzType="primary">
+                搜索
+            </button>
+            <button nz-button type="button" (click)="reset()" class="mx-sm">重置</button>
+            <a style="display: none;" id="aSheduleDeExcelUrl" href="#">
+                <button type="button" id="btnSheduleDeHref">隐藏下载</button>
+            </a>
+            <button nz-button type="button" (click)="exportSheduleDe()" [nzLoading]="exportDLoading">
+                <i class="anticon anticon-download"></i>
+                <span>导出</span>
+            </button>
+        </div>
+    </div>
+    <ng-template #totalTemplate let-total>共 {{totalItems}} 条</ng-template>
+    <nz-table #ajaxTable nzShowSizeChanger [nzData]="dataList" [nzShowTotal]="totalTemplate" [nzTotal]="totalItems" [(nzPageIndex)]="pageNumber"
+        [(nzPageSize)]="pageSize" [nzLoading]="isTableLoading" (nzPageIndexChange)="refresh()" (nzPageSizeChange)="refresh()"
+        [nzFrontPagination]="false">
+        <thead>
+            <tr>
+                <th>订单编号</th>
+                <th>店铺名称</th>
+                <th>商品名称</th>
+                <th>兑换方式</th>
+                <th>兑换时间</th>
+                <th>物流单号</th>
+                <th>物流公司</th>
+            </tr>
+
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of ajaxTable.data">
+                <td>
+                    <a (click)="goOrderDetail(item.orderId)">{{item.orderNumber}}</a>
+                </td>
+                <td>{{item.shopName}}</td>
+                <td>{{item.specification}}</td>
+                <td>{{item.exchangeCodeName}}</td>
+                <td>{{item.creationTime|_date}}</td>
+                <td>{{item.logisticsNo}}</td>
+                <td>{{item.logisticsCompany}}</td>
+            </tr>
+        </tbody>
+    </nz-table>
+</nz-card>

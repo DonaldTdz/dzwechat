@@ -8,6 +8,11 @@ export class Exchange {
     creationTime: Date;
     logisticsCompany: string;
     logisticsNo: string;
+    shopName: string;
+    orderNumber: string;
+    specification: string;
+    exchangeCodeName: string;
+    orderId: string;
     constructor(data?: any) {
         if (data) {
             for (var property in data) {
@@ -27,6 +32,12 @@ export class Exchange {
             this.logisticsCompany = data["logisticsCompany"];
             this.logisticsNo = data["logisticsNo"];
             this.wechatUserId = data["wechatUserId"];
+            this.shopName = data["shopName"];
+            this.orderNumber = data["orderNumber"];
+            this.specification = data["specification"];
+            this.exchangeCodeName = data["exchangeCodeName"];
+            this.orderId = data["orderId"];
+
         }
     }
     toJSON(data?: any) {
@@ -40,6 +51,12 @@ export class Exchange {
         data["logisticsCompany"] = this.logisticsCompany;
         data["logisticsNo"] = this.logisticsNo;
         data["wechatUserId"] = this.wechatUserId;
+        data["shopName"] = this.shopName;
+        data["orderNumber"] = this.orderNumber;
+        data["specification"] = this.specification;
+        data["exchangeCodeName"] = this.exchangeCodeName;
+        data["orderId"] = this.orderId;
+
         return data;
     }
     static fromJS(data: any): Exchange {

@@ -11,6 +11,7 @@ import { MemberDetailComponent } from './member/member-detail/member-detail.comp
 import { GoodsDetailComponent } from './goods/goods-detail/goods-detail.component';
 import { OrderDetailComponent } from './order/order-detail/order-detail.component';
 import { ShopDetailComponent } from './shop/shop-detail/shop-detail.component';
+import { ExchangeComponent } from '@app/mall/exchange/exchange.component';
 
 const routes: Routes = [
     {
@@ -66,6 +67,11 @@ const routes: Routes = [
     {
         path: 'vip',
         component: VipComponent,
+        canActivate: [AppRouteGuard],
+    },
+    {
+        path: 'exchange',
+        component: ExchangeComponent,
         canActivate: [AppRouteGuard],
     },
 ];

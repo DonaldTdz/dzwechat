@@ -16,5 +16,6 @@ namespace HC.DZWechat.ScanExchange
         Task<bool> IsShopManagerByIdAsync(string openId);
         Task<List<OrderDetailDto>> GetExchangeGoodsByIdAsync(Guid orderId, string openId);
         Task<APIResultDto> ExchangeGoods(Guid orderId);
+        Task<OrderDto> GetOrderByIdAsync(Guid orderId);
     }
 }

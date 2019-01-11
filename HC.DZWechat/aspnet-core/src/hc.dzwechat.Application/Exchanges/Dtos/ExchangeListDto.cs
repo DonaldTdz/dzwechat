@@ -9,49 +9,49 @@ using HC.DZWechat.DZEnums.DZCommonEnums;
 
 namespace HC.DZWechat.Exchanges.Dtos
 {
-    public class ExchangeListDto : EntityDto<Guid>,IHasCreationTime 
+    public class ExchangeListDto : EntityDto<Guid>, IHasCreationTime
     {
 
-        
-		/// <summary>
-		/// OrderDetailId
-		/// </summary>
-		public Guid? OrderDetailId { get; set; }
+
+        /// <summary>
+        /// OrderDetailId
+        /// </summary>
+        public Guid? OrderDetailId { get; set; }
 
 
 
-		/// <summary>
-		/// ExchangeCode
-		/// </summary>
-		public ExchangeCodeEnum? ExchangeCode { get; set; }
+        /// <summary>
+        /// ExchangeCode
+        /// </summary>
+        public ExchangeCodeEnum? ExchangeCode { get; set; }
 
 
 
-		/// <summary>
-		/// ShopId
-		/// </summary>
-		public Guid? ShopId { get; set; }
+        /// <summary>
+        /// ShopId
+        /// </summary>
+        public Guid? ShopId { get; set; }
 
 
 
-		/// <summary>
-		/// UserId
-		/// </summary>
-		public long? UserId { get; set; }
+        /// <summary>
+        /// UserId
+        /// </summary>
+        public long? UserId { get; set; }
 
 
 
-		/// <summary>
-		/// CreationTime
-		/// </summary>
-		public DateTime CreationTime { get; set; }
+        /// <summary>
+        /// CreationTime
+        /// </summary>
+        public DateTime CreationTime { get; set; }
 
 
 
-		/// <summary>
-		/// LogisticsCompany
-		/// </summary>
-		public string LogisticsCompany { get; set; }
+        /// <summary>
+        /// LogisticsCompany
+        /// </summary>
+        public string LogisticsCompany { get; set; }
 
 
         public string WechatUserId { get; set; }
@@ -60,5 +60,33 @@ namespace HC.DZWechat.Exchanges.Dtos
         /// LogisticsNo
         /// </summary>
         public string LogisticsNo { get; set; }
+
+        public string ExchangeCodeName
+        {
+            get
+            {
+                return ExchangeCode.ToString();
+            }
+        }
+
+        /// <summary>
+        /// µêÆÌÃû
+        /// </summary>
+        public string ShopName { get; set; }
+
+        /// <summary>
+        /// ¶©µ¥±àºÅ
+        /// </summary>
+        public string OrderNumber { get; set; }
+
+        /// <summary>
+        /// ¹æ¸ñ
+        /// </summary>
+        public string Specification { get; set; }
+
+        /// <summary>
+        /// ¶©µ¥id
+        /// </summary>
+        public Guid OrderId { get; set; }
     }
 }

@@ -4,10 +4,10 @@
     <nz-tab [nzTitle]="'消息回复'">
         <nz-card>
             <div nz-row class="mb-md">
-                <div nz-col [nzSpan]="7">
+                <div nz-col [nzSpan]="6">
                     <nz-form-item nz-row>
-                        <nz-form-label nz-col [nzSm]="5" [nzXs]="24" nzFor="type">回复类型</nz-form-label>
-                        <nz-form-control nz-col [nzSm]="19">
+                        <nz-form-label nz-col [nzSm]="6" [nzXs]="24" nzFor="type">回复类型</nz-form-label>
+                        <nz-form-control nz-col [nzSm]="18">
                             <nz-select style="width: 100%;" name="triType" #triType="ngModel" [(ngModel)]="param.triType">
                                 <nz-option *ngFor="let i of triggerTypesMe" [nzLabel]="i.text" [nzValue]="i.value">
                                 </nz-option>
@@ -15,16 +15,16 @@
                         </nz-form-control>
                     </nz-form-item>
                 </div>
-                <div nz-col [nzSpan]="7">
-                    <nz-form-label nz-col [nzSm]="5" [nzXs]="24" nzFor="type">消息类型</nz-form-label>
-                    <nz-form-control nz-col [nzSm]="19">
+                <div nz-col [nzSpan]="6">
+                    <nz-form-label nz-col [nzSm]="6" [nzXs]="24" nzFor="type">消息类型</nz-form-label>
+                    <nz-form-control nz-col [nzSm]="18">
                         <nz-select name="msType" style="width: 100%;" #msType="ngModel" [(ngModel)]="param.msType">
                             <nz-option *ngFor="let i of msgTypesMe" [nzLabel]="i.text" [nzValue]="i.value">
                             </nz-option>
                         </nz-select>
                     </nz-form-control>
                 </div>
-                <div nz-col [nzSpan]="6">
+                <div nz-col [nzSpan]="8">
                     <nz-form-label [nzSm]="8" [nzXs]="24" nzFor="mesText">关键字/事件Key</nz-form-label>
                     <nz-form-control [nzSm]="16">
                         <input nz-input name="mesText" #mesText="ngModel" [(ngModel)]="param.mesText" [placeholder]="'请输入关键字/事件Key'">
