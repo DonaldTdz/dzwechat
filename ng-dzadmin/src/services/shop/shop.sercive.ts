@@ -35,4 +35,14 @@ export class ShopService {
             return Shop.fromJS(data);
         }));
     }
+
+    /**
+     * 获取直营店（用于DropDown）
+     */
+    getShopListForDropDown(): Observable<Shop[]> {
+        let url_ = "/api/services/app/Shop/GetShopListForDropDown";
+        return this._commonhttp.get(url_).pipe(map(data => {
+            return Shop.fromJSArray(data);
+        }));
+    }
 }

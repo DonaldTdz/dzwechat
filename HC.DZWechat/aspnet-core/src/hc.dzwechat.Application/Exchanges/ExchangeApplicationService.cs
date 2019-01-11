@@ -280,13 +280,17 @@ namespace HC.DZWechat.Exchanges
             var queryE = _entityRepository.GetAll().WhereIf(input.ShopId.HasValue, e => e.ShopId == input.ShopId)
                                                   .WhereIf(input.ExchangeStyle.HasValue,e=>e.ExchangeCode==input.ExchangeStyle)
                                                   .WhereIf(input.StartTime.HasValue,e=>e.CreationTime>=input.StartTime)
-                                                  .WhereIf(input.EndTime.HasValue,e=>e.CreationTime<=input.EndTime);
+                                                  .WhereIf(input.EndTime.HasValue,e=>e.CreationTime<=input.EndTimeAddOne);
+            var aa = queryE.ToList();
             var queryOD = _orderDetailRepository.GetAll().WhereIf(!string.IsNullOrEmpty(input.GoodsName), o => o.Specification.Contains(input.GoodsName));
             var queryO = _orderRepository.GetAll().WhereIf(!string.IsNullOrEmpty(input.OrderId), o => o.Number.Contains(input.OrderId));
+            var bb = queryOD.ToList();
+            var cc = queryO.ToList();
             var query = from e in queryE
                         join od in queryOD on e.OrderDetailId equals od.Id
                         join o in queryO on od.OrderId equals o.Id
-                        join s in _shopRepository.GetAll() on e.ShopId equals s.Id
+                        join s in _shopRepository.GetAll() on e.ShopId equals s.Id into se
+                        from ses in se.DefaultIfEmpty()
                         select new ExchangeListDto
                         {
                             Id = e.Id,
@@ -296,9 +300,10 @@ namespace HC.DZWechat.Exchanges
                             CreationTime = e.CreationTime,
                             LogisticsCompany = e.LogisticsCompany,
                             LogisticsNo = e.LogisticsNo,
-                            ShopName = s.Name,
+                            ShopName = ses.Name,
                             OrderNumber = o.Number,
-                            Specification = od.Specification
+                            Specification = od.Specification,
+                            OrderId=od.OrderId
                         };
 
             var count = await query.CountAsync();

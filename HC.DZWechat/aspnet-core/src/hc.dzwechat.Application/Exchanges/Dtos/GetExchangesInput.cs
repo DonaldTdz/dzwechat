@@ -55,5 +55,18 @@ namespace HC.DZWechat.Exchanges.Dtos
         /// </summary>
         public ExchangeCodeEnum? ExchangeStyle { get; set; }
 
+
+        public DateTime? EndTimeAddOne
+        {
+            get
+            {
+                if (EndTime.HasValue)
+                {
+                    return EndTime.Value.AddDays(1);
+                }
+                return EndTime;
+            }
+        }
+
     }
 }
