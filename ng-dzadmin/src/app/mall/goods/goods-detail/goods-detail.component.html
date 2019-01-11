@@ -64,14 +64,14 @@
                     </nz-form-control>
                 </nz-form-item>
                 <nz-form-item nz-row>
-                    <nz-form-label nz-col [nzSm]="4">商品库存</nz-form-label>
+                    <nz-form-label nz-col [nzSm]="4">限制总量</nz-form-label>
                     <nz-form-control [nzSm]="20" nzHasFeedback>
                         <input nz-input name="stock" #stock="ngModel" [(ngModel)]="goods.stock" pattern="^([1-9]\d*|[0]{1,1})$" [placeholder]="'请输入商品库存'">
                         <nz-form-explain *ngIf="stock.control.dirty&&stock.control.errors">
                             <ng-container *ngIf="stock.control.hasError('pattern')">请输入正确的数字</ng-container>
                         </nz-form-explain>
                     </nz-form-control>
-                    <nz-alert nzType="info" nzMessage="如果不填则库存不限量" nzShowIcon></nz-alert>
+                    <nz-alert nzType="info" nzMessage="如果不填则商品兑换不限量" nzShowIcon></nz-alert>
                 </nz-form-item>
                 <nz-form-item nz-row>
                     <nz-form-label nz-col [nzSm]="4">条码</nz-form-label>

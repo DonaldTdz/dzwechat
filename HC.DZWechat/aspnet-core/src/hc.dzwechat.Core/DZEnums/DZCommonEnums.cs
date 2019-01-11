@@ -17,14 +17,13 @@ namespace HC.DZWechat.DZEnums.DZCommonEnums
     public enum UserType
     {
         普通会员 = 1,
-        Vip会员 = 2,
-        取消关注 = 3
+        Vip会员 = 2
     }
 
     public enum BindStatus
     {
-        已绑定 = 1,
-        未绑定 = 2
+        已关注 = 1,
+        取消关注 = 2
     }
 
     public enum IntegralType
@@ -66,7 +65,7 @@ namespace HC.DZWechat.DZEnums.DZCommonEnums
         已兑换 = 2,
     }
 
-    public enum ExchangeCode
+    public enum ExchangeCodeEnum
     {
         线下兑换 = 1,
         邮寄兑换 = 2,

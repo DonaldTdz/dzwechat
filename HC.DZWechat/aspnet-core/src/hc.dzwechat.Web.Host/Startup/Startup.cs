@@ -104,6 +104,8 @@ namespace HC.DZWechat.Web.Host.Startup
             app.UseCors(_defaultCorsPolicyName); // Enable CORS!
 
             app.UseStaticFiles();
+            //使用session
+            app.UseSession();
 
             app.UseAuthentication();
 

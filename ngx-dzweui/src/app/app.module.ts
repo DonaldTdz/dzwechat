@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, Injector, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
@@ -16,9 +16,17 @@ import { AppConsts } from './shared/AppConsts';
 import { API_BASE_URL } from './services/common-httpclient';
 import { ServicesModule } from './services/services.module';
 import { WechatModule } from './wechat/wechat.module';
+import { SettingsService } from './services';
 
 export function getRemoteServiceBaseUrl(): string {
   return AppConsts.remoteServiceBaseUrl;
+}
+
+export function StartupServiceFactory(injector: Injector): Function {
+  return () => {
+    let settingSer = injector.get(SettingsService);
+    return settingSer.load();
+  };
 }
 
 @NgModule({
@@ -43,7 +51,14 @@ export function getRemoteServiceBaseUrl(): string {
     AppComponent
   ],
   providers: [
+    SettingsService,
     { provide: API_BASE_URL, useFactory: getRemoteServiceBaseUrl },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: StartupServiceFactory,
+      deps: [Injector],
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })

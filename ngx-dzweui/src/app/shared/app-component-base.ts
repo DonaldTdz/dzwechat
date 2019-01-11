@@ -1,9 +1,11 @@
 import { Injector, ElementRef } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import { SettingsService } from '../services/common/settings.service';
 
 export abstract class AppComponentBase {
 
     activatedRoute: ActivatedRoute;
+    settingsService: SettingsService;
 
     query: any = {
         pageIndex: 1,
@@ -15,16 +17,25 @@ export abstract class AppComponentBase {
 
     constructor(injector: Injector) {
         this.activatedRoute = injector.get(ActivatedRoute);
+        this.settingsService = injector.get(SettingsService);
     }
 
-    get IsIOS(){
+    get WUserParams() {
+        var params: any = {};
+        if (this.settingsService.openId) {
+            params.openId = this.settingsService.openId;
+        }
+        return params;
+    }
+
+    get IsIOS() {
         let ua = navigator.userAgent.toLowerCase();
         return /mac os/.test(ua);
     }
 
     get CurrentUrl() {
-        if(this.IsIOS){
-            return encodeURIComponent(location.href.split('#')[0]+'index.html');
+        if (this.IsIOS) {
+            return encodeURIComponent(location.href.split('#')[0] + 'index.html');
         } else {
             return encodeURIComponent(location.href.split('#')[0]);
         }

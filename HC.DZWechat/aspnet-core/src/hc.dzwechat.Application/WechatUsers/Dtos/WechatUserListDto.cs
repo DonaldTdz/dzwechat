@@ -6,6 +6,7 @@ using Abp.Domain.Entities.Auditing;
 using System.ComponentModel.DataAnnotations;
 using HC.DZWechat.WechatUsers;
 using HC.DZWechat.DZEnums.DZCommonEnums;
+using Abp.AutoMapper;
 
 namespace HC.DZWechat.WechatUsers.Dtos
 {
@@ -147,9 +148,16 @@ namespace HC.DZWechat.WechatUsers.Dtos
 		/// UnBindTime
 		/// </summary>
 		public DateTime? UnBindTime { get; set; }
+    }
 
+    [AutoMapTo(typeof(WechatUser))]
+    public class UserBindDto
+    {
+        public string host { get; set; }
+        public string OpenId { get; set; }
 
+        public Guid ShopId { get; set; }
 
-
+        public string VerificationCode { get; set; }
     }
 }

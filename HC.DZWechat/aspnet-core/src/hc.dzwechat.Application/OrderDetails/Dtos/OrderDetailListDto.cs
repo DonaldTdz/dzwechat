@@ -91,6 +91,13 @@ namespace HC.DZWechat.OrderDetails.Dtos
 		/// <summary>
 		/// UserChooseType
 		/// </summary>
-		public string UserChooseType { get; set; }
+		public ExchangeCodeEnum ExchangeCode { get; set; }
+        public string ExchangeCodeName
+        {
+            get
+            {
+                return ExchangeCode.ToString();
+            }
+        }
     }
 }

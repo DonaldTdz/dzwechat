@@ -21,8 +21,10 @@ using Abp.Linq.Extensions;
 using HC.DZWechat.WechatUsers;
 using HC.DZWechat.WechatUsers.Dtos;
 using HC.DZWechat.WechatUsers.DomainService;
-
-
+using Abp.Domain.Uow;
+using HC.DZWechat.CommonDto;
+using HC.DZWechat.Shops;
+using HC.DZWechat.Shops.Dtos;
 
 namespace HC.DZWechat.WechatUsers
 {
@@ -33,6 +35,7 @@ namespace HC.DZWechat.WechatUsers
     public class WechatUserAppService : DZWechatAppServiceBase, IWechatUserAppService
     {
         private readonly IRepository<WechatUser, Guid> _entityRepository;
+        private readonly IRepository<Shop, Guid> _shopRepository;
 
         private readonly IWechatUserManager _entityManager;
 
@@ -41,10 +44,12 @@ namespace HC.DZWechat.WechatUsers
         ///</summary>
         public WechatUserAppService(
         IRepository<WechatUser, Guid> entityRepository
+            , IRepository<Shop, Guid> shopRepository
         , IWechatUserManager entityManager
         )
         {
             _entityRepository = entityRepository;
+            _shopRepository = shopRepository;
             _entityManager = entityManager;
         }
 
@@ -196,19 +201,45 @@ namespace HC.DZWechat.WechatUsers
         }
 
 
-        /// <summary>
-        /// 导出WechatUser为excel表,等待开发。
-        /// </summary>
-        /// <returns></returns>
-        //public async Task<FileDto> GetToExcel()
-        //{
-        //	var users = await UserManager.Users.ToListAsync();
-        //	var userListDtos = ObjectMapper.Map<List<UserListDto>>(users);
-        //	await FillRoleNames(userListDtos);
-        //	return _userListExcelExporter.ExportToFile(userListDtos);
-        //}
+        [AbpAllowAnonymous]
+        [UnitOfWork(isTransactional: false)]
+        public async Task<WechatUserListDto> GetWeChatUserAsync(string openId)
+        {
+            var user = await _entityManager.GetWeChatUserAsync(openId);
+            var userDto = user.MapTo<WechatUserListDto>();
+            return userDto;
+        }
 
+        /// <summary>
+        /// 店铺管理员绑定
+        /// </summary>
+        [AbpAllowAnonymous]
+        public async Task<APIResultDto> BindWeChatUserAsync(UserBindDto input)
+        {
+            var entity = await _entityRepository.GetAll().Where(w => w.OpenId == input.OpenId).FirstOrDefaultAsync();
+            if (entity == null)
+            {
+                return new APIResultDto() { Code = 902, Msg = "用户不存在" };
+            }
+
+            string verificationCode = await _shopRepository.GetAll().Where(v=>v.Id == input.ShopId).Select(v=>v.VerificationCode).FirstOrDefaultAsync();
+            if(verificationCode != null)
+            {
+                if(input.VerificationCode != verificationCode)
+                {
+                    return new APIResultDto() { Code = 901, Msg = "验证未通过" };
+                }
+            }
+            else
+            {
+                return new APIResultDto() { Code = 901, Msg = "验证未通过" };
+
+            }       
+            entity.IsShopManager = true;
+            entity.ShopId = input.ShopId;
+            entity.AuthTime = DateTime.Now;
+            var result = await _entityRepository.UpdateAsync(entity);
+            return new APIResultDto() { Code = 0, Msg = "绑定成功", Data = entity.MapTo<WechatUserListDto>() };
+        }
     }
 }
-
-

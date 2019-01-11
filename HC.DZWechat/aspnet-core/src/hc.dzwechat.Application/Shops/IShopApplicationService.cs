@@ -71,12 +71,6 @@ namespace HC.DZWechat.Shops
         /// </summary>
         Task BatchDelete(List<Guid> input);
 
-
-		/// <summary>
-        /// 导出Shop为excel表
-        /// </summary>
-        /// <returns></returns>
-		//Task<FileDto> GetToExcel();
-
+        Task<List<ShopListDto>> GetShopList();
     }
 }

@@ -20,6 +20,7 @@ using Abp.Application.Services.Dto;
 
 using HC.DZWechat.WechatUsers.Dtos;
 using HC.DZWechat.WechatUsers;
+using HC.DZWechat.CommonDto;
 
 namespace HC.DZWechat.WechatUsers
 {
@@ -71,12 +72,7 @@ namespace HC.DZWechat.WechatUsers
         /// </summary>
         Task BatchDelete(List<Guid> input);
 
-
-		/// <summary>
-        /// 导出WechatUser为excel表
-        /// </summary>
-        /// <returns></returns>
-		//Task<FileDto> GetToExcel();
-
+        Task<WechatUserListDto> GetWeChatUserAsync(string openId);
+        Task<APIResultDto> BindWeChatUserAsync(UserBindDto input);
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using Abp.Domain.Entities.Auditing;
+using HC.DZWechat.DZEnums.DZCommonEnums;
 using HC.DZWechat.OrderDetails;
 
 namespace  HC.DZWechat.OrderDetails.Dtos
@@ -82,13 +83,9 @@ namespace  HC.DZWechat.OrderDetails.Dtos
 
 
 
-		/// <summary>
-		/// UserChooseType
-		/// </summary>
-		public string UserChooseType { get; set; }
-
-
-
-
+        /// <summary>
+        /// UserChooseType
+        /// </summary>
+        public ExchangeCodeEnum ExchangeCode { get; set; }
     }
 }

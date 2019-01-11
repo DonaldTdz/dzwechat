@@ -89,6 +89,7 @@ namespace HC.DZWechat.Web.Host.Controllers
         public IActionResult GetCurrentUserOpenId()
         {
             APIResultDto result = new APIResultDto();
+            UserOpenId = "666666";
 
             if (string.IsNullOrEmpty(UserOpenId))
             {

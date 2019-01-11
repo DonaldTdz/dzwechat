@@ -23,7 +23,7 @@ namespace HC.DZWechat.EntityMapper.OrderDetails
 			builder.Property(a => a.Status).HasMaxLength(YoYoAbpefCoreConsts.EntityLengthNames.Length64);
 			builder.Property(a => a.ExchangeTime).HasMaxLength(YoYoAbpefCoreConsts.EntityLengthNames.Length64);
 			builder.Property(a => a.CreationTime).HasMaxLength(YoYoAbpefCoreConsts.EntityLengthNames.Length64);
-			builder.Property(a => a.UserChooseType).HasMaxLength(YoYoAbpefCoreConsts.EntityLengthNames.Length64);
+			//builder.Property(a => a.exchangeCode).HasMaxLength(YoYoAbpefCoreConsts.EntityLengthNames.Length64);
 
 
         }

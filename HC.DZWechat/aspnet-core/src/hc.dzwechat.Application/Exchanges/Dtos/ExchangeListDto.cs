@@ -23,7 +23,7 @@ namespace HC.DZWechat.Exchanges.Dtos
 		/// <summary>
 		/// ExchangeCode
 		/// </summary>
-		public ExchangeCode? ExchangeCode { get; set; }
+		public ExchangeCodeEnum? ExchangeCode { get; set; }
 
 
 

@@ -1,0 +1,48 @@
+<Page [ngClass]="'input'" [title]="'管理员绑定'" [showTitle]="false" [spacing]="false">
+    <div class="weui-media-box weui-media-box_small-appmsg">
+        <div class="weui-cells">
+            <a class="weui-cell weui-cell_access" href="javascript:;">
+                <div class="weui-cell__hd">
+                    <img src="./assets/images/icon_nav_dialog.png" alt="" style="width:20px;margin-right:5px;display:block">
+                </div>
+                <div class="weui-cell__bd weui-cell_primary">
+                    <p>店铺管理员绑定</p>
+                </div>
+            </a>
+        </div>
+    </div>
+    <form #f="ngForm" (ngSubmit)="onSave()">
+        <div class="weui-cells__title">绑定后可进行扫码积分兑换</div>
+        <div class="weui-cells weui-cells_form">
+            <div class="weui-cell" style="padding-top: 0px;padding-bottom: 0px;">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">选择店铺</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <div class="weui-cell weui-cell_select">
+                        <div class="weui-cell__bd">
+                            <select style="padding-left: 0px;" class="weui-select" name="select" [(ngModel)]="res.shopId" name="contact">
+                                <option *ngFor="let o of shopList" value="{{o.id}}">{{o.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="weui-cell weui-cell_warn">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">授权码</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="text" [(ngModel)]="res.verificationCode" name="verificationCode" weui-input="verificationCode" placeholder="请输入验证码" weui-required>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="weui-cells__tips">{{openMsg}}</div> -->
+        <div class="weui-btn-area">
+            <button class="weui-btn weui-btn_primary" [disabled]="!f.form.valid || !f.form.dirty" [ngClass]="{'weui-btn_disabled': !f.form.valid || !f.form.dirty}">绑定</button>
+        </div>
+    </form>
+    <!--将对话框组件放在底部-->
+    <weui-toptips #toptips></weui-toptips>
+    <weui-toast #loading [type]="'loading'" [text]="'提交中...'"></weui-toast>
+</Page>

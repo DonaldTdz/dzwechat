@@ -16,12 +16,6 @@ namespace HC.DZWechat.WechatUsers.DomainService
         /// 初始化方法
         ///</summary>
         void InitWechatUser();
-
-
-
-		 
-      
-         
-
+        Task<WechatUser> GetWeChatUserAsync(string openId);
     }
 }

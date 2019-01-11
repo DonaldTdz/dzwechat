@@ -1,24 +1,10 @@
-﻿
-
-using System;
-using System.Data;
-using System.IO;
+﻿using System;
 using System.Linq;
-using System.Linq.Dynamic;
-using System.Linq.Expressions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Abp.Linq;
-using Abp.Linq.Extensions;
-using Abp.Extensions;
-using Abp.UI;
 using Abp.Domain.Repositories;
-using Abp.Domain.Services;
-
-using HC.DZWechat;
 using HC.DZWechat.Orders;
-using Abp.Authorization;
 using HC.DZWechat.WechatUsers;
 using HC.DZWechat.OrderDetails;
 using HC.DZWechat.ScanExchange.Dtos;
@@ -31,8 +17,6 @@ namespace HC.DZWechat.ScanExchange
         private readonly IRepository<Order, Guid> _repository;
         private readonly IRepository<WechatUser, Guid> _wechatuserRepository;
         private readonly IRepository<OrderDetail, Guid> _orderDetailRepository;
-
-
 
         public ScanExchangeManager(
             IRepository<Order, Guid> repository
@@ -53,7 +37,7 @@ namespace HC.DZWechat.ScanExchange
         /// <returns></returns>
         public async Task<bool> GetIsAttentionByIdAsync(string openId)
         {
-            int weChat = await _wechatuserRepository.GetAll().Where(v => v.OpenId == openId && v.UserType == DZEnums.DZCommonEnums.UserType.取消关注).CountAsync();
+            int weChat = await _wechatuserRepository.GetAll().Where(v => v.OpenId == openId && v.BindStatus == DZEnums.DZCommonEnums.BindStatus.取消关注).CountAsync();
             if (weChat == 0)
             {
                 return true;

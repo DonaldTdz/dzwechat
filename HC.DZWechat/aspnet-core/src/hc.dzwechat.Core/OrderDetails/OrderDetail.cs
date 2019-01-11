@@ -53,7 +53,7 @@ namespace HC.DZWechat.OrderDetails
         /// 
         /// </summary>
         public virtual DateTime CreationTime { get; set; }
-        public virtual string UserChooseType { get; set; }
+        public virtual ExchangeCodeEnum exchangeCode { get; set; }
     }
 
 }

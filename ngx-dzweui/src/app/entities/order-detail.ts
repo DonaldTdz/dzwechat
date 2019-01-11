@@ -9,8 +9,6 @@ export class OrderDetail {
     status: number;
     exchangeTime: Date;
     creationTime: Date;
-    exchangeCode: number;
-    exchangeCodeName: string;
     constructor(data?: any) {
         if (data) {
             for (var property in data) {
@@ -31,8 +29,6 @@ export class OrderDetail {
             this.status = data["status"];
             this.exchangeTime = data["exchangeTime"];
             this.creationTime = data["creationTime"];
-            this.exchangeCode = data["exchangeCode"];
-            this.exchangeCodeName = data["exchangeCodeName"];
         }
     }
     toJSON(data?: any) {

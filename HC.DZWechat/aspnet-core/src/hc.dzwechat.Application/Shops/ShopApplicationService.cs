@@ -190,6 +190,17 @@ ShopEditDto editDto;
             }
             return result.ToString();
         }
+
+        [AbpAllowAnonymous]
+        public async Task<List<ShopListDto>> GetShopList()
+        {
+            var list = await _entityRepository.GetAll().Select(v => new ShopListDto()
+            {
+                Id = v.Id,
+                Name = v.Name
+            }).OrderByDescending(v=>v.Name).ToListAsync();
+            return list;
+        }
     }
 }
 
