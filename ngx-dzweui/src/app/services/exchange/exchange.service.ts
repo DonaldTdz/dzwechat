@@ -17,4 +17,10 @@ export class ExchangeService {
         }));
     }
 
+    getShopInfo(params: any): Observable<Shop> {
+        let url_ = "/api/services/app/Shop/GetShopInfoById";
+        return this.commonHttpClient.get(url_, params).pipe(map(data => {
+            return Shop.fromJS(data.result);
+        }));
+    }
 }

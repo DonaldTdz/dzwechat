@@ -201,6 +201,22 @@ ShopEditDto editDto;
             }).OrderByDescending(v=>v.Name).ToListAsync();
             return list;
         }
+
+        /// <summary>
+        /// 微信获取店铺信息
+        /// </summary>
+        /// <param name="shopId"></param>
+        /// <returns></returns>
+        public async Task<ShopListDto> GetShopInfoById(Guid shopId)
+        {
+            var result = await _entityRepository.GetAll().Where(v => v.Id == shopId).Select(v => new ShopListDto()
+            {
+                Id = v.Id,
+                Name = v.Name,
+                Address = v.Address
+            }).FirstOrDefaultAsync();
+            return result;
+        }
     }
 }
 

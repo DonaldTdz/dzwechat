@@ -72,5 +72,6 @@ namespace HC.DZWechat.Shops
         Task BatchDelete(List<Guid> input);
 
         Task<List<ShopListDto>> GetShopList();
+        Task<ShopListDto> GetShopInfoById(Guid shopId);
     }
 }
