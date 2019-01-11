@@ -44,7 +44,7 @@ namespace HC.DZWechat.ShopCarts
         /// <summary>
         /// 兑换方式
         /// </summary>
-        public virtual ExchangeCode ExchangeCode { get; set; }
+        public virtual ExchangeCodeEnum ExchangeCode { get; set; }
         /// <summary>
         /// 
         /// </summary>

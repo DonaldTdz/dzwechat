@@ -58,7 +58,7 @@ namespace HC.DZWechat.ShopCarts.Dtos
 		/// <summary>
 		/// ExchangeCode
 		/// </summary>
-		public ExchangeCode ExchangeCode { get; set; }
+		public ExchangeCodeEnum ExchangeCode { get; set; }
 
 
 
