@@ -299,6 +299,12 @@ ShopCartEditDto editDto;
                         };
             return await query.FirstOrDefaultAsync();
         }
+        [AbpAllowAnonymous]
+        public async Task UserShopCartDeleteAsync(ShopCartDeleteInput input)
+        {
+            var userId = await _wechatUserRepository.GetAll().Where(w => w.WxOpenId == input.WxOpenId).Select(w => w.Id).FirstAsync();
+            await _entityRepository.DeleteAsync(d => d.UserId == userId && d.Id == input.ShopCartId);
+        }
     }
 }
 
