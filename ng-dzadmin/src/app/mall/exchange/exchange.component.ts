@@ -38,7 +38,6 @@ export class ExchangeComponent extends PagedListingComponentBase<any> {
                 data.map(i => {
                     this.shops.push(i);
                 })
-
                 //排序
                 // this.shops.sort((a, b) => {
                 //     if (a.id > b.id) {
@@ -54,6 +53,7 @@ export class ExchangeComponent extends PagedListingComponentBase<any> {
         }
 
         if (this.isReset) {
+            this.pageNumber = 1;
             request.skipCount = 0;
             this.isReset = false;
         }
