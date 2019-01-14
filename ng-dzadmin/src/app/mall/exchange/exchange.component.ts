@@ -57,9 +57,7 @@ export class ExchangeComponent extends PagedListingComponentBase<any> {
             request.skipCount = 0;
             this.isReset = false;
         }
-        this.search.skipCount = request.skipCount;
-        this.search.maxResultCount = request.maxResultCount;
-        this.exchangeService.getExchangeDetail(this.getParameter()).finally(() => {
+        this.exchangeService.getExchangeDetail(this.getParameter(request.skipCount, request.maxResultCount)).finally(() => {
             finishedCallback();
         }).subscribe((data) => {
             this.dataList = data.items;
@@ -101,10 +99,10 @@ export class ExchangeComponent extends PagedListingComponentBase<any> {
     /**
      * 获取查询条件
      */
-    getParameter(): any {
+    getParameter(skipCount?, maxResultCount?): any {
         var arry: any = {};
-        // arry.skipCount = request.skipCount;
-        // arry.maxResultCount = request.maxResultCount;
+        arry.skipCount = skipCount;
+        arry.maxResultCount = maxResultCount;
         arry.goodsName = this.search.goodsName;
         arry.orderId = this.search.orderId;
         arry.shopId = this.search.shopId === '0' ? '' : this.search.shopId;
