@@ -1,9 +1,10 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { JWeiXinService, ToptipsService, DialogService, SkinType, DialogConfig } from 'ngx-weui';
 import { AppComponentBase } from '../../../shared/app-component-base';
-import { Router } from '@angular/router';
+import { Router, Params } from '@angular/router';
 import { Shop, WechatUser, OrderDetail, Order } from '../../../entities';
 import { ExchangeService } from '../../../services';
+import { AppConsts } from '../../../shared/AppConsts';
 
 @Component({
     selector: 'scan-exchange',
@@ -46,7 +47,9 @@ export class ScanExchangeComponent extends AppComponentBase implements OnInit {
         private dia: DialogService,
         private srv: ToptipsService) {
         super(injector);
-
+        this.activatedRoute.params.subscribe((params: Params) => {
+            this.orderBarCode = params['orderId'];
+        });
     }
 
     ngOnInit() {
@@ -73,41 +76,43 @@ export class ScanExchangeComponent extends AppComponentBase implements OnInit {
             });
         });
 
+        // if (!this.settingsService.openId) {
+        //     let params: any = {};
+        //     this.exchangeService.GetAuthorizationUrl(params).subscribe((res) => {
+        //         location.href = res;
+        //     });
+        // }
+
         this.settingsService.getUser().subscribe(result => {
             this.user = result;
-            if (this.user) {
-                if (!this.user.isShopManager) {//不是店铺管理员
+            // if (this.user.bindStatus == 1) {
+            if (!this.user.isShopManager) {//不是店铺管理员
+                this.router.navigate(['/marketing-exchange/bind-shop']);
+            } else {
+                if (!this.user.shopId) { //绑定店铺
                     this.router.navigate(['/marketing-exchange/bind-shop']);
                 } else {
-                    if (!this.user.shopId) { //绑定店铺
-                        this.router.navigate(['/marketing-exchange/bind-shop']);
-                    } else {
-                        let params: any = {};
-                        params.shopId = this.user.shopId;
-                        this.exchangeService.getShopInfo(params)
-                            .subscribe(result => {
-                                this.shop = result;
-                            });
-                    }
+                    let params: any = {};
+                    params.shopId = this.user.shopId;
+                    this.exchangeService.getShopInfo(params)
+                        .subscribe(result => {
+                            this.shop = result;
+                            if (this.orderBarCode) {
+                                this.getOrderInfo();
+                            }
+                        });
                 }
-            } else {
-                this.router.navigate(['/personals/bind-retailer']);
             }
-        });
-    }
-
-    getOrderInfo() {
-        let params: any = {};
-        params.orderId = '';
-        params.openId = this.settingsService.openId;
-        this.exchangeService.getOrderDetailInfo(params).subscribe(result => {
-            this.orderDetailList = result;
+            // }
+            //  else {
+            //     location.href = AppConsts.remoteServiceBaseUrl + '/Wechat/ExchangeAuth';
+            // }
         });
     }
 
     onSave() {
         let params: any = {};
-        params.orderId = '';
+        params.orderId = this.orderBarCode;
         params.openId = this.settingsService.openId;
         this.exchangeService.getOrderDetailInfo(params).subscribe(result => {
             this.orderDetailList = result;
@@ -138,23 +143,29 @@ export class ScanExchangeComponent extends AppComponentBase implements OnInit {
      * 扫码
      */
     setOrderBarCode(res: string) {
-        // let resarry = res.split(',');
-        // if (resarry.length == 2) {
-        //     if (resarry[0] != 'EAN_13') {
-        //         this.srv['warn']('条码格式不匹配');
-        //         return;
-        //     }
-        // this.orderBarCode = resarry[1];
-        this.orderBarCode = res;
+        if (res.indexOf('&') != -1) {
+            this.orderBarCode = res.split('&')[1].split('=')[1];
+            this.getOrderInfo();
+        }
+        // this.orderBarCode = res;
+        // this.getOrderInfo();
+    }
+
+    getOrderInfo() {
         let param: any = {};
         param.orderId = this.orderBarCode;
         this.exchangeService.getOrderInfo(param).subscribe(result => {
             if (result) {
                 this.order = result;
+                if (this.order) {
+                    this.getOrderDetail();
+                }
             } else {
                 this.srv['warn']('没找到匹配订单');
             }
         });
+    }
+    getOrderDetail() {
         //获取订单详情
         let params: any = {};
         params.orderId = this.orderBarCode;

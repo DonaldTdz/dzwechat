@@ -49,7 +49,7 @@ namespace HC.DZWechat.WechatMenus
         }
 
         public GetMenuResult GetMenu()
-        { 
+        {
             return CommonApi.GetMenu(AppId);
         }
 

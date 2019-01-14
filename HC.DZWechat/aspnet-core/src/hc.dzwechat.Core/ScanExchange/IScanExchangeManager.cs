@@ -12,7 +12,7 @@ namespace HC.DZWechat.ScanExchange
 {
     public interface IScanExchangeManager : IDomainService
     {
-        Task<bool> GetIsAttentionByIdAsync(string openId);
+        bool GetIsAttentionByIdAsync(string openId);
         Task<bool> IsShopManagerByIdAsync(string openId);
         Task<List<OrderDetailDto>> GetExchangeGoodsByIdAsync(Guid orderId, string openId);
         Task<APIResultDto> ExchangeGoods(Guid orderId);
