@@ -270,7 +270,7 @@ namespace HC.DZWechat.Goods
         [AbpAllowAnonymous]
         public async Task<WxPagedResultDto<GoodsGridDto>> GetHeatGoodsAsync(WxPagedInputDto input)
         {
-            var query = _entityRepository.GetAll().Where(e => e.IsAction == true).Select(e => new GoodsGridDto(_hostUrl)
+            var query = _entityRepository.GetAll().Where(e => e.IsAction == true && e.Stock != 0).Select(e => new GoodsGridDto(_hostUrl)
             {
                 Id = e.Id,
                 name = e.Specification,
@@ -294,7 +294,7 @@ namespace HC.DZWechat.Goods
         [AbpAllowAnonymous]
         public async Task<WxPagedResultDto<GoodsGridDto>> GetSearchGoodsAsync(GoodsSearchInputDto input)
         {
-            var query = _entityRepository.GetAll().Where(e => e.IsAction == true)
+            var query = _entityRepository.GetAll().Where(e => e.IsAction == true && e.Stock != 0)
                 .WhereIf(!string.IsNullOrEmpty(input.KeyWord), e => e.Specification.Contains(input.KeyWord) || e.Desc.Contains(input.KeyWord))
                 .WhereIf(input.CategoryId != 0, e => e.CategoryId == input.CategoryId);
 
@@ -348,7 +348,7 @@ namespace HC.DZWechat.Goods
         {
             top = top == 0 ? 50 : top;
             var goodsList = await _entityRepository.GetAll()
-                .Where(e => e.IsAction == true && e.CategoryId == groupId)
+                .Where(e => e.IsAction == true && e.Stock != 0 && e.CategoryId == groupId)
                 .OrderByDescending(o => o.CreationTime)
                 .Take(top)
                 .Select(e => new GoodsGridDto(_hostUrl)

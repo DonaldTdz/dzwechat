@@ -29,6 +29,11 @@ using HC.DZWechat.ScanExchange;
 using HC.DZWechat.CommonDto;
 using HC.DZWechat.Orders.Dtos;
 using HC.DZWechat.ScanExchange.Dtos;
+using HC.DZWechat.Helpers;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
 
 namespace HC.DZWechat.Exchanges
 {
@@ -45,7 +50,7 @@ namespace HC.DZWechat.Exchanges
 
         private readonly IExchangeManager _entityManager;
         private readonly IScanExchangeManager _scanExchangeManager;
-
+        private readonly IHostingEnvironment _hostingEnvironment;
 
         /// <summary>
         /// 构造函数 
@@ -54,8 +59,9 @@ namespace HC.DZWechat.Exchanges
         IRepository<Exchange, Guid> entityRepository
         , IRepository<OrderDetail, Guid> orderDetailRepository
         , IRepository<Order, Guid> orderRepository, IRepository<Shop, Guid> shopRepository
-        , IExchangeManager entityManager
-                        , IScanExchangeManager scanExchangeManager
+        , IExchangeManager entityManager, IScanExchangeManager scanExchangeManager,
+        IHostingEnvironment hostingEnvironment
+
         )
         {
             _entityRepository = entityRepository;
@@ -64,6 +70,7 @@ namespace HC.DZWechat.Exchanges
             _entityManager = entityManager;
             _shopRepository = shopRepository;
             _scanExchangeManager = scanExchangeManager;
+            _hostingEnvironment = hostingEnvironment;
         }
 
 
@@ -281,13 +288,17 @@ namespace HC.DZWechat.Exchanges
             var queryE = _entityRepository.GetAll().WhereIf(input.ShopId.HasValue, e => e.ShopId == input.ShopId)
                                                   .WhereIf(input.ExchangeStyle.HasValue,e=>e.ExchangeCode==input.ExchangeStyle)
                                                   .WhereIf(input.StartTime.HasValue,e=>e.CreationTime>=input.StartTime)
-                                                  .WhereIf(input.EndTime.HasValue,e=>e.CreationTime<=input.EndTime);
+                                                  .WhereIf(input.EndTime.HasValue,e=>e.CreationTime<=input.EndTimeAddOne);
+            var aa = queryE.ToList();
             var queryOD = _orderDetailRepository.GetAll().WhereIf(!string.IsNullOrEmpty(input.GoodsName), o => o.Specification.Contains(input.GoodsName));
             var queryO = _orderRepository.GetAll().WhereIf(!string.IsNullOrEmpty(input.OrderId), o => o.Number.Contains(input.OrderId));
+            var bb = queryOD.ToList();
+            var cc = queryO.ToList();
             var query = from e in queryE
                         join od in queryOD on e.OrderDetailId equals od.Id
                         join o in queryO on od.OrderId equals o.Id
-                        join s in _shopRepository.GetAll() on e.ShopId equals s.Id
+                        join s in _shopRepository.GetAll() on e.ShopId equals s.Id into se
+                        from ses in se.DefaultIfEmpty()
                         select new ExchangeListDto
                         {
                             Id = e.Id,
@@ -297,9 +308,10 @@ namespace HC.DZWechat.Exchanges
                             CreationTime = e.CreationTime,
                             LogisticsCompany = e.LogisticsCompany,
                             LogisticsNo = e.LogisticsNo,
-                            ShopName = s.Name,
+                            ShopName = ses.Name,
                             OrderNumber = o.Number,
-                            Specification = od.Specification
+                            Specification = od.Specification,
+                            OrderId=od.OrderId
                         };
 
             var count = await query.CountAsync();
@@ -324,12 +336,120 @@ namespace HC.DZWechat.Exchanges
             return result;
         }
         [AbpAllowAnonymous]
-
         public async Task<OrderDto> GetOrderByIdAsync(Guid orderId)
         {
             var result = await _scanExchangeManager.GetOrderByIdAsync(orderId);
             return result;
         }
+        #region 导出兑换明细
+
+        /// <summary>
+        /// 获取兑换明细的导出数据
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task<List<ExchangeListDto>> GetExchangeDetailForExcel(ExchangeInput input)
+        {
+            var queryE = _entityRepository.GetAll().WhereIf(input.ShopId.HasValue, e => e.ShopId == input.ShopId)
+                                                 .WhereIf(input.ExchangeStyle.HasValue, e => e.ExchangeCode == input.ExchangeStyle)
+                                                 .WhereIf(input.StartTime.HasValue, e => e.CreationTime >= input.StartTime)
+                                                 .WhereIf(input.EndTime.HasValue, e => e.CreationTime <= input.EndTimeAddOne);
+            var aa = queryE.ToList();
+            var queryOD = _orderDetailRepository.GetAll().WhereIf(!string.IsNullOrEmpty(input.GoodsName), o => o.Specification.Contains(input.GoodsName));
+            var queryO = _orderRepository.GetAll().WhereIf(!string.IsNullOrEmpty(input.OrderId), o => o.Number.Contains(input.OrderId));
+            var bb = queryOD.ToList();
+            var cc = queryO.ToList();
+            var query = from e in queryE
+                        join od in queryOD on e.OrderDetailId equals od.Id
+                        join o in queryO on od.OrderId equals o.Id
+                        join s in _shopRepository.GetAll() on e.ShopId equals s.Id into se
+                        from ses in se.DefaultIfEmpty()
+                        select new ExchangeListDto
+                        {
+                            Id = e.Id,
+                            OrderDetailId = e.OrderDetailId,
+                            ExchangeCode = e.ExchangeCode,
+                            ShopId = e.ShopId,
+                            CreationTime = e.CreationTime,
+                            LogisticsCompany = e.LogisticsCompany,
+                            LogisticsNo = e.LogisticsNo,
+                            ShopName = ses.Name,
+                            OrderNumber = o.Number,
+                            Specification = od.Specification,
+                            OrderId = od.OrderId
+                        };
+            var entityList = await query
+                    .OrderByDescending(e => e.CreationTime).AsNoTracking()
+                    .ToListAsync();
+
+            return entityList;
+        }
+        /// <summary>
+        /// 创建兑换明细表
+        /// </summary>
+        /// <param name="fileName">表名</param>
+        /// <param name="data">表数据</param>
+        /// <returns></returns>
+        public string CreateExchangeDetailExcel(string fileName, List<ExchangeListDto> data)
+        {
+            var fullPath = ExcelHelper.GetSavePath(_hostingEnvironment.WebRootPath) + fileName;
+            using (var fs=new FileStream(fullPath, FileMode.Create, FileAccess.Write))
+            {
+                IWorkbook workbook = new XSSFWorkbook();
+                ISheet sheet = workbook.CreateSheet("SheduleSum");
+                var rowIndex = 0;
+                IRow titleRow = sheet.CreateRow(rowIndex);
+                string[] titles = { "订单编号", "店铺名称", "商品名称", "兑换方式", "兑换时间", "物流单号", "物流公司"};
+                var fontTitle = workbook.CreateFont();
+                fontTitle.IsBold = true;
+                for (int i = 0; i < titles.Length; i++)
+                {
+                    var cell = titleRow.CreateCell(i);
+                    cell.CellStyle.SetFont(fontTitle);
+                    cell.SetCellValue(titles[i]);
+                    //ExcelHelper.SetCell(titleRow.CreateCell(i), fontTitle, titles[i]);
+                }
+                var font = workbook.CreateFont();
+                foreach (var item in data)
+                {
+
+                    rowIndex++;
+                    IRow row = sheet.CreateRow(rowIndex);
+                    ExcelHelper.SetCell(row.CreateCell(0), font, item.OrderNumber);
+                    ExcelHelper.SetCell(row.CreateCell(1), font, item.ShopName);
+                    ExcelHelper.SetCell(row.CreateCell(2), font, item.Specification);
+                    ExcelHelper.SetCell(row.CreateCell(3), font, item.ExchangeCodeName);
+                    ExcelHelper.SetCell(row.CreateCell(4), font, item.CreationTime.ToString("yyyy-MM-dd hh:mm:ss"));
+                    ExcelHelper.SetCell(row.CreateCell(5), font, item.LogisticsNo);
+                    ExcelHelper.SetCell(row.CreateCell(6), font, item.LogisticsCompany);
+                }
+                workbook.Write(fs);
+            }
+            return "/files/downloadtemp/" + fileName;
+        }
+        /// <summary>
+        /// 导出兑换明细表
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public  async Task<APIResultDto>ExportExchangeDetail(ExchangeInput input)
+        {
+            try
+            {
+                var exportData = await GetExchangeDetailForExcel(input);
+                var result = new APIResultDto();
+                result.Code = 0;
+                result.Data = CreateExchangeDetailExcel("兑换明细.xlsx", exportData);
+                return result;
+
+            }catch(Exception ex)
+            {
+                Logger.ErrorFormat("ExportExchangeDetail errormsg{0} Exception{1}", ex.Message, ex);
+                return new APIResultDto() { Code = 901, Msg = "网络忙...请待会儿再试！" };
+
+            }
+        }
+        #endregion
     }
 }
 

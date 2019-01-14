@@ -218,7 +218,7 @@ ShopEditDto editDto;
             {
                 Id = v.Id,
                 Name = v.Name
-            }).OrderByDescending(v => v.Name).ToListAsync();
+            }).OrderBy(s=>s.Id).ToListAsync();
             return list;
         }
         /// 微信获取店铺信息

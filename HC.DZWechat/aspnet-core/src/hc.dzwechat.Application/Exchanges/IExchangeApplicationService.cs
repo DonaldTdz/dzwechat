@@ -90,5 +90,12 @@ namespace HC.DZWechat.Exchanges
 
         Task<APIResultDto> ExchangeGoods(OrderEditDto input);
         Task<OrderDto> GetOrderByIdAsync(Guid orderId);
+
+        /// <summary>
+        /// 导出兑换明细表
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task<APIResultDto> ExportExchangeDetail(ExchangeInput input);
     }
 }
