@@ -18,22 +18,28 @@
             <div class="weui-cell__ft">{{shop.address}}</div>
         </div>
     </div>
-
-    <div class="weui-cells__title">商品兑换</div>
-    <div class="weui-btn-area">
-        <button class="weui-btn weui-btn_primary" (click)="setOrderBarCode('7AD7FEA6-8B4A-428D-A6AC-1CBCB39F5120')">扫一扫</button>
+    <div class="weui-cells__title"></div>
+    <div class="weui-cell" style="background-color:white">
+        <div class="weui-cell__bd">
+            <input disabled="disabled" class="weui-input" type="text" [(ngModel)]="order.number" name="number" placeholder="兑换码扫一扫">
+        </div>
+        <a class="weui-cell__ft weui-cell_access" (click)="scanBarCode()">
+            <!-- <a class="weui-cell__ft weui-cell_access" (click)="setOrderBarCode('7AD7FEA6-8B4A-428D-A6AC-1CBCB39F5120')"> -->
+            <img class="weui-icon-h18" src="./assets/images/scan-o-2.png" alt="">
+        </a>
     </div>
+    <!-- <button class="weui-btn weui-btn_primary" (click)="scanBarCode()">扫一扫</button> -->
+    <!-- <button class="weui-btn weui-btn_primary" (click)="setOrderBarCode('7AD7FEA6-8B4A-428D-A6AC-1CBCB39F5120')">扫一扫</button> -->
     <div *ngIf="orderBarCode" class="weui-cells__title">
         <div style="padding:0px;">
             <div class="weui-flex__item" style="float:left;">
-                <p>订单号:{{order.number}}</p>
+                <p>订单号：{{order.number}}</p>
             </div>
             <div class="weui-flex__item" style="float:right;font-size: 12px;">
                 <p style="color:gray;border-width:1px; border-style:solid;border-radius:3px;margin-left:10px;padding: 2px;">{{order.statusName}}</p>
             </div>
         </div>
     </div>
-
     <div class="weui-btn-area">
         <div class="weui-flex" style="padding:0px;">
         </div>

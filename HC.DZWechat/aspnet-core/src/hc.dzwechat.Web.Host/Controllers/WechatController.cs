@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 using HC.DZWechat.Configuration;
 using HC.DZWechat.Controllers;
 using HC.DZWechat.Dtos;
+using HC.DZWechat.ScanExchange;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Senparc.CO2NET.Extensions;
 using Senparc.Weixin;
 using Senparc.Weixin.MP;
 using Senparc.Weixin.MP.AdvancedAPIs;
@@ -22,8 +24,10 @@ namespace HC.DZWechat.Web.Host.Controllers
         public static readonly string EncodingAESKey = Config.SenparcWeixinSetting.EncodingAESKey;//与微信公众账号后台的EncodingAESKey设置保持一致，区分大小写。
         public static readonly string AppId = Config.SenparcWeixinSetting.WeixinAppId;//与微信公众账号后台的AppId设置保持一致，区分大小写。
         public static readonly string AppSecret = Config.SenparcWeixinSetting.WeixinAppSecret;//与微信公众账号后台的AppId设置保持一致，区分大小写。
-        private string host = "http://localhost:21021";
+        //private string host = "http://localhost:21021";
+        private string host = "http://hcwx.sayequ.me";
         private readonly IConfigurationRoot _appConfiguration;
+        private IScanExchangeManager _scanExchangeManager;
 
         private string UserOpenId
         {
@@ -59,10 +63,14 @@ namespace HC.DZWechat.Web.Host.Controllers
             }
         }
 
-        public WechatController(IHostingEnvironment env)
+        public WechatController(IHostingEnvironment env
+                       ,IScanExchangeManager scanExchangeManager
+
+            )
         {
             _appConfiguration = env.GetAppConfiguration();
             host = _appConfiguration["App:ServerRootAddress"];
+            _scanExchangeManager = scanExchangeManager;
         }
 
         private async Task SetUserOpenId(string code)
@@ -89,8 +97,8 @@ namespace HC.DZWechat.Web.Host.Controllers
         public IActionResult GetCurrentUserOpenId()
         {
             APIResultDto result = new APIResultDto();
-            UserOpenId = "666666";
-
+            //UserOpenId = "666666";
+            //UserOpenId = "oL5qB1m9WA2oNqtszJOJWrcpErzk";
             if (string.IsNullOrEmpty(UserOpenId))
             {
                 result.Code = 901;
@@ -156,6 +164,28 @@ namespace HC.DZWechat.Web.Host.Controllers
                         //url = host + "/Wechat/MarketingStrategyAsync";
                         return Redirect(AuthorizationPageUrl.MarketingExchangeUrl);
                     }
+                case AuthorizationPageEnum.MarketingExchangeWithOrderId: //扫码兑换二维码
+                    {
+                        if (!string.IsNullOrEmpty(UserOpenId))
+                        {
+                            var result = _scanExchangeManager.GetIsAttentionByIdAsync(UserOpenId);
+                            if(result == true)
+                            {
+                                return Redirect(string.Format(AuthorizationPageUrl.MarketingExchangeWithOrderIdUrl, param));
+                            }
+                            else
+                            {
+                                return RedirectToAction("ExchangeAuth");
+                            }
+                        }
+                        else
+                        {
+                            url = host + "/Wechat/MarketingExchangeWithOrderId";
+                            param = param ?? "123";
+                            var pageUrl = OAuthApi.GetAuthorizeUrl(AppId, url, param, OAuthScope.snsapi_base, "code");
+                            return Redirect(pageUrl); 
+                        }
+                    }
                 //break;
                 default:
                     {
@@ -164,48 +194,31 @@ namespace HC.DZWechat.Web.Host.Controllers
             }
 
             //param = param ?? "123";
-            //var pageUrl = OAuthApi.GetAuthorizeUrl(AppId, url, param, OAuthScope.snsapi_base, "code"); 
+            //var pageUrl = OAuthApi.GetAuthorizeUrl(AppId, url, param, OAuthScope.snsapi_base, "code");
             //return Redirect(pageUrl);
         }
 
+        /// <summary>
+        /// 扫码兑换页面微信验证
+        /// </summary>
+        /// <returns></returns>
+        public string GetAuthorizeUrl(string orderId)
+        {
+            Logger.Info(orderId);
+            string redictUrl = host + "/Wechat/MarketingExchangeWithOrderIdUrl";
+
+            var url =
+                string.Format("https://open.weixin.qq.com/connect/oauth2/authorize?appid={0}&redirect_uri={1}&response_type={2}&scope={3}&state={4}#wechat_redirect",
+                                AppId, redictUrl, "code", 0, orderId);
+            return url;
+        }
 
         /// <summary>
-        /// 推广码
+        /// 微信二维码
         /// </summary>
-        public IActionResult ExchangeAuth(string code, string state)
+        public IActionResult ExchangeAuth()
         {
-            ////如果code为null 跳转获取code, 注：state需要传入 shopId
-            //if (string.IsNullOrEmpty(UserOpenId) && string.IsNullOrEmpty(code))
-            //{
-            //    var url = host + "/GAWX/ShopAuth";
-            //    var pageUrl = _weChatOAuthAppService.GetAuthorizeUrl(url, state, Senparc.Weixin.MP.OAuthScope.snsapi_base);
-            //    return Redirect(pageUrl);
-            //}
-            //else
-            //{
-            //    //存储openId 避免重复提交
-            //    SetUserOpenId(code);
-            //    var isExist = _weChatUserAppService.GetWeChatUserIsExsit(UserOpenId).Result;
-            //    if (isExist)
-            //    {
-            //        //店铺页面
-            //        if (curIsShopKeeper == true)
-            //        {
-            //            return Redirect(string.Format(GAAuthorizationPageUrl.ShopUrl, state));
-            //        }
-            //        else
-            //        {
-            //            return Redirect(string.Format(GAAuthorizationPageUrl.ShopUrlNotOpen, state, isShowWindows));
-            //        }
-            //    }
-            //    else
-            //    {
-            //        //二维码关注页面
-            //        var url = host + _shopAppService.GetShopQrCodeURL(shopId).Result;
-            return RedirectToAction("QrCode");
-            //    }
-            //}
-            //}
+            return View("wechatQrCode");
         }
 
 
@@ -241,6 +254,20 @@ namespace HC.DZWechat.Web.Host.Controllers
 
             return Redirect(AuthorizationPageUrl.MarketingExchangeUrl);
         }
+
+        /// <summary>
+        /// 扫码兑换订单
+        /// </summary>
+        /// <param name="code"></param>
+        /// <param name="state"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> MarketingExchangeWithOrderId(string code, string state)
+        {
+            await SetUserOpenId(code);
+            Logger.Info(code);
+            Logger.Info(UserOpenId);
+            return Redirect(AuthorizationPageUrl.MarketingExchangeWithOrderIdUrl);
+        }
     }
 
 
@@ -252,6 +279,7 @@ namespace HC.DZWechat.Web.Host.Controllers
 
         MarketingStrategy = 101,
         MarketingExchange = 102,
+        MarketingExchangeWithOrderId = 103,
     }
 
     public class AuthorizationPageUrl
@@ -262,5 +290,6 @@ namespace HC.DZWechat.Web.Host.Controllers
 
         public static string MarketingStrategyUrl = "/dzwechat/index.html#/marketing-strategy/strategy";
         public static string MarketingExchangeUrl = "/dzwechat/index.html#/marketing-exchange/exchange";
+        public static string MarketingExchangeWithOrderIdUrl = "/dzwechat/index.html#/marketing-exchange/exchange;orderId={0}";
     }
 }

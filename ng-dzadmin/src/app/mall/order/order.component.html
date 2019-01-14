@@ -3,7 +3,7 @@
     <div nz-row class="mb-md">
         <div nz-col nzSpan="18" style="padding-right:10px;">
             <nz-input-group nzSearch [nzSuffix]="suffixButton">
-                <input type="text" [(ngModel)]="keyWord" nz-input placeholder="会员手机号码">
+                <input type="text" [(ngModel)]="keyWord" nz-input placeholder="订单编号/收货人姓名、电话">
             </nz-input-group>
             <ng-template #suffixButton>
                 <button nz-button nzType="primary" [nzLoading]="isTableLoading" (click)="refreshData()" nzSearch>搜索</button>

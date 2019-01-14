@@ -34,9 +34,9 @@ namespace HC.DZWechat.ScanExchange
         /// </summary>
         /// <param name="openId"></param>
         /// <returns></returns>
-        public async Task<bool> GetIsAttentionByIdAsync(string openId)
+        public bool GetIsAttentionByIdAsync(string openId)
         {
-            int weChat = await _wechatuserRepository.GetAll().Where(v => v.OpenId == openId && v.BindStatus == DZEnums.DZCommonEnums.BindStatus.取消关注).CountAsync();
+            int weChat =  _wechatuserRepository.GetAll().Where(v => v.OpenId == openId && v.BindStatus == DZEnums.DZCommonEnums.BindStatus.取消关注).Count();
             if (weChat == 0)
             {
                 return true;
