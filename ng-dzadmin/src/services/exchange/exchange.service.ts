@@ -3,6 +3,7 @@ import { Observer, Observable } from "rxjs";
 import { CommonHttpClient } from "services/common-httpclient";
 import { map } from "rxjs/operators";
 import { PagedResultDto } from "@shared/component-base";
+import { ApiResult } from "entities/api-result";
 
 @Injectable()
 export class ExchangeService {
@@ -26,5 +27,18 @@ export class ExchangeService {
         }));
     }
 
+
+    /**
+     * 导出兑换明细
+     * @param param 
+     */
+    exportExchangeDetail(param: any): Observable<ApiResult> {
+        var _url = '/api/services/app/Exchange/ExportExchangeDetail';
+        return this._commonhttp.post(_url, param).pipe(map(data => {
+            return ApiResult.fromJS(data);
+
+        }));
+
+    }
 
 }
