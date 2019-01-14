@@ -6,6 +6,7 @@ using Abp.Domain.Entities.Auditing;
 using System.ComponentModel.DataAnnotations;
 using HC.DZWechat.ShopCarts;
 using HC.DZWechat.DZEnums.DZCommonEnums;
+using System.Collections.Generic;
 
 namespace HC.DZWechat.ShopCarts.Dtos
 {
@@ -69,11 +70,15 @@ namespace HC.DZWechat.ShopCarts.Dtos
 
     public class UserCartDto : EntityDto<Guid>
     {
-        public UserCartDto() { }
+        public UserCartDto()
+        {
+            ischecked = true;
+        }
 
         public UserCartDto(string host)
         {
             Host = host;
+            ischecked = true;
         }
 
         /// <summary>
@@ -101,11 +106,26 @@ namespace HC.DZWechat.ShopCarts.Dtos
         /// </summary>
         public string Unit { get; set; }
 
+        private decimal? num;
 
         /// <summary>
         /// Num
         /// </summary>
-        public decimal? Num { get; set; }
+        public decimal? Num
+        {
+            get
+            {
+                if (num > Stock)
+                {
+                    return Stock;
+                }
+                return num;
+            }
+            set
+            {
+                num = value;
+            }
+        }
 
         /// <summary>
         /// ExchangeCode
@@ -152,5 +172,38 @@ namespace HC.DZWechat.ShopCarts.Dtos
 
         public bool? IsAction { get; set; }
 
+        private bool? ischecked;
+
+        public bool? Ischecked
+        {
+            get
+            {
+                if (IsAction == false)
+                {
+                    return false;
+                }
+                return ischecked;
+            }
+            set
+            {
+                ischecked = value;
+            }
+        }
+
+        public decimal? PriceSubtotal
+        {
+            get
+            {
+                return Integral * Num;
+            }
+        }
+
+    }
+
+    public class UserCart
+    {
+        public List<UserCartDto> Items { get; set; }
+
+        public decimal? TotalPrice { get; set; }
     }
 }

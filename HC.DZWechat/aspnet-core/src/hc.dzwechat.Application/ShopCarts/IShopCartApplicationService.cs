@@ -80,7 +80,10 @@ namespace HC.DZWechat.ShopCarts
 
         Task AddCartAsync(ShopCartInputDto input);
 
-        Task<List<UserCartDto>> GetUserCartListAsync(string wxopenid);
+        Task<UserCart> GetUserCartListAsync(string wxopenid);
 
+        Task<UserCartDto> GetCheckCartGoodsAsync(Guid id);
+
+        Task UserShopCartDeleteAsync(ShopCartDeleteInput input);
     }
 }
