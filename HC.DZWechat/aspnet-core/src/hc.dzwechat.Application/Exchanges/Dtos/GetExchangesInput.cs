@@ -9,6 +9,9 @@ namespace HC.DZWechat.Exchanges.Dtos
 {
     public class GetExchangesInput : PagedSortedAndFilteredInputDto, IShouldNormalize
     {
+        public Guid ShopId { get; set; }
+        public DateTime? StartTime { get; set; }
+        public DateTime? EndTime { get; set; }
 
         /// <summary>
         /// 正常化排序使用

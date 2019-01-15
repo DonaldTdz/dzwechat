@@ -88,5 +88,8 @@ namespace HC.DZWechat.Exchanges.Dtos
         /// ¶©µ¥id
         /// </summary>
         public Guid OrderId { get; set; }
+
+        public string DeliveryName { get; set; }
+        public string DeliveryPhone { get; set; }
     }
 }

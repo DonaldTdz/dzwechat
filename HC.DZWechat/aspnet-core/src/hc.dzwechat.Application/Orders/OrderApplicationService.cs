@@ -68,7 +68,12 @@ namespace HC.DZWechat.Orders
         public async Task<PagedResultDto<OrderListDto>> GetPaged(GetOrdersInput input)
         {
 
-            var query = _entityRepository.GetAll().WhereIf(!string.IsNullOrEmpty(input.FilterText), u => u.Phone.Contains(input.FilterText));
+            var query = _entityRepository.GetAll().WhereIf(!string.IsNullOrEmpty(input.FilterText),
+            u => u.Number.Contains(input.FilterText)
+            || u.DeliveryName.Contains(input.FilterText)
+            || u.DeliveryPhone.Contains(input.FilterText))
+                .WhereIf(input.Status.HasValue, v => v.Status == input.Status.Value);
+
             var count = await query.CountAsync();
             var entityList = await query
                     .OrderBy(input.Sorting).AsNoTracking()
@@ -246,20 +251,20 @@ namespace HC.DZWechat.Orders
         {
             var result = new ProcesseingOrderListDto();
             var query = from o in _entityRepository.GetAll().Where(o => o.Status != OrderStatus.已支付 && o.Status != OrderStatus.已取消)
-                        join od in _orderdetailRepository.GetAll().Where(od=>od.exchangeCode== ExchangeCodeEnum.邮寄兑换 && od.Status == ExchangeStatus.未兑换) on o.Id equals od.OrderId
+                        join od in _orderdetailRepository.GetAll().Where(od => od.exchangeCode == ExchangeCodeEnum.邮寄兑换 && od.Status == ExchangeStatus.未兑换) on o.Id equals od.OrderId
                         select new OrderListDto
                         {
                             Id = o.Id,
                             Number = o.Number,
                             NickName = o.NickName,
-                            UserId=o.UserId,
-                            Phone=o.Phone,
-                            Status=o.Status,
-                            PayTime=o.PayTime,
+                            UserId = o.UserId,
+                            Phone = o.Phone,
+                            Status = o.Status,
+                            PayTime = o.PayTime,
                         };
-            var list =await query.OrderByDescending(o => o.PayTime).Take(6).ToListAsync();
+            var list = await query.OrderByDescending(o => o.PayTime).Take(6).ToListAsync();
             result.Orders = list.MapTo<List<OrderListDto>>();
-            result.Count =await query.CountAsync();
+            result.Count = await query.CountAsync();
             return result;
         }
     }

@@ -286,9 +286,9 @@ namespace HC.DZWechat.Exchanges
         public async Task<PagedResultDto<ExchangeListDto>> GetExchangeDetail(ExchangeInput input)
         {
             var queryE = _entityRepository.GetAll().WhereIf(input.ShopId.HasValue, e => e.ShopId == input.ShopId)
-                                                  .WhereIf(input.ExchangeStyle.HasValue,e=>e.ExchangeCode==input.ExchangeStyle)
-                                                  .WhereIf(input.StartTime.HasValue,e=>e.CreationTime>=input.StartTime)
-                                                  .WhereIf(input.EndTime.HasValue,e=>e.CreationTime<=input.EndTimeAddOne);
+                                                  .WhereIf(input.ExchangeStyle.HasValue, e => e.ExchangeCode == input.ExchangeStyle)
+                                                  .WhereIf(input.StartTime.HasValue, e => e.CreationTime >= input.StartTime)
+                                                  .WhereIf(input.EndTime.HasValue, e => e.CreationTime <= input.EndTimeAddOne);
             var aa = queryE.ToList();
             var queryOD = _orderDetailRepository.GetAll().WhereIf(!string.IsNullOrEmpty(input.GoodsName), o => o.Specification.Contains(input.GoodsName));
             var queryO = _orderRepository.GetAll().WhereIf(!string.IsNullOrEmpty(input.OrderId), o => o.Number.Contains(input.OrderId));
@@ -311,20 +311,20 @@ namespace HC.DZWechat.Exchanges
                             ShopName = ses.Name,
                             OrderNumber = o.Number,
                             Specification = od.Specification,
-                            OrderId=od.OrderId
+                            OrderId = od.OrderId
                         };
 
             var count = await query.CountAsync();
 
             var entityList = await query
-                    .OrderByDescending(e=>e.CreationTime).AsNoTracking()
+                    .OrderByDescending(e => e.CreationTime).AsNoTracking()
                     .PageBy(input)
                     .ToListAsync();
 
             // var entityListDtos = ObjectMapper.Map<List<ExchangeListDto>>(entityList);
             var entityListDtos = entityList.MapTo<List<ExchangeListDto>>();
             return new PagedResultDto<ExchangeListDto>(count, entityListDtos);
-        } 
+        }
         /// 兑换商品
         /// </summary>
         /// <param name="orderId"></param>
@@ -393,13 +393,13 @@ namespace HC.DZWechat.Exchanges
         public string CreateExchangeDetailExcel(string fileName, List<ExchangeListDto> data)
         {
             var fullPath = ExcelHelper.GetSavePath(_hostingEnvironment.WebRootPath) + fileName;
-            using (var fs=new FileStream(fullPath, FileMode.Create, FileAccess.Write))
+            using (var fs = new FileStream(fullPath, FileMode.Create, FileAccess.Write))
             {
                 IWorkbook workbook = new XSSFWorkbook();
                 ISheet sheet = workbook.CreateSheet("SheduleSum");
                 var rowIndex = 0;
                 IRow titleRow = sheet.CreateRow(rowIndex);
-                string[] titles = { "订单编号", "店铺名称", "商品名称", "兑换方式", "兑换时间", "物流单号", "物流公司"};
+                string[] titles = { "订单编号", "店铺名称", "商品名称", "兑换方式", "兑换时间", "物流单号", "物流公司" };
                 var fontTitle = workbook.CreateFont();
                 fontTitle.IsBold = true;
                 for (int i = 0; i < titles.Length; i++)
@@ -432,7 +432,7 @@ namespace HC.DZWechat.Exchanges
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public  async Task<APIResultDto>ExportExchangeDetail(ExchangeInput input)
+        public async Task<APIResultDto> ExportExchangeDetail(ExchangeInput input)
         {
             try
             {
@@ -442,7 +442,8 @@ namespace HC.DZWechat.Exchanges
                 result.Data = CreateExchangeDetailExcel("兑换明细.xlsx", exportData);
                 return result;
 
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 Logger.ErrorFormat("ExportExchangeDetail errormsg{0} Exception{1}", ex.Message, ex);
                 return new APIResultDto() { Code = 901, Msg = "网络忙...请待会儿再试！" };
@@ -450,6 +451,45 @@ namespace HC.DZWechat.Exchanges
             }
         }
         #endregion
+
+
+        /// <summary>
+        /// 店铺兑换记录
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task<PagedResultDto<ExchangeListDto>> GetPagedByShopId(GetExchangesInput input)
+        {
+
+            var exchange = _entityRepository.GetAll().Where(v => v.ShopId == input.ShopId).WhereIf(input.StartTime.HasValue, v => v.CreationTime >= input.StartTime && v.CreationTime <= input.EndTime);
+            var orderDetails = _orderDetailRepository.GetAll();
+            var order = _orderRepository.GetAll();
+
+            var result = (from e in exchange
+                         join od in orderDetails on e.OrderDetailId equals od.Id
+                         join o in order on od.OrderId equals o.Id
+                         select new ExchangeListDto()
+                         {
+                             Id = e.Id,
+                             OrderId = o.Id,
+                             Specification = od.Specification,
+                             OrderNumber = o.Number,
+                             DeliveryName = o.DeliveryName,
+                             DeliveryPhone = o.Phone,
+                             CreationTime = e.CreationTime,
+                             LogisticsCompany = e.LogisticsCompany,
+                             LogisticsNo = e.LogisticsNo,
+                             ExchangeCode = e.ExchangeCode
+                         }).WhereIf(!string.IsNullOrEmpty(input.FilterText), v => v.Specification.Contains(input.FilterText)|| v.DeliveryName.Contains(input.FilterText) || v.DeliveryPhone.Contains(input.FilterText) || v.OrderNumber.Contains(input.FilterText));
+
+            var count = await result.CountAsync();
+            var entityList = await result
+                    .OrderByDescending(v => v.CreationTime).AsNoTracking()
+                    .PageBy(input)
+                    .ToListAsync();
+
+            return new PagedResultDto<ExchangeListDto>(count, entityList);
+        }
     }
 }
 

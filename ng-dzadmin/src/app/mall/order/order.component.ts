@@ -9,6 +9,14 @@ import { OrderService } from 'services';
 })
 export class OrderComponent extends PagedListingComponentBase<any> {
     keyWord: string;
+    serchType: number = 0;
+    statusTypes = [
+        { value: 0, text: '全部' },
+        { value: 1, text: '待支付' },
+        { value: 2, text: '已支付' },
+        { value: 3, text: '已完成' },
+        { value: 4, text: '已取消' }
+    ];
     constructor(injector: Injector
         , private router: Router
         , private orderService: OrderService
@@ -27,6 +35,7 @@ export class OrderComponent extends PagedListingComponentBase<any> {
     resetSearch() {
         this.pageNumber = 1;
         this.keyWord = null;
+        this.serchType = 0;
         this.refresh();
     }
     protected fetchDataList(
@@ -38,6 +47,7 @@ export class OrderComponent extends PagedListingComponentBase<any> {
         params.SkipCount = request.skipCount;
         params.MaxResultCount = request.maxResultCount;
         params.FilterText = this.keyWord;
+        params.Status = this.serchType
         this.orderService.getAll(params)
             .finally(() => {
                 finishedCallback();

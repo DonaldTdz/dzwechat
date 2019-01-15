@@ -97,5 +97,6 @@ namespace HC.DZWechat.Exchanges
         /// <param name="input"></param>
         /// <returns></returns>
         Task<APIResultDto> ExportExchangeDetail(ExchangeInput input);
+        Task<PagedResultDto<ExchangeListDto>> GetPagedByShopId(GetExchangesInput input);
     }
 }

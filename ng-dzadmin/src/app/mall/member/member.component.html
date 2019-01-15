@@ -16,9 +16,8 @@
         </div>
     </div>
     <ng-template #totalTemplate let-total>共 {{totalItems}} 条</ng-template>
-    <nz-table #ajaxTable nzShowSizeChanger [nzData]="dataList" [nzShowTotal]="totalTemplate" [nzTotal]="totalItems"
-        [(nzPageIndex)]="pageNumber" [(nzPageSize)]="pageSize" [nzLoading]="isTableLoading" (nzPageIndexChange)="refresh()"
-        (nzPageSizeChange)="refresh()" [nzFrontPagination]="false">
+    <nz-table #ajaxTable nzShowSizeChanger [nzData]="dataList" [nzShowTotal]="totalTemplate" [nzTotal]="totalItems" [(nzPageIndex)]="pageNumber" [(nzPageSize)]="pageSize" [nzLoading]="isTableLoading" (nzPageIndexChange)="refresh()" (nzPageSizeChange)="refresh()"
+        [nzFrontPagination]="false">
         <thead>
             <tr>
                 <th>微信昵称</th>
@@ -41,11 +40,11 @@
                 <td>{{item.userTypeName}}</td>
                 <td>{{item.userName}}</td>
                 <td>{{item.phone}}</td>
-                <td>{{item.isShopManager}}</td>
-                <td>{{item.authTime}}</td>
+                <td>{{item.isShopManager==true?'是':'否'}}</td>
+                <td>{{item.authTime | _date}}</td>
                 <td>{{item.bindStatusName}}</td>
-                <td>{{item.bindTime}}</td>
-                <td>{{item.unBindTime}}</td>
+                <td>{{item.bindTime | _date}}</td>
+                <td>{{item.unBindTime | _date}}</td>
                 <td>{{item.integral}}</td>
                 <td>
                     <a (click)="goDetail(item.id)">详情</a>

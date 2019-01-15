@@ -1,7 +1,12 @@
 <page-header [title]="'订单管理'"></page-header>
 <nz-card>
     <div nz-row class="mb-md">
-        <div nz-col nzSpan="18" style="padding-right:10px;">
+        <div nz-col nzSpan="6" style="padding-right:10px;">
+            <nz-select style="width: 100%;" [(ngModel)]="serchType" nzPlaceHolder="请选择">
+                <nz-option *ngFor="let o of statusTypes" [nzValue]="o.value" [nzLabel]="o.text"></nz-option>
+            </nz-select>
+        </div>
+        <div nz-col nzSpan="12" style="padding-right:10px;">
             <nz-input-group nzSearch [nzSuffix]="suffixButton">
                 <input type="text" [(ngModel)]="keyWord" nz-input placeholder="订单编号/收货人姓名、电话">
             </nz-input-group>

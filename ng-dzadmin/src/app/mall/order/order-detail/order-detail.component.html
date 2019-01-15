@@ -40,7 +40,11 @@
                 <td>{{data.num}}</td>
                 <td>{{data.unit}}</td>
                 <td>{{data.integral}}</td>
-                <td>{{data.statusName}}</td>
+                <!-- <td>{{data.statusName}}</td> -->
+                <td>
+                    <nz-badge *ngIf="data.status == 1" [nzStatus]="'default'" [nzText]="'未兑换'"></nz-badge>
+                    <nz-badge *ngIf="data.status == 2" [nzStatus]="'success'" [nzText]="'已兑换'"></nz-badge>
+                </td>
                 <td>{{data.exchangeCodeName}}</td>
                 <td>{{data.exchangeTime | _date}}</td>
                 <td>{{data.creationTime | _date}}</td>

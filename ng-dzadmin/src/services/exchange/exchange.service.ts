@@ -41,4 +41,13 @@ export class ExchangeService {
 
     }
 
+    getExchangeByShopId(param: any): Observable<PagedResultDto> {
+        let _url = "/api/services/app/Exchange/GetPagedByShopId";
+        return this._commonhttp.get(_url, param).pipe(map(data => {
+            var result = new PagedResultDto();
+            result.items = data.items;
+            result.totalCount = data.totalCount;
+            return result;
+        }));
+    }
 }
