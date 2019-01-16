@@ -28,6 +28,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Hosting;
 using HC.DZWechat.Configuration;
 using HC.DZWechat.Categorys;
+using HC.DZWechat.Deliverys;
+using HC.DZWechat.Deliverys.Dtos;
 
 namespace HC.DZWechat.ShopCarts
 {
@@ -42,6 +44,7 @@ namespace HC.DZWechat.ShopCarts
         private readonly IRepository<Good, Guid> _goodsRepository;
         private readonly IRepository<Category> _categoryRepository;
         private readonly IConfigurationRoot _appConfiguration;
+        private readonly IRepository<Delivery, Guid> _deliveryRepository;
 
         private readonly IShopCartManager _entityManager;
 
@@ -57,6 +60,7 @@ namespace HC.DZWechat.ShopCarts
         , IRepository<Category> categoryRepository
         , IShopCartManager entityManager
         , IHostingEnvironment env
+        , IRepository<Delivery, Guid> deliveryRepository
         )
         {
             _entityRepository = entityRepository;
@@ -66,6 +70,7 @@ namespace HC.DZWechat.ShopCarts
             _entityManager = entityManager;
             _appConfiguration = AppConfigurations.Get(env.ContentRootPath, env.EnvironmentName, env.IsDevelopment());
             _hostUrl = _appConfiguration["App:ServerRootAddress"];
+            _deliveryRepository = deliveryRepository;
         }
 
 
@@ -304,6 +309,68 @@ ShopCartEditDto editDto;
         {
             var userId = await _wechatUserRepository.GetAll().Where(w => w.WxOpenId == input.WxOpenId).Select(w => w.Id).FirstAsync();
             await _entityRepository.DeleteAsync(d => d.UserId == userId && d.Id == input.ShopCartId);
+        }
+        /// <summary>
+        /// 结算确认
+        /// </summary>
+        [AbpAllowAnonymous]
+        public async Task PayOrderConfirmAsync(PayOrderInput input)
+        {
+            var userId = await _wechatUserRepository.GetAll().Where(w => w.WxOpenId == input.WxOpenId).Select(w => w.Id).FirstAsync();
+            var userCartList = await _entityRepository.GetAll().Where(e => e.UserId == userId).ToListAsync();
+            foreach (var item in userCartList)
+            {
+                var selected = input.Items.Where(i => i.Id == item.Id).FirstOrDefault();
+                if (selected != null) //购物车被选中，更新状态和数量
+                {
+                    item.Num = selected.Num;
+                    item.IsSelected = true;
+                }
+                else
+                {
+                    item.IsSelected = false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 获取结算信息
+        /// </summary>
+        [AbpAllowAnonymous]
+        public async Task<PayOrderDto> GetPayOrderAsync(string wxopenid)
+        {
+            var payOrder = new PayOrderDto();
+            var user = await _wechatUserRepository.GetAll().Where(w => w.WxOpenId == wxopenid).FirstAsync();
+            var delivery = await _deliveryRepository.GetAll().Where(d => d.UserId == user.Id && d.IsDefault == true).FirstOrDefaultAsync();
+            if (delivery != null)
+            {
+                payOrder.IsExitAddress = true;
+                payOrder.DefaultAddress = delivery.MapTo<DeliveryListDto>();
+            }
+
+            var query = from c in _entityRepository.GetAll().Where(e => e.UserId == user.Id && e.IsSelected == true)
+                        join g in _goodsRepository.GetAll() on c.GoodsId equals g.Id
+                        join t in _categoryRepository.GetAll() on g.CategoryId equals t.Id
+                        select new UserCartDto()
+                        {
+                            UserId = c.UserId,
+                            CategoryName = t.Name,
+                            ExchangeCode = c.ExchangeCode,
+                            Id = c.Id,
+                            Integral = c.Integral,
+                            GoodsId = c.GoodsId,
+                            Host = _hostUrl,
+                            IsAction = g.IsAction,
+                            Num = c.Num,
+                            PhotoUrl = g.PhotoUrl,
+                            Specification = c.Specification,
+                            Stock = g.Stock,
+                            Unit = c.Unit
+                        };
+            payOrder.Items = await query.ToListAsync();
+            payOrder.Integral = user.Integral;
+            payOrder.TotalPrice = payOrder.Items.Sum(d => d.Integral * d.Num);
+            return payOrder;
         }
     }
 }

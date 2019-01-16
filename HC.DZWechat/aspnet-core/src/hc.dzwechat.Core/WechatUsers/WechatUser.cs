@@ -21,7 +21,6 @@ namespace HC.DZWechat.WechatUsers
         /// 微信OpenId
         /// </summary>
         [StringLength(50)]
-        [Required]
         public virtual string OpenId { get; set; }
 
         public virtual string WxOpenId { get; set; }
@@ -38,13 +37,11 @@ namespace HC.DZWechat.WechatUsers
         /// <summary>
         /// 零售用户 或 营销人员Id 外键
         /// </summary>
-        [Required]
-        public virtual Guid UserId { get; set; }
+        public virtual Guid? UserId { get; set; }
         /// <summary>
         /// 零售用户 或 营销人员 名称 快照
         /// </summary>
         [StringLength(50)]
-        [Required]
         public virtual string UserName { get; set; }
         /// <summary>
         /// 绑定手机
