@@ -65,12 +65,12 @@ namespace  HC.DZWechat.ShopCarts.Dtos
 		/// </summary>
 		public ExchangeCodeEnum ExchangeCode { get; set; }
 
+        public bool? IsSelected { get; set; }
 
-
-		/// <summary>
-		/// CreationTime
-		/// </summary>
-		public DateTime CreationTime { get; set; }
+        /// <summary>
+        /// CreationTime
+        /// </summary>
+        public DateTime CreationTime { get; set; }
 
 
 

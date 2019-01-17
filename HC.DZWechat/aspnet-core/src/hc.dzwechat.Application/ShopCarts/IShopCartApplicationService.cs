@@ -85,5 +85,9 @@ namespace HC.DZWechat.ShopCarts
         Task<UserCartDto> GetCheckCartGoodsAsync(Guid id);
 
         Task UserShopCartDeleteAsync(ShopCartDeleteInput input);
+
+        Task PayOrderConfirmAsync(PayOrderInput input);
+
+        Task<PayOrderDto> GetPayOrderAsync(string wxopenid);
     }
 }

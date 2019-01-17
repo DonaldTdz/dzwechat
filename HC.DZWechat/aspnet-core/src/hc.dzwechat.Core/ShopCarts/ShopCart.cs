@@ -49,6 +49,11 @@ namespace HC.DZWechat.ShopCarts
         /// 
         /// </summary>
         public virtual DateTime CreationTime { get; set; }
+
+        /// <summary>
+        /// 是否选中
+        /// </summary>
+        public virtual bool? IsSelected { get; set; }
     }
 
 }

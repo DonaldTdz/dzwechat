@@ -27,7 +27,6 @@ namespace  HC.DZWechat.WechatUsers.Dtos
 		/// <summary>
 		/// OpenId
 		/// </summary>
-		[Required(ErrorMessage="OpenId不能为空")]
 		public string OpenId { get; set; }
 
         public string WxOpenId { get; set; }
@@ -51,15 +50,13 @@ namespace  HC.DZWechat.WechatUsers.Dtos
 		/// <summary>
 		/// UserId
 		/// </summary>
-		[Required(ErrorMessage="UserId不能为空")]
-		public Guid UserId { get; set; }
+		public Guid? UserId { get; set; }
 
 
 
 		/// <summary>
 		/// UserName
 		/// </summary>
-		[Required(ErrorMessage="UserName不能为空")]
 		public string UserName { get; set; }
 
 
