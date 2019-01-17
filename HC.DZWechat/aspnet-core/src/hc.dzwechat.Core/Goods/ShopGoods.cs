@@ -10,7 +10,7 @@ using HC.DZWechat.DZEnums.DZCommonEnums;
 namespace HC.DZWechat.Goods
 {
     [Table("Goods")]
-    public class Good : Entity<Guid>, IHasCreationTime, ICreationAudited //注意修改主键Id数据类型
+    public class ShopGoods : Entity<Guid>, IHasCreationTime, ICreationAudited //注意修改主键Id数据类型
     {
         /// <summary>
         /// 商品规格名称
@@ -58,7 +58,7 @@ namespace HC.DZWechat.Goods
         /// <summary>
         /// 销售数量
         /// </summary>
-        public virtual int? SellCount { get; set; }
+        public virtual decimal? SellCount { get; set; }
         /// <summary>
         /// 上架、下架
         /// </summary>

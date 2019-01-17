@@ -13,11 +13,11 @@ namespace HC.DZWechat.Goods.Mapper
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
-            configuration.CreateMap <Good,GoodListDto>();
-            configuration.CreateMap <GoodListDto,Good>();
+            configuration.CreateMap <ShopGoods,GoodListDto>();
+            configuration.CreateMap <GoodListDto,ShopGoods>();
 
-            configuration.CreateMap <GoodEditDto,Good>();
-            configuration.CreateMap <Good,GoodEditDto>();
+            configuration.CreateMap <GoodEditDto,ShopGoods>();
+            configuration.CreateMap <ShopGoods,GoodEditDto>();
 
         }
 	}

@@ -41,7 +41,7 @@ namespace HC.DZWechat.ShopCarts
     {
         private readonly IRepository<ShopCart, Guid> _entityRepository;
         private readonly IRepository<WechatUser, Guid> _wechatUserRepository;
-        private readonly IRepository<Good, Guid> _goodsRepository;
+        private readonly IRepository<ShopGoods, Guid> _goodsRepository;
         private readonly IRepository<Category> _categoryRepository;
         private readonly IConfigurationRoot _appConfiguration;
         private readonly IRepository<Delivery, Guid> _deliveryRepository;
@@ -56,7 +56,7 @@ namespace HC.DZWechat.ShopCarts
         public ShopCartAppService(
         IRepository<ShopCart, Guid> entityRepository
         , IRepository<WechatUser, Guid> wechatUserRepository
-        , IRepository<Good, Guid> goodsRepository
+        , IRepository<ShopGoods, Guid> goodsRepository
         , IRepository<Category> categoryRepository
         , IShopCartManager entityManager
         , IHostingEnvironment env
@@ -222,6 +222,16 @@ ShopCartEditDto editDto;
         public async Task AddCartAsync(ShopCartInputDto input)
         {
             var userId = await _wechatUserRepository.GetAll().Where(w => w.WxOpenId == input.WxOpenId).Select(w => w.Id).FirstAsync();
+            //如果是直接购买 需要先清购物车
+            if (input.IsSelected)
+            {
+                var userCartList = await _entityRepository.GetAll().Where(e => e.UserId == userId).ToListAsync();
+                foreach (var item in userCartList)
+                {
+                   item.IsSelected = false;
+                }
+            }
+            //添加购车处理
             var goods = await _goodsRepository.GetAsync(input.GoodsId);
             if (await _entityRepository.GetAll().AnyAsync(e => e.UserId == userId && e.GoodsId == input.GoodsId && e.ExchangeCode == input.ExchangeCode))
             {
@@ -235,6 +245,7 @@ ShopCartEditDto editDto;
                 {
                     shopCart.Num = num;
                 }
+                shopCart.IsSelected = input.IsSelected;
             }
             else
             {
@@ -246,7 +257,8 @@ ShopCartEditDto editDto;
                     Num = input.Num,
                     Specification = goods.Specification,
                     Unit = goods.Unit,
-                    UserId = userId
+                    UserId = userId,
+                    IsSelected = input.IsSelected
                 };
                 await _entityRepository.InsertAsync(shopCart);
             }

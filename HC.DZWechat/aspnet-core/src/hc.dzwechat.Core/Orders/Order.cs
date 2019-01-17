@@ -15,7 +15,7 @@ namespace HC.DZWechat.Orders
         /// <summary>
         /// 订单编号（生成唯一格式，需考虑并发）
         /// </summary>
-        [StringLength(20)]
+        [StringLength(50)]
         [Required]
         public virtual string Number { get; set; }
 

@@ -6,9 +6,9 @@ using HC.DZWechat.Goods;
 
 namespace HC.DZWechat.EntityMapper.Goodss
 {
-    public class GoodsCfg : IEntityTypeConfiguration<Good>
+    public class GoodsCfg : IEntityTypeConfiguration<DZWechat.Goods.ShopGoods>
     {
-        public void Configure(EntityTypeBuilder<Good> builder)
+        public void Configure(EntityTypeBuilder<DZWechat.Goods.ShopGoods> builder)
         {
 
             builder.ToTable("Goodss", YoYoAbpefCoreConsts.SchemaNames.CMS);

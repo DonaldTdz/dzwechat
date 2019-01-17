@@ -9,7 +9,7 @@ using Abp.AutoMapper;
 
 namespace HC.DZWechat.Goods.Dtos
 {
-    [AutoMapFrom(typeof(Good))]
+    [AutoMapFrom(typeof(ShopGoods))]
     public class GoodListDto : EntityDto<Guid>, IHasCreationTime, ICreationAudited
     {      
 		/// <summary>
@@ -79,7 +79,7 @@ namespace HC.DZWechat.Goods.Dtos
 		/// <summary>
 		/// SearchCount
 		/// </summary>
-		public int? SellCount { get; set; }
+		public decimal? SellCount { get; set; }
 
 
 
@@ -163,7 +163,7 @@ namespace HC.DZWechat.Goods.Dtos
         /// <summary>
         /// 销量
         /// </summary>
-        public int? saleCount { get; set; } 
+        public decimal? saleCount { get; set; } 
     }
 
 
@@ -174,10 +174,10 @@ namespace HC.DZWechat.Goods.Dtos
     {
         public string GroupName { get; set; }
         public decimal? IntegralTotal { get; set; }
-        public int? Total { get; set; }
+        public decimal? Total { get; set; }
     }
 
-    [AutoMapFrom(typeof(Good))]
+    [AutoMapFrom(typeof(ShopGoods))]
     public class GoodsDetailDto : EntityDto<Guid>
     {
         public GoodsDetailDto() { }
@@ -237,7 +237,7 @@ namespace HC.DZWechat.Goods.Dtos
         /// <summary>
         /// 销量
         /// </summary>
-        public int? SellCount { get; set; }
+        public decimal? SellCount { get; set; }
 
         public string Desc { get; set; }
 

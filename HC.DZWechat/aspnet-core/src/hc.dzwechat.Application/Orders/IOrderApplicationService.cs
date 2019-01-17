@@ -20,6 +20,7 @@ using Abp.Application.Services.Dto;
 
 using HC.DZWechat.Orders.Dtos;
 using HC.DZWechat.Orders;
+using HC.DZWechat.CommonDto;
 
 namespace HC.DZWechat.Orders
 {
@@ -85,5 +86,6 @@ namespace HC.DZWechat.Orders
         /// <returns></returns>
         Task<ProcesseingOrderListDto> GetOrderTopSix();
 
+        Task<APIResultDto> SaveOrderAsync(SaveOrderInput input);
     }
 }

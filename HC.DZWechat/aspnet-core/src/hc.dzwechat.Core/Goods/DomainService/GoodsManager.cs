@@ -28,13 +28,13 @@ namespace HC.DZWechat.Goods.DomainService
     public class GoodsManager :DZWechatDomainServiceBase, IGoodsManager
     {
 		
-		private readonly IRepository<Good,Guid> _repository;
+		private readonly IRepository<ShopGoods,Guid> _repository;
 
 		/// <summary>
 		/// Goods的构造方法
 		///</summary>
 		public GoodsManager(
-			IRepository<Good, Guid> repository
+			IRepository<ShopGoods, Guid> repository
 		)
 		{
 			_repository =  repository;

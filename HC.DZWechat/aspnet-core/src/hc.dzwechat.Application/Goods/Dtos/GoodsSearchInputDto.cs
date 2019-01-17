@@ -12,6 +12,8 @@ namespace HC.DZWechat.Goods.Dtos
         public SortTypeEnum SortType { get; set; }
 
         public int CategoryId { get; set; }
+
+        public string CateCode { get; set; }
     }
 
     public enum SortTypeEnum
@@ -20,7 +22,8 @@ namespace HC.DZWechat.Goods.Dtos
         ZongHe = 1, //综合
         Sale = 2,  //销量
         PriceAsc = 3,  //价格 升
-        PriceDesc = 4  //价格 降
+        PriceDesc = 4,  //价格 降
+        News = 5 //新品
     }
 
 }

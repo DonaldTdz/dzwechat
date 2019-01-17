@@ -33,7 +33,7 @@ namespace HC.DZWechat.OrderDetails
     public class OrderDetailAppService : DZWechatAppServiceBase, IOrderDetailAppService
     {
         private readonly IRepository<OrderDetail, Guid> _entityRepository;
-        private readonly IRepository<Good, Guid> _goodRepository;
+        private readonly IRepository<Goods.ShopGoods, Guid> _goodRepository;
 
         private readonly IOrderDetailManager _entityManager;
 
@@ -42,7 +42,7 @@ namespace HC.DZWechat.OrderDetails
         ///</summary>
         public OrderDetailAppService(
         IRepository<OrderDetail, Guid> entityRepository
-        ,IRepository<Good, Guid> goodRepository
+        ,IRepository<Goods.ShopGoods, Guid> goodRepository
         , IOrderDetailManager entityManager
         )
         {
