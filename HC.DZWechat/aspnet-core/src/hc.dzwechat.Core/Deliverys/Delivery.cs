@@ -32,6 +32,10 @@ namespace HC.DZWechat.Deliverys
         /// </summary>
         [StringLength(500)]
         public virtual string Address { get; set; }
+        public virtual string Province { get; set; }
+        public virtual string City { get; set; }
+        public virtual string Area { get; set; }
+
         /// <summary>
         /// 是否是默认地址
         /// </summary>

@@ -21,8 +21,8 @@ using Abp.Linq.Extensions;
 using HC.DZWechat.IntegralDetails;
 using HC.DZWechat.IntegralDetails.Dtos;
 using HC.DZWechat.IntegralDetails.DomainService;
-
-
+using HC.DZWechat.WechatUsers;
+using HC.DZWechat.Dtos;
 
 namespace HC.DZWechat.IntegralDetails
 {
@@ -33,6 +33,7 @@ namespace HC.DZWechat.IntegralDetails
     public class IntegralDetailAppService : DZWechatAppServiceBase, IIntegralDetailAppService
     {
         private readonly IRepository<IntegralDetail, Guid> _entityRepository;
+        private readonly IRepository<WechatUser, Guid> _wechatUserRepository;
         private readonly IIntegralDetailsRepository _integralDetailsRepository;
         private readonly IIntegralDetailManager _entityManager;
 
@@ -42,10 +43,12 @@ namespace HC.DZWechat.IntegralDetails
         public IntegralDetailAppService(
         IRepository<IntegralDetail, Guid> entityRepository, IIntegralDetailsRepository integralDetailsRepository
         , IIntegralDetailManager entityManager
+             , IRepository<WechatUser, Guid> wechatUserRepository
         )
         {
             _entityRepository = entityRepository;
             _entityManager = entityManager;
+            _wechatUserRepository = wechatUserRepository;
             _integralDetailsRepository = integralDetailsRepository;
         }
 
@@ -245,6 +248,124 @@ namespace HC.DZWechat.IntegralDetails
             return list.OrderBy(r => r.GroupName).ToList();
         }
 
+        /// <summary>
+        /// 判断用户当天是否签到过
+        /// </summary>
+        /// <param name="WxOpenId"></param>
+        /// <returns></returns>
+        [AbpAllowAnonymous]
+        public async Task<SignInDto> GetUserTodayIsSignIn(string WxOpenId)
+        {
+            var user = await _wechatUserRepository.GetAll().Where(v => v.WxOpenId == WxOpenId).Select(v => new SignInDto()
+            {
+                UserId = v.Id,
+                Integral = v.Integral.Value
+            }).FirstOrDefaultAsync();
+            var count = await _entityRepository.GetAll().Where(v => v.UserId == user.UserId && v.CreationTime >= DateTime.Today && v.CreationTime <= DateTime.Today.AddDays(86399F / 86400)).CountAsync();
+            if(count != 0)
+            {
+                return new SignInDto()
+                {
+                    Integral = user.Integral,
+                    IsSign = true
+                };
+            }
+            else
+            {
+                return new SignInDto()
+                {
+                    Integral = user.Integral,
+                    IsSign = false
+                };
+            }
+        }
+
+        /// <summary>
+        /// 每日签到
+        /// </summary>
+        /// <param name="WxOpenId"></param>
+        /// <returns></returns>
+        [AbpAllowAnonymous]
+        public async Task SignInAsync(EntityDto<string> input)
+        {
+            var user = await _wechatUserRepository.GetAll().Where(v => v.WxOpenId == input.Id).FirstOrDefaultAsync();
+            var entity = new IntegralDetail();
+            entity.UserId = user.Id;
+            if (user.Integral == null)
+            {
+                user.Integral = 0;
+            }
+            entity.InitialIntegral = user.Integral;
+            entity.Integral = 5;
+            entity.FinalIntegral = user.Integral + 5;
+            entity.Desc = $"签到有礼获得积分*{entity.Integral}";
+            entity.Type = DZEnums.DZCommonEnums.IntegralType.每日签到;
+            await _entityRepository.InsertAsync(entity);
+            await CurrentUnitOfWork.SaveChangesAsync();
+            user.Integral += 5;
+            await _wechatUserRepository.UpdateAsync(user);
+        }
+
+        /// <summary>
+        /// 获取用户签到列表
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [AbpAllowAnonymous]
+        public async Task<WxPagedResultDto<WXIntegralDetailListDto>> GetIntegralDetailListAsync(GetWxIntegralDetailsInput input)
+        {
+            Guid userId = await _wechatUserRepository.GetAll().Where(v => v.WxOpenId == input.WxOpenId).Select(v=>v.Id).FirstOrDefaultAsync();
+            var query = _entityRepository.GetAll().Where(e => e.UserId ==userId && e.Type== DZEnums.DZCommonEnums.IntegralType.每日签到).Select(e => new WXIntegralDetailListDto()
+            {
+                CreationTime = e.CreationTime,
+                Type = e.Type,
+                Integral = e.Integral
+            });
+            var count = await query.CountAsync();
+            var dataList = await query.OrderByDescending(o => o.CreationTime)
+                        .PageBy(input)
+                        .ToListAsync();
+            var result = new WxPagedResultDto<WXIntegralDetailListDto>(count, dataList);
+            result.PageSize = input.Size;
+            return result;
+        }
+
+
+        /// <summary>
+        /// 我的积分
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [AbpAllowAnonymous]
+        public async Task<WxPagedResultDto<WXIntegralDetailListDto>> GetIntegralAllListAsync(GetWxIntegralDetailsInput input)
+        {
+            Guid userId = await _wechatUserRepository.GetAll().Where(v => v.WxOpenId == input.WxOpenId).Select(v => v.Id).FirstOrDefaultAsync();
+            var query = _entityRepository.GetAll().Where(e => e.UserId == userId).Select(e => new WXIntegralDetailListDto()
+            {
+                CreationTime = e.CreationTime,
+                Integral = e.Integral,
+                Type = e.Type
+            });
+            var count = await query.CountAsync();
+            var dataList = await query.OrderByDescending(o => o.CreationTime)
+                        .PageBy(input)
+                        .ToListAsync();
+            var result = new WxPagedResultDto<WXIntegralDetailListDto>(count, dataList);
+            result.PageSize = input.Size;
+            return result;
+        }
+
+        /// <summary>
+        /// 获取用户总积分
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [AbpAllowAnonymous]
+        public async Task<decimal?> GetUserIntegralTotalAsync(EntityDto<string> input)
+        {
+            decimal? total = await _wechatUserRepository.GetAll().Where(v => v.WxOpenId == input.Id).Select(v => v.Integral).FirstOrDefaultAsync();
+            return total;
+        }
     }
 }
 

@@ -222,10 +222,10 @@ namespace HC.DZWechat.WechatUsers
                 return new APIResultDto() { Code = 902, Msg = "用户不存在" };
             }
 
-            string verificationCode = await _shopRepository.GetAll().Where(v=>v.Id == input.ShopId).Select(v=>v.VerificationCode).FirstOrDefaultAsync();
-            if(verificationCode != null)
+            string verificationCode = await _shopRepository.GetAll().Where(v => v.Id == input.ShopId).Select(v => v.VerificationCode).FirstOrDefaultAsync();
+            if (verificationCode != null)
             {
-                if(input.VerificationCode != verificationCode)
+                if (input.VerificationCode != verificationCode)
                 {
                     return new APIResultDto() { Code = 901, Msg = "验证未通过" };
                 }
@@ -234,12 +234,37 @@ namespace HC.DZWechat.WechatUsers
             {
                 return new APIResultDto() { Code = 901, Msg = "验证未通过" };
 
-            }       
+            }
             entity.IsShopManager = true;
             entity.ShopId = input.ShopId;
             entity.AuthTime = DateTime.Now;
             var result = await _entityRepository.UpdateAsync(entity);
             return new APIResultDto() { Code = 0, Msg = "绑定成功", Data = entity.MapTo<WechatUserListDto>() };
+        }
+
+        /// <summary>
+        /// 注册手机号
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [AbpAllowAnonymous]
+        public async Task RegisterUserAsync(UserBindDto input)
+        {
+            var user = await _entityRepository.GetAll().Where(v => v.WxOpenId == input.WxOpenId).FirstOrDefaultAsync();
+            user.Phone = input.Phone;
+            await _entityRepository.UpdateAsync(user);
+        }
+
+        /// <summary>
+        /// 获取手机号码
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [AbpAllowAnonymous]
+        public async Task<string> GetUserPhoneAsync(UserBindDto input)
+        {
+            var phone = await _entityRepository.GetAll().Where(v => v.WxOpenId == input.WxOpenId).Select(v=>v.Phone).FirstOrDefaultAsync();
+            return phone;
         }
     }
 }

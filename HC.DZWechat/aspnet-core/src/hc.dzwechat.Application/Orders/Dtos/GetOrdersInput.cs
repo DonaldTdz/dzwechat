@@ -10,6 +10,8 @@ namespace HC.DZWechat.Orders.Dtos
     {
         public Guid Id { get; set; }
         public OrderStatus? Status { get; set; }
+
+        public bool IsUnMailing { get; set; }
         /// <summary>
         /// 正常化排序使用
         /// </summary>

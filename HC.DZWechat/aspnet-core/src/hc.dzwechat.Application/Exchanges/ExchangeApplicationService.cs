@@ -330,9 +330,9 @@ namespace HC.DZWechat.Exchanges
         /// <param name="orderId"></param>
         /// <returns></returns>
         [AbpAllowAnonymous]
-        public async Task<APIResultDto> ExchangeGoods(OrderEditDto input)
+        public async Task<APIResultDto> ExchangeGoods(ExchangeDtoInput input)
         {
-            var result = await _scanExchangeManager.ExchangeGoods(input.Id.Value);
+            var result = await _scanExchangeManager.ExchangeGoods(input.OrderId,input.OpenId,input.ShopId);
             return result;
         }
         [AbpAllowAnonymous]
@@ -442,7 +442,7 @@ namespace HC.DZWechat.Exchanges
                 result.Data = CreateExchangeDetailExcel("兑换明细.xlsx", exportData);
                 return result;
 
-            }
+            }   
             catch (Exception ex)
             {
                 Logger.ErrorFormat("ExportExchangeDetail errormsg{0} Exception{1}", ex.Message, ex);
@@ -460,7 +460,6 @@ namespace HC.DZWechat.Exchanges
         /// <returns></returns>
         public async Task<PagedResultDto<ExchangeListDto>> GetPagedByShopId(GetExchangesInput input)
         {
-
             var exchange = _entityRepository.GetAll().Where(v => v.ShopId == input.ShopId).WhereIf(input.StartTime.HasValue, v => v.CreationTime >= input.StartTime && v.CreationTime <= input.EndTime);
             var orderDetails = _orderDetailRepository.GetAll();
             var order = _orderRepository.GetAll();

@@ -192,7 +192,9 @@ export class ScanExchangeComponent extends AppComponentBase implements OnInit {
         this.dia.show(this.config).subscribe((res: any) => {
             if (res.value == true) {
                 let params: any = {};
-                params.Id = this.orderBarCode;
+                params.OrderId = this.orderBarCode;
+                params.OpenId = this.settingsService.openId;
+                params.ShopId = this.shop.id;
                 this.exchangeService.exchangeGoods(params).subscribe(result => {
                     if (result.code == 0) {
                         this.router.navigate(['/marketing-exchange/exchange-success']);

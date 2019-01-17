@@ -72,7 +72,8 @@ namespace HC.DZWechat.Orders
             u => u.Number.Contains(input.FilterText)
             || u.DeliveryName.Contains(input.FilterText)
             || u.DeliveryPhone.Contains(input.FilterText))
-                .WhereIf(input.Status.HasValue, v => v.Status == input.Status.Value);
+                .WhereIf(input.Status.HasValue, v => v.Status == input.Status.Value)
+                .WhereIf(input.IsUnMailing, u => _orderdetailRepository.GetAll().Any(d => d.OrderId == u.Id && d.Status == ExchangeStatus.未兑换 && d.ExchangeCode == ExchangeCodeEnum.邮寄兑换));
 
             var count = await query.CountAsync();
             var entityList = await query
@@ -251,7 +252,7 @@ namespace HC.DZWechat.Orders
         {
             var result = new ProcesseingOrderListDto();
             var query = from o in _entityRepository.GetAll().Where(o => o.Status != OrderStatus.已支付 && o.Status != OrderStatus.已取消)
-                        join od in _orderdetailRepository.GetAll().Where(od => od.exchangeCode == ExchangeCodeEnum.邮寄兑换 && od.Status == ExchangeStatus.未兑换) on o.Id equals od.OrderId
+                        join od in _orderdetailRepository.GetAll().Where(od => od.ExchangeCode == ExchangeCodeEnum.邮寄兑换 && od.Status == ExchangeStatus.未兑换) on o.Id equals od.OrderId
                         select new OrderListDto
                         {
                             Id = o.Id,

@@ -112,9 +112,12 @@ namespace  HC.DZWechat.Orders.Dtos
 		/// DeliveryAddress
 		/// </summary>
 		public string DeliveryAddress { get; set; }
+    }
 
-
-
-
+    public class ExchangeDtoInput
+    {
+        public Guid OrderId { get; set; }
+        public string OpenId { get; set; }
+        public Guid ShopId { get; set; }
     }
 }

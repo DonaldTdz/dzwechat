@@ -23,4 +23,9 @@ namespace HC.DZWechat.IntegralDetails.Dtos
         }
 
     }
+
+    public class GetWxIntegralDetailsInput: WxPagedInputDto
+    {
+        public string WxOpenId { get; set; }
+    }
 }
