@@ -20,6 +20,7 @@ using Abp.Application.Services.Dto;
 
 using HC.DZWechat.IntegralDetails.Dtos;
 using HC.DZWechat.IntegralDetails;
+using HC.DZWechat.Dtos;
 
 namespace HC.DZWechat.IntegralDetails
 {
@@ -79,6 +80,10 @@ namespace HC.DZWechat.IntegralDetails
         /// </summary>
         /// <returns></returns> 
         Task<List<IntegralDetailDto>> GetIntegralDetailByMonthAsync(int searchMonth);
-
+        Task SignInAsync(EntityDto<string> input);
+        Task<SignInDto> GetUserTodayIsSignIn(string WxOpenId);
+        Task<WxPagedResultDto<WXIntegralDetailListDto>> GetIntegralDetailListAsync(GetWxIntegralDetailsInput input);
+        Task<WxPagedResultDto<WXIntegralDetailListDto>> GetIntegralAllListAsync(GetWxIntegralDetailsInput input);
+        Task<decimal?> GetUserIntegralTotalAsync(EntityDto<string> input);
     }
 }

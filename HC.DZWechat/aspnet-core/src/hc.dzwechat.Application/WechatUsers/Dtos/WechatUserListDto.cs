@@ -150,6 +150,8 @@ namespace HC.DZWechat.WechatUsers.Dtos
     [AutoMapTo(typeof(WechatUser))]
     public class UserBindDto
     {
+        public string Phone { get; set; }
+        public string WxOpenId { get; set; }
         public string host { get; set; }
         public string OpenId { get; set; }
 

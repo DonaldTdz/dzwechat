@@ -55,7 +55,7 @@ namespace HC.DZWechat.Deliverys
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        Task CreateOrUpdate(CreateOrUpdateDeliveryInput input);
+        //Task CreateOrUpdate(CreateOrUpdateDeliveryInput input);
 
 
         /// <summary>
@@ -63,20 +63,15 @@ namespace HC.DZWechat.Deliverys
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        Task Delete(EntityDto<Guid> input);
+        Task WXDelete(EntityDto<Guid> input);
 
 
         /// <summary>
         /// 批量删除Delivery
         /// </summary>
         Task BatchDelete(List<Guid> input);
-
-
-		/// <summary>
-        /// 导出Delivery为excel表
-        /// </summary>
-        /// <returns></returns>
-		//Task<FileDto> GetToExcel();
-
+        Task<DeliveryListDto> WXCreateOrUpdate(DeliveryWXEditDto input);
+        Task<List<DeliveryListDto>> GetWxDeliveryListAsync(EntityDto<string> input);
+        Task<DeliveryListDto> GetWxDeliveryByIdAsync(EntityDto<Guid> input);
     }
 }

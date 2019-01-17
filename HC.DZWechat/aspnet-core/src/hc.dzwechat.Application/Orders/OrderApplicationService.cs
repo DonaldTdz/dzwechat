@@ -88,7 +88,8 @@ namespace HC.DZWechat.Orders
             u => u.Number.Contains(input.FilterText)
             || u.DeliveryName.Contains(input.FilterText)
             || u.DeliveryPhone.Contains(input.FilterText))
-                .WhereIf(input.Status.HasValue, v => v.Status == input.Status.Value);
+                .WhereIf(input.Status.HasValue, v => v.Status == input.Status.Value)
+                .WhereIf(input.IsUnMailing, u => _orderdetailRepository.GetAll().Any(d => d.OrderId == u.Id && d.Status == ExchangeStatus.未兑换 && d.ExchangeCode == ExchangeCodeEnum.邮寄兑换));
 
             var count = await query.CountAsync();
             var entityList = await query

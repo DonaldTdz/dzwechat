@@ -9,6 +9,7 @@ using HC.DZWechat.WechatUsers;
 using HC.DZWechat.OrderDetails;
 using HC.DZWechat.ScanExchange.Dtos;
 using HC.DZWechat.CommonDto;
+using HC.DZWechat.Exchanges;
 
 namespace HC.DZWechat.ScanExchange
 {
@@ -17,15 +18,18 @@ namespace HC.DZWechat.ScanExchange
         private readonly IRepository<Order, Guid> _repository;
         private readonly IRepository<WechatUser, Guid> _wechatuserRepository;
         private readonly IRepository<OrderDetail, Guid> _orderDetailRepository;
+        private readonly IRepository<Exchange, Guid> _exchangeRepository;
 
         public ScanExchangeManager(IRepository<Order, Guid> repository
             , IRepository<OrderDetail, Guid> orderDetailRepository
             , IRepository<WechatUser, Guid> wechatuserRepository
+            , IRepository<Exchange, Guid> exchangeRepository
         )
         {
             _repository = repository;
             _orderDetailRepository = orderDetailRepository;
             _wechatuserRepository = wechatuserRepository;
+            _exchangeRepository = exchangeRepository;
         }
 
 
@@ -85,13 +89,15 @@ namespace HC.DZWechat.ScanExchange
         /// </summary>
         /// <param name="orderId"></param>
         /// <returns></returns>
-        public async Task<APIResultDto> ExchangeGoods(Guid orderId)
+        public async Task<APIResultDto> ExchangeGoods(Guid orderId,string openId,Guid shopId)
         {
+            Guid userId =await _wechatuserRepository.GetAll().Where(v => v.OpenId == openId).Select(v => v.Id).FirstOrDefaultAsync();
             var orderDetails = await _orderDetailRepository.GetAll().Where(v => v.OrderId == orderId && v.Status == DZEnums.DZCommonEnums.ExchangeStatus.未兑换).ToListAsync();
             foreach (var item in orderDetails)
             {
                 item.Status = DZEnums.DZCommonEnums.ExchangeStatus.已兑换;
                 item.ExchangeTime = DateTime.Now;
+                await UpdateExchangeAsync(item.Id, shopId, userId);
             }
             bool isOk = await CheckedOrderStatus(orderId);
             if (isOk == true)
@@ -147,6 +153,25 @@ namespace HC.DZWechat.ScanExchange
                     Status = v.Status
                 }).FirstOrDefaultAsync();
             return result;
+        }
+
+
+        /// <summary>
+        /// 生成线下兑换记录
+        /// </summary>
+        /// <param name="orderDetailId"></param>
+        /// <param name="shopId"></param>
+        /// <param name="openId"></param>
+        /// <returns></returns>
+        protected virtual async Task UpdateExchangeAsync(Guid orderDetailId,Guid shopId,Guid userId)
+        {
+            var entity = new Exchange();
+            entity.CreationTime = DateTime.Now;
+            entity.ExchangeCode = DZEnums.DZCommonEnums.ExchangeCodeEnum.线下兑换;
+            entity.ShopId = shopId;
+            entity.WechatUserId = userId;
+            entity.OrderDetailId = orderDetailId;
+            await _exchangeRepository.InsertAsync(entity);
         }
     }
 }

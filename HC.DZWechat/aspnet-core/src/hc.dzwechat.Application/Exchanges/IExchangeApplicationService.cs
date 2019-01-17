@@ -88,7 +88,7 @@ namespace HC.DZWechat.Exchanges
         /// <returns></returns>
         Task<PagedResultDto<ExchangeListDto>> GetExchangeDetail(ExchangeInput input);
 
-        Task<APIResultDto> ExchangeGoods(OrderEditDto input);
+        Task<APIResultDto> ExchangeGoods(ExchangeDtoInput input);
         Task<OrderDto> GetOrderByIdAsync(Guid orderId);
 
         /// <summary>

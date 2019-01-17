@@ -6,9 +6,11 @@ using Abp.Domain.Entities.Auditing;
 using System.ComponentModel.DataAnnotations;
 using HC.DZWechat.Exchanges;
 using HC.DZWechat.DZEnums.DZCommonEnums;
+using Abp.AutoMapper;
 
 namespace HC.DZWechat.Exchanges.Dtos
 {
+    [AutoMapFrom(typeof(Exchange))]
     public class ExchangeListDto : EntityDto<Guid>, IHasCreationTime
     {
 

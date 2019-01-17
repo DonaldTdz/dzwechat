@@ -1,6 +1,9 @@
 <page-header [title]="'订单管理'"></page-header>
 <nz-card>
     <div nz-row class="mb-md">
+        <div nz-col nzSpan="4" style="padding-right:10px;">
+            <label style="margin-top: 5px;" nz-checkbox [(ngModel)]="isUnMailing">待邮寄商品</label>
+        </div>
         <div nz-col nzSpan="6" style="padding-right:10px;">
             <nz-select style="width: 100%;" [(ngModel)]="serchType" nzPlaceHolder="请选择">
                 <nz-option *ngFor="let o of statusTypes" [nzValue]="o.value" [nzLabel]="o.text"></nz-option>
@@ -14,7 +17,7 @@
                 <button nz-button nzType="primary" [nzLoading]="isTableLoading" (click)="refreshData()" nzSearch>搜索</button>
             </ng-template>
         </div>
-        <div nz-col nzSpan="6" style="text-align:right;">
+        <div nz-col nzSpan="2" style="text-align:right;">
             <button nz-button (click)="resetSearch()" nzShape="circle" nz-tooltip nzPlacement="top" nzTitle="刷新">
                 <i class="anticon anticon-reload"></i>
             </button>
@@ -45,7 +48,12 @@
                 <td>{{item.nickName}}</td>
                 <td>{{item.phone}}</td>
                 <td>{{item.integral}}</td>
-                <td>{{item.statusName}}</td>
+                <td>
+                    <nz-badge *ngIf="item.status == 1" [nzStatus]="'warning'" [nzText]="'待支付'"></nz-badge>
+                    <nz-badge *ngIf="item.status == 2" [nzStatus]="'processing'" [nzText]="'已支付'"></nz-badge>
+                    <nz-badge *ngIf="item.status == 3" [nzStatus]="'success'" [nzText]="'已完成'"></nz-badge>
+                    <nz-badge *ngIf="item.status == 4" [nzStatus]="'default'" [nzText]="'已取消'"></nz-badge>
+                </td>
                 <td>{{item.payTime| _date}}</td>
                 <!-- <td>{{item.completeTime| _date}}</td> -->
                 <td>{{item.deliveryName}}</td>
