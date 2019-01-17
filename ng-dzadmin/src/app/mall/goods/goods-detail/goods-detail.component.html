@@ -11,7 +11,8 @@
                 <nz-form-item nz-row>
                     <nz-form-label nz-col [nzSm]="4" nzRequired>商品名称</nz-form-label>
                     <nz-form-control [nzSm]="20" nzHasFeedback>
-                        <input nz-input name="specification" maxlength="200" #specification="ngModel" [(ngModel)]="goods.specification" [placeholder]="'请输入商品名称'" required>
+                        <input nz-input name="specification" maxlength="200" #specification="ngModel" [(ngModel)]="goods.specification"
+                            [placeholder]="'请输入商品名称'" required>
                         <nz-form-explain *ngIf="specification.control.dirty&&specification.control.errors">
                             <ng-container *ngIf="specification.control.hasError('required')">请输入商品名称</ng-container>
                         </nz-form-explain>
@@ -20,7 +21,8 @@
                 <nz-form-item nz-row>
                     <nz-form-label nz-col [nzSm]="4" nzRequired>商品类型</nz-form-label>
                     <nz-form-control [nzSm]="20" nzHasFeedback>
-                        <nz-select [nzPlaceHolder]="'请选择商品类型'" name="categoryTypes" [(ngModel)]="goods.categoryId" [nzShowSearch]="true">
+                        <nz-select [nzPlaceHolder]="'请选择商品类型'" name="categoryTypes" [(ngModel)]="goods.categoryId"
+                            [nzShowSearch]="true">
                             <nz-option *ngFor="let i of categoryTypes" [nzLabel]="i.text" [nzValue]="i.value">
                             </nz-option>
                         </nz-select>
@@ -29,7 +31,8 @@
                 <nz-form-item nz-row>
                     <nz-form-label nz-col [nzSm]="4" nzRequired>所需积分</nz-form-label>
                     <nz-form-control [nzSm]="20" nzHasFeedback>
-                        <input nz-input name="integral" #integral="ngModel" [(ngModel)]="goods.integral" pattern="^(?:[1-9]\d*|0)(?:\.\d{1,2})?$" [placeholder]="'请输入兑换所需积分'" required>
+                        <input nz-input name="integral" #integral="ngModel" [(ngModel)]="goods.integral" pattern="^(?:[1-9]\d*|0)(?:\.\d{1,2})?$"
+                            [placeholder]="'请输入兑换所需积分'" required>
                         <nz-form-explain *ngIf="integral.control.dirty&&integral.control.errors">
                             <ng-container *ngIf="specification.control.hasError('required')">请输入兑换所需积分</ng-container>
                             <ng-container *ngIf="integral.control.hasError('pattern')">请输入正确的数字</ng-container>
@@ -40,15 +43,18 @@
                     <nz-form-label nz-col [nzSm]="4" nzRequired>商品图片</nz-form-label>
                     <nz-form-control [nzSm]="20" nzHasFeedback>
                         <div class="clearfix">
-                            <nz-upload nzListType="picture-card" [(nzFileList)]="fileList" [nzShowButton]="'false'" [nzRemove]="handleRemove" [nzPreview]="handlePreview">
+                            <nz-upload nzListType="picture-card" [(nzFileList)]="fileList" [nzShowButton]="'false'"
+                                [nzRemove]="handleRemove" [nzPreview]="handlePreview">
                             </nz-upload>
-                            <div *ngIf="fileList.length < 4" (click)="goCreate()" class="ng-star-inserted ant-upload ant-upload-select ant-upload-select-picture-card" ng-reflect-ng-class="ant-upload,ant-upload-select,a">
+                            <div *ngIf="fileList.length < 4" (click)="goCreate()" class="ng-star-inserted ant-upload ant-upload-select ant-upload-select-picture-card"
+                                ng-reflect-ng-class="ant-upload,ant-upload-select,a">
                                 <div class="ant-upload" tabindex="0" role="button">
                                     <i nz-icon type="plus"></i>
                                     <div class="ant-upload-text">添加图片</div>
                                 </div>
                             </div>
-                            <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null" (nzOnCancel)="previewVisible=false">
+                            <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null"
+                                (nzOnCancel)="previewVisible=false">
                                 <ng-template #modalContent>
                                     <img [src]="previewImage" [ngStyle]="{ 'width': '460px' }" />
                                 </ng-template>
@@ -60,23 +66,26 @@
                 <nz-form-item nz-row>
                     <nz-form-label nz-col [nzSm]="4">商品单位</nz-form-label>
                     <nz-form-control [nzSm]="20" nzHasFeedback>
-                        <input nz-input name="unit" #unit="ngModel" [(ngModel)]="goods.unit" maxlength="30" [placeholder]="'请输入商品单位'">
+                        <input nz-input name="unit" #unit="ngModel" [(ngModel)]="goods.unit" maxlength="30"
+                            [placeholder]="'请输入商品单位'">
                     </nz-form-control>
                 </nz-form-item>
                 <nz-form-item nz-row>
                     <nz-form-label nz-col [nzSm]="4">限制总量</nz-form-label>
                     <nz-form-control [nzSm]="20" nzHasFeedback>
-                        <input nz-input name="stock" #stock="ngModel" [(ngModel)]="goods.stock" pattern="^([1-9]\d*|[0]{1,1})$" [placeholder]="'请输入商品库存'">
+                        <input nz-input name="stock" #stock="ngModel" [(ngModel)]="goods.stock" pattern="^([1-9]\d*|[0]{1,1})$"
+                            [placeholder]="'请输入商品总量'">
                         <nz-form-explain *ngIf="stock.control.dirty&&stock.control.errors">
                             <ng-container *ngIf="stock.control.hasError('pattern')">请输入正确的数字</ng-container>
                         </nz-form-explain>
+                        <nz-alert nzType="info" nzMessage="不填则商品兑换不限总量" nzShowIcon></nz-alert>
                     </nz-form-control>
-                    <nz-alert nzType="info" nzMessage="如果不填则商品兑换不限量" nzShowIcon></nz-alert>
                 </nz-form-item>
                 <nz-form-item nz-row>
                     <nz-form-label nz-col [nzSm]="4">条码</nz-form-label>
                     <nz-form-control [nzSm]="20" nzHasFeedback>
-                        <input nz-input name="barCode" #barCode="ngModel" [(ngModel)]="goods.barCode" maxlength="50" pattern="^\+?[1-9][0-9]*$" [placeholder]="'请输入商品条码'">
+                        <input nz-input name="barCode" #barCode="ngModel" [(ngModel)]="goods.barCode" maxlength="50"
+                            pattern="^\+?[1-9][0-9]*$" [placeholder]="'请输入商品条码'">
                         <nz-form-explain *ngIf="barCode.control.dirty&&barCode.control.errors">
                             <ng-container *ngIf="barCode.control.hasError('pattern')">请输入正确的数字</ng-container>
                         </nz-form-explain>
@@ -91,22 +100,26 @@
                 <nz-form-item nz-row>
                     <nz-form-label nz-col [nzSm]="4">小程序首页轮播</nz-form-label>
                     <nz-form-control [nzSm]="20">
-                        <nz-switch name="isBanner" #isBanner="ngModel" [(ngModel)]="goods.isBanner" nzCheckedChildren="是" nzUnCheckedChildren="否"></nz-switch>
+                        <nz-switch name="isBanner" #isBanner="ngModel" [(ngModel)]="goods.isBanner" nzCheckedChildren="是"
+                            nzUnCheckedChildren="否"></nz-switch>
                     </nz-form-control>
                 </nz-form-item>
                 <nz-form-item nz-row *ngIf="goods.isBanner">
                     <nz-form-label nz-col [nzSm]="4">轮播图片</nz-form-label>
                     <nz-form-control [nzSm]="20" nzHasFeedback>
                         <div class="clearfix">
-                            <nz-upload nzListType="picture-card" [(nzFileList)]="bannerFile" [nzShowButton]="'false'" [nzRemove]="bannerRemove" [nzPreview]="bannerPreview">
+                            <nz-upload nzListType="picture-card" [(nzFileList)]="bannerFile" [nzShowButton]="'false'"
+                                [nzRemove]="bannerRemove" [nzPreview]="bannerPreview">
                             </nz-upload>
-                            <div *ngIf="bannerFile.length < 1" (click)="goBanner()" class="ng-star-inserted ant-upload ant-upload-select ant-upload-select-picture-card" ng-reflect-ng-class="ant-upload,ant-upload-select,a">
+                            <div *ngIf="bannerFile.length < 1" (click)="goBanner()" class="ng-star-inserted ant-upload ant-upload-select ant-upload-select-picture-card"
+                                ng-reflect-ng-class="ant-upload,ant-upload-select,a">
                                 <div class="ant-upload" tabindex="0" role="button">
                                     <i nz-icon type="plus"></i>
                                     <div class="ant-upload-text">添加图片</div>
                                 </div>
                             </div>
-                            <nz-modal [nzVisible]="bannerVisible" [nzContent]="modalContent" [nzFooter]="null" (nzOnCancel)="bannerVisible=false">
+                            <nz-modal [nzVisible]="bannerVisible" [nzContent]="modalContent" [nzFooter]="null"
+                                (nzOnCancel)="bannerVisible=false">
                                 <ng-template #modalContent>
                                     <img [src]="bannerImage" [ngStyle]="{ 'width': '460px' }" />
                                 </ng-template>
@@ -117,17 +130,20 @@
                 <nz-form-item nz-row>
                     <nz-form-label nz-col [nzSm]="4">商品描述</nz-form-label>
                     <nz-form-control [nzSm]="20" nzHasFeedback>
-                        <textarea nz-input row="3" name="desc" #desc="ngModel" [(ngModel)]="goods.desc" maxlength="500" [placeholder]="'请输入商品描述信息'"></textarea>
+                        <textarea nz-input row="3" name="desc" #desc="ngModel" [(ngModel)]="goods.desc" maxlength="500"
+                            [placeholder]="'请输入商品描述信息'"></textarea>
                     </nz-form-control>
                 </nz-form-item>
             </div>
         </div>
         <footer-toolbar errorCollect>
             <button nz-button [nzType]="'default'" type="button" (click)="return()">返回</button>
-            <button nz-button *ngIf="goods.id && isOnline" type="button" [nzType]="'danger'" (click)="offline()" [nzLoading]="loading" [disabled]="!validateForm.valid || loading">
+            <button nz-button *ngIf="goods.id && isOnline" type="button" [nzType]="'danger'" (click)="offline()"
+                [nzLoading]="loading" [disabled]="!validateForm.valid || loading">
                 下架
             </button>
-            <button nz-button *ngIf="goods.id && !isOnline" [nzType]="'primary'" type="button" (click)="online()" [nzLoading]="loading" [disabled]="!validateForm.valid || loading">
+            <button nz-button *ngIf="goods.id && !isOnline" [nzType]="'primary'" type="button" (click)="online()"
+                [nzLoading]="loading" [disabled]="!validateForm.valid || loading">
                 上架
             </button>
             <button nz-button [nzType]="'primary'" type="submit" [nzLoading]="loading" [disabled]="!validateForm.valid || loading">
