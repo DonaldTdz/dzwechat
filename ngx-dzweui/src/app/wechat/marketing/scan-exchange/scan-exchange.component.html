@@ -2,7 +2,7 @@
     <div class="weui-cells" *ngIf="shop" style="margin-top: 0px;">
         <div class="weui-cell" style=" padding-bottom: 0px; padding-top: 0px; padding-left: 0px; padding-right: 0px;">
             <div style="text-align: center; width: 100%;">
-                <img src="./assets/images/swiper-1.png" style="width:100%;">
+                <img src="./assets/images/scan-exchange.png" style="width:100%;">
             </div>
         </div>
         <div class="weui-cell">
@@ -21,7 +21,8 @@
     <div class="weui-cells__title"></div>
     <div class="weui-cell" style="background-color:white">
         <div class="weui-cell__bd">
-            <input disabled="disabled" class="weui-input" type="text" [(ngModel)]="order.number" name="number" placeholder="兑换码扫一扫">
+            <input disabled="disabled" class="weui-input" type="text" [(ngModel)]="order.number" name="number"
+                placeholder="兑换码扫一扫">
         </div>
         <a class="weui-cell__ft weui-cell_access" (click)="scanBarCode()">
             <!-- <a class="weui-cell__ft weui-cell_access" (click)="setOrderBarCode('7AD7FEA6-8B4A-428D-A6AC-1CBCB39F5120')"> -->
@@ -73,7 +74,8 @@
         <weui-loadmore type="line" *ngIf="!orderDetailList || orderDetailList.length == 0"></weui-loadmore>
     </div>
     <div *ngIf="orderBarCode" class="weui-btn-area">
-        <button class="weui-btn weui-btn_primary" [disabled]="!orderDetailList || orderDetailList.length == 0" (click)="onShowBySrv()" [ngClass]="{'weui-btn_disabled': !orderDetailList || orderDetailList == 0}">确定兑换</button>
+        <button class="weui-btn weui-btn_primary" [disabled]="!orderDetailList || orderDetailList.length == 0" (click)="onShowBySrv()"
+            [ngClass]="{'weui-btn_disabled': !orderDetailList || orderDetailList == 0}">确定兑换</button>
     </div>
     <weui-dialog #delconfirm [config]="config"></weui-dialog>
 </Page>

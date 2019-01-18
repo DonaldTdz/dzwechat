@@ -13,7 +13,7 @@ export class OrderComponent extends PagedListingComponentBase<any> {
     isUnMailing: boolean = false;
     statusTypes = [
         { value: 0, text: '全部' },
-        { value: 1, text: '待支付' },
+        // { value: 1, text: '待支付' },
         { value: 2, text: '已支付' },
         { value: 3, text: '已完成' },
         { value: 4, text: '已取消' }

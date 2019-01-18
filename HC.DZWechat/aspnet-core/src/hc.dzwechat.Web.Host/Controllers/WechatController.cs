@@ -24,8 +24,8 @@ namespace HC.DZWechat.Web.Host.Controllers
         public static readonly string EncodingAESKey = Config.SenparcWeixinSetting.EncodingAESKey;//与微信公众账号后台的EncodingAESKey设置保持一致，区分大小写。
         public static readonly string AppId = Config.SenparcWeixinSetting.WeixinAppId;//与微信公众账号后台的AppId设置保持一致，区分大小写。
         public static readonly string AppSecret = Config.SenparcWeixinSetting.WeixinAppSecret;//与微信公众账号后台的AppId设置保持一致，区分大小写。
-        //private string host = "http://localhost:21021";
-        private string host = "http://hcwx.sayequ.me";
+        private string host = "http://localhost:21021";
+        //private string host = "http://hcwx.sayequ.me";
         private readonly IConfigurationRoot _appConfiguration;
         private IScanExchangeManager _scanExchangeManager;
 
@@ -97,7 +97,7 @@ namespace HC.DZWechat.Web.Host.Controllers
         public IActionResult GetCurrentUserOpenId()
         {
             APIResultDto result = new APIResultDto();
-            //UserOpenId = "666666";
+            UserOpenId = "666666";
             //UserOpenId = "oL5qB1m9WA2oNqtszJOJWrcpErzk";
             if (string.IsNullOrEmpty(UserOpenId))
             {

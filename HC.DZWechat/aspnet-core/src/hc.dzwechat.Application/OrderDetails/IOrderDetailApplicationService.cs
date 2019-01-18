@@ -70,6 +70,6 @@ namespace HC.DZWechat.OrderDetails
         /// 批量删除OrderDetail
         /// </summary>
         Task BatchDelete(List<Guid> input);
-        Task<List<WXOrderDetailListDto>> GetOrderDetailListByIdAsync(GetOrderDetailsInput input);
+        Task<WXOrderDetailListWitStatusDto> GetOrderDetailListByIdAsync(GetOrderDetailsInput input);
     }
 }

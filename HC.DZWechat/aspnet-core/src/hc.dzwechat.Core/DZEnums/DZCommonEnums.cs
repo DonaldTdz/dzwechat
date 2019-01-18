@@ -31,7 +31,8 @@ namespace HC.DZWechat.DZEnums.DZCommonEnums
         绑定会员 = 1,
         每日签到 = 2,
         VIP系统导入 = 3,
-        商品兑换 = 4
+        商品兑换 = 4,
+        取消订单 =5
     }
 
     public enum OrderStatus

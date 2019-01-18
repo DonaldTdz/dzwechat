@@ -335,7 +335,7 @@ namespace HC.DZWechat.Orders
         /// 保存订单并检查
         /// </summary>
         [AbpAllowAnonymous]
-        public async Task<APIResultDto> SaveOrderAsync(SaveOrderInput input)
+        public async Task<CommonDto.APIResultDto> SaveOrderAsync(SaveOrderInput input)
         {
             var user = await _wechatUserRepository.GetAll().Where(w => w.WxOpenId == input.WxOpenId).FirstAsync();
             var shopCartList = await _shopCartRepository.GetAll().Where(s => s.UserId == user.Id && s.IsSelected == true).ToListAsync();
@@ -348,19 +348,19 @@ namespace HC.DZWechat.Orders
             var goods = goodsList.FirstOrDefault(g => g.IsAction == false);
             if (goods != null)
             {
-                return new APIResultDto() { Code = 710, Msg = "商品[" + goods.Specification + "]已下架，请重新下单" };
+                return new CommonDto.APIResultDto() { Code = 710, Msg = "商品[" + goods.Specification + "]已下架，请重新下单" };
             }
             //验证库存
             var goodsStock = goodsList.FirstOrDefault(g => shopCartList.Any(s => s.GoodsId == g.Id && g.Stock.HasValue && s.Num > g.Stock));
             if (goodsStock != null)
             {
-                return new APIResultDto() { Code = 720, Msg = "商品[" + goodsStock.Specification + "]库存不足，请重新下单" };
+                return new CommonDto.APIResultDto() { Code = 720, Msg = "商品[" + goodsStock.Specification + "]库存不足，请重新下单" };
             }
             //验证用户积分
             var totalPrice = shopCartList.Sum(s => s.Integral * s.Num);
             if (totalPrice > user.Integral)
             {
-                return new APIResultDto() { Code = 730, Msg = "积分余额不足" };
+                return new CommonDto.APIResultDto() { Code = 730, Msg = "积分余额不足" };
             }
 
             #endregion
@@ -439,7 +439,53 @@ namespace HC.DZWechat.Orders
 
             #endregion
 
-            return new APIResultDto() { Code = 0, Msg = "支付成功", Data = new { OrderNo = orderId, TotalPrice = totalPrice } };
+            return new CommonDto.APIResultDto() { Code = 0, Msg = "支付成功", Data = new { OrderNo = orderId, TotalPrice = totalPrice } };
+        }
+
+        /// <summary>
+        /// 取消订单
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [AbpAllowAnonymous]
+        public async Task CancelOrderByIdAsync(SaveOrderInput input)
+        {
+            var user = await _wechatUserRepository.GetAll().Where(w => w.WxOpenId == input.WxOpenId).FirstAsync();
+            var order = await _entityRepository.GetAsync(input.OrderId);
+            var orderDetail = await _orderdetailRepository.GetAll().Where(v => v.OrderId == input.OrderId).ToListAsync();
+            //更新订单状态
+            order.CancelTime = DateTime.Now;
+            order.Remark = "用户取消订单";
+            order.Status = OrderStatus.已取消;
+            await _entityRepository.UpdateAsync(order);
+            //返回用户积分
+            user.Integral += order.Integral;
+            await _wechatUserRepository.UpdateAsync(user);
+            //新增积分明细
+            var integralDetail = new IntegralDetail();
+            integralDetail.RefId = order.Id.ToString();
+            integralDetail.UserId = user.Id;
+            integralDetail.InitialIntegral = 0;
+            integralDetail.Integral = order.Integral;
+            integralDetail.FinalIntegral = order.Integral;
+            integralDetail.Type = IntegralType.取消订单;
+            integralDetail.Desc = $"取消订单返回积分*{order.Integral}";
+            await _integralRepository.InsertAsync(integralDetail);
+            //修改商品库存,销量
+            foreach (var item in orderDetail)
+            {
+              var entity = await _goodsRepository.GetAsync(item.GoodsId);
+                if (entity.Stock.HasValue)
+                {
+                    entity.Stock += item.Num;
+                }
+                if (!entity.SellCount.HasValue)
+                {
+                    entity.SellCount = 0;
+                }
+                entity.SellCount -= item.Num;
+                await _goodsRepository.UpdateAsync(entity);
+            }
         }
     }
 }

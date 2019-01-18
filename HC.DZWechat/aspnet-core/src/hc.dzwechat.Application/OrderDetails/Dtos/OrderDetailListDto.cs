@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using HC.DZWechat.OrderDetails;
 using HC.DZWechat.DZEnums.DZCommonEnums;
 using Abp.AutoMapper;
+using System.Collections.Generic;
 
 namespace HC.DZWechat.OrderDetails.Dtos
 {
@@ -138,8 +139,14 @@ namespace HC.DZWechat.OrderDetails.Dtos
         /// ExchangeTime
         /// </summary>
         public DateTime? ExchangeTime { get; set; }
-
-
+        public string ExchangeTimeFormat
+        {
+            get
+            {
+                return ExchangeTime.ToString();
+            }
+        }
+        
 
         /// <summary>
         /// CreationTime
@@ -161,5 +168,14 @@ namespace HC.DZWechat.OrderDetails.Dtos
         }
 
         public string PhotoUrl { get; set; }
+
+        public string LogisticsCompany { get; set; }
+        public string LogisticsNo { get; set; }
+    }
+
+    public class WXOrderDetailListWitStatusDto
+    {
+        public List<WXOrderDetailListDto> List { get; set; }
+        public bool IsCancel { get; set; }
     }
 }
