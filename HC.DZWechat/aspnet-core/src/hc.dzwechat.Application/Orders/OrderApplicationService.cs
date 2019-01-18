@@ -26,6 +26,11 @@ using HC.DZWechat.IntegralDetails;
 using HC.DZWechat.DZEnums.DZCommonEnums;
 using HC.DZWechat.OrderDetails;
 using HC.DZWechat.Dtos;
+using HC.DZWechat.CommonDto;
+using HC.DZWechat.ShopCarts;
+using HC.DZWechat.Deliverys;
+using HC.DZWechat.Goods;
+using HC.DZWechat.GenerateCodes;
 
 namespace HC.DZWechat.Orders
 {
@@ -40,6 +45,10 @@ namespace HC.DZWechat.Orders
         private readonly IRepository<IntegralDetail, Guid> _integralRepository;
         private readonly IRepository<OrderDetail, Guid> _orderdetailRepository;
 
+        private readonly IRepository<ShopCart, Guid> _shopCartRepository;
+        private readonly IRepository<Delivery, Guid> _deliveryRepository;
+        private readonly IRepository<ShopGoods, Guid> _goodsRepository;
+
         private readonly IOrderManager _entityManager;
 
 
@@ -49,7 +58,11 @@ namespace HC.DZWechat.Orders
         public OrderAppService(
         IRepository<Order, Guid> entityRepository
         , IOrderManager entityManager, IRepository<WechatUser, Guid> wechatUserRepository
-        , IRepository<IntegralDetail, Guid> integralRepository, IRepository<OrderDetail, Guid> orderdetailRepository
+        , IRepository<IntegralDetail, Guid> integralRepository
+        , IRepository<OrderDetail, Guid> orderdetailRepository
+        , IRepository<ShopCart, Guid> shopCartRepository
+        , IRepository<Delivery, Guid> deliveryRepository
+        , IRepository<ShopGoods, Guid> goodsRepository
         )
         {
             _entityRepository = entityRepository;
@@ -57,6 +70,9 @@ namespace HC.DZWechat.Orders
             _wechatUserRepository = wechatUserRepository;
             _integralRepository = integralRepository;
             _orderdetailRepository = orderdetailRepository;
+            _shopCartRepository = shopCartRepository;
+            _deliveryRepository = deliveryRepository;
+            _goodsRepository = goodsRepository;
         }
 
 
@@ -280,13 +296,13 @@ namespace HC.DZWechat.Orders
         public async Task<WxPagedResultDto<OrderListDto>> GetOrderListAsync(GetWxOrderInput input)
         {
             Guid userId = await _wechatUserRepository.GetAll().Where(v => v.WxOpenId == input.WxOpenId).Select(v => v.Id).FirstOrDefaultAsync();
-            var query = _entityRepository.GetAll().Where(e => e.UserId == userId).WhereIf(input.status.HasValue,v=>v.Status ==input.status).Select(e => new OrderListDto()
+            var query = _entityRepository.GetAll().Where(e => e.UserId == userId).WhereIf(input.status.HasValue, v => v.Status == input.status).Select(e => new OrderListDto()
             {
                 Id = e.Id,
                 CreationTime = e.CreationTime,
                 Integral = e.Integral,
-                Number =e.Number,
-                Status =e.Status         
+                Number = e.Number,
+                Status = e.Status
             });
             var count = await query.CountAsync();
             var dataList = await query.OrderByDescending(o => o.CreationTime)
@@ -307,6 +323,123 @@ namespace HC.DZWechat.Orders
         {
             var result = await _entityRepository.GetAsync(input.OrderId);
             return result.MapTo<OrderListDto>();
+        }
+        private string GetOrderCode()
+        {
+            GenerateCode gserver = new GenerateCode(0, 0);
+            string code = "OR" + gserver.nextId().ToString();
+            return code;
+        }
+
+        /// <summary>
+        /// 保存订单并检查
+        /// </summary>
+        [AbpAllowAnonymous]
+        public async Task<APIResultDto> SaveOrderAsync(SaveOrderInput input)
+        {
+            var user = await _wechatUserRepository.GetAll().Where(w => w.WxOpenId == input.WxOpenId).FirstAsync();
+            var shopCartList = await _shopCartRepository.GetAll().Where(s => s.UserId == user.Id && s.IsSelected == true).ToListAsync();
+            var goodsIds = shopCartList.Select(s => s.GoodsId).ToArray();
+            var goodsList = await _goodsRepository.GetAll().Where(g => goodsIds.Contains(g.Id)).ToListAsync();
+
+            #region 验证
+
+            //验证是否下架
+            var goods = goodsList.FirstOrDefault(g => g.IsAction == false);
+            if (goods != null)
+            {
+                return new APIResultDto() { Code = 710, Msg = "商品[" + goods.Specification + "]已下架，请重新下单" };
+            }
+            //验证库存
+            var goodsStock = goodsList.FirstOrDefault(g => shopCartList.Any(s => s.GoodsId == g.Id && g.Stock.HasValue && s.Num > g.Stock));
+            if (goodsStock != null)
+            {
+                return new APIResultDto() { Code = 720, Msg = "商品[" + goodsStock.Specification + "]库存不足，请重新下单" };
+            }
+            //验证用户积分
+            var totalPrice = shopCartList.Sum(s => s.Integral * s.Num);
+            if (totalPrice > user.Integral)
+            {
+                return new APIResultDto() { Code = 730, Msg = "积分余额不足" };
+            }
+
+            #endregion
+
+            #region 下单
+
+            //获取收货地址
+            var delivery = await _deliveryRepository.GetAsync(input.DeliveryId);
+            //保存订单
+            var order = new Order();
+            order.Number = GetOrderCode();
+            order.NickName = user.NickName;
+            order.PayTime = DateTime.Now;
+            order.Phone = user.Phone;
+            order.Remark = input.Remark;
+            order.Status = OrderStatus.已支付;
+            order.UserId = user.Id;
+            order.Integral = totalPrice;
+            order.DeliveryAddress = delivery.Address;
+            order.DeliveryName = delivery.Name;
+            order.DeliveryPhone = delivery.Phone;
+            var orderId = await _entityRepository.InsertAndGetIdAsync(order);
+            await CurrentUnitOfWork.SaveChangesAsync();
+
+            //保存订单明细
+            foreach (var item in shopCartList)
+            {
+                var orderDetail = new OrderDetail();
+                orderDetail.ExchangeCode = item.ExchangeCode;
+                orderDetail.GoodsId = item.GoodsId;
+                orderDetail.Integral = item.Integral;
+                orderDetail.Num = item.Num;
+                orderDetail.OrderId = orderId;
+                orderDetail.Specification = item.Specification;
+                orderDetail.Status = ExchangeStatus.未兑换;
+                orderDetail.Unit = item.Unit;
+                await _orderdetailRepository.InsertAsync(orderDetail);
+
+                var editGoods = goodsList.First(g => g.Id == item.GoodsId);
+                //减库存
+                if (editGoods.Stock.HasValue)
+                {
+                    editGoods.Stock = (editGoods.Stock - item.Num);
+                }
+                //加销量
+                editGoods.SellCount = (editGoods.SellCount + item.Num);
+            }
+
+            //减积分
+            var initialIntegral = user.Integral;//初始积分
+            user.Integral = (user.Integral - totalPrice);
+
+            //积分明细
+            await _integralRepository.InsertAsync(new IntegralDetail()
+            {
+                InitialIntegral = initialIntegral,
+                Integral = totalPrice * -1,
+                FinalIntegral = user.Integral,
+                RefId = orderId.ToString(),
+                Type = IntegralType.商品兑换,
+                UserId = user.Id,
+                Desc = "兑换商品消耗，订单编号[" + order.Number + "]"
+            });
+
+            //删除购物车
+            foreach (var item in shopCartList)
+            {
+                await _shopCartRepository.DeleteAsync(item);
+            }
+
+            await CurrentUnitOfWork.SaveChangesAsync();
+
+            #endregion
+
+            #region 消息通知 运营管理员 积分消耗通知用户
+
+            #endregion
+
+            return new APIResultDto() { Code = 0, Msg = "支付成功", Data = new { OrderNo = orderId, TotalPrice = totalPrice } };
         }
     }
 }

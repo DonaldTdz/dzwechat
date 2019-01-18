@@ -28,13 +28,13 @@ namespace HC.DZWechat.Goods.DomainService
     public class GoodManager :DZWechatDomainServiceBase, IGoodManager
     {
 		
-		private readonly IRepository<Good,Guid> _repository;
+		private readonly IRepository<ShopGoods,Guid> _repository;
 
 		/// <summary>
 		/// Good的构造方法
 		///</summary>
 		public GoodManager(
-			IRepository<Good, Guid> repository
+			IRepository<ShopGoods, Guid> repository
 		)
 		{
 			_repository =  repository;

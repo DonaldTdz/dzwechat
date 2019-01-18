@@ -21,6 +21,7 @@ using Abp.Application.Services.Dto;
 using HC.DZWechat.Orders.Dtos;
 using HC.DZWechat.Orders;
 using HC.DZWechat.Dtos;
+using HC.DZWechat.CommonDto;
 
 namespace HC.DZWechat.Orders
 {
@@ -37,10 +38,10 @@ namespace HC.DZWechat.Orders
         Task<PagedResultDto<OrderListDto>> GetPaged(GetOrdersInput input);
 
 
-		/// <summary>
-		/// 通过指定id获取OrderListDto信息
-		/// </summary>
-		Task<OrderListDto> GetById(Guid id);
+        /// <summary>
+        /// 通过指定id获取OrderListDto信息
+        /// </summary>
+        Task<OrderListDto> GetById(Guid id);
 
 
         /// <summary>
@@ -87,5 +88,7 @@ namespace HC.DZWechat.Orders
         Task<ProcesseingOrderListDto> GetOrderTopSix();
         Task<WxPagedResultDto<OrderListDto>> GetOrderListAsync(GetWxOrderInput input);
         Task<OrderListDto> GetOrderByIdAsync(GetWxOrderInput input);
+
+        Task<APIResultDto> SaveOrderAsync(SaveOrderInput input);
     }
 }

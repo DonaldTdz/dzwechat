@@ -35,7 +35,7 @@ namespace HC.DZWechat.Goods
     [AbpAuthorize]
     public class GoodAppService : DZWechatAppServiceBase, IGoodAppService
     {
-        private readonly IRepository<Good, Guid> _entityRepository;
+        private readonly IRepository<ShopGoods, Guid> _entityRepository;
         private readonly IRepository<Category> _categoryRepository;
         private readonly IGoodManager _entityManager;
         private readonly IConfigurationRoot _appConfiguration;
@@ -46,7 +46,7 @@ namespace HC.DZWechat.Goods
         /// 构造函数 
         ///</summary>
         public GoodAppService(
-        IRepository<Good, Guid> entityRepository
+        IRepository<ShopGoods, Guid> entityRepository
         , IRepository<Category> categoryRepository
         , IGoodManager entityManager
         , IHostingEnvironment env
@@ -198,7 +198,7 @@ namespace HC.DZWechat.Goods
         protected virtual async Task<GoodListDto> Create(GoodEditDto input)
         {
             input.SellCount = 0;
-            var entity = input.MapTo<Good>();
+            var entity = input.MapTo<ShopGoods>();
             entity = await _entityRepository.InsertAsync(entity);
             await CurrentUnitOfWork.SaveChangesAsync();
             return entity.MapTo<GoodListDto>();
@@ -294,10 +294,15 @@ namespace HC.DZWechat.Goods
         [AbpAllowAnonymous]
         public async Task<WxPagedResultDto<GoodsGridDto>> GetSearchGoodsAsync(GoodsSearchInputDto input)
         {
+            var newData = DateTime.Today.AddDays(-60);//近60天上新的产品
             var query = _entityRepository.GetAll().Where(e => e.IsAction == true && e.Stock != 0)
                 .WhereIf(!string.IsNullOrEmpty(input.KeyWord), e => e.Specification.Contains(input.KeyWord) || e.Desc.Contains(input.KeyWord))
-                .WhereIf(input.CategoryId != 0, e => e.CategoryId == input.CategoryId);
-
+                .WhereIf(input.CategoryId != 0, e => e.CategoryId == input.CategoryId)
+                .WhereIf(input.CateCode == "new", e => e.CreationTime >= newData);
+            if (input.CateCode == "new")
+            {
+                input.SortType = SortTypeEnum.News;
+            }
             switch (input.SortType)
             {
                 case SortTypeEnum.None:
@@ -323,6 +328,11 @@ namespace HC.DZWechat.Goods
                 case SortTypeEnum.PriceDesc:
                     {
                         query = query.OrderByDescending(q => q.Integral);
+                    }
+                    break;
+                case SortTypeEnum.News:
+                    {
+                        query = query.OrderByDescending(q => q.CreationTime);
                     }
                     break;
             }

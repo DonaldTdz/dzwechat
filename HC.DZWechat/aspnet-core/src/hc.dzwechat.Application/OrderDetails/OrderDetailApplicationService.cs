@@ -44,7 +44,7 @@ namespace HC.DZWechat.OrderDetails
         ///</summary>
         public OrderDetailAppService(
         IRepository<OrderDetail, Guid> entityRepository
-        ,IRepository<Good, Guid> goodRepository
+        ,IRepository<Goods.ShopGoods, Guid> goodRepository
         , IOrderDetailManager entityManager
         )
         {

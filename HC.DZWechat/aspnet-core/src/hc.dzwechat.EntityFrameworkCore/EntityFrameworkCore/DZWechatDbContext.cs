@@ -36,7 +36,7 @@ namespace HC.DZWechat.EntityFrameworkCore
         public virtual DbSet<WechatUser> WechatUsers { get; set; }
         public virtual DbSet<IntegralDetail> IntegralDetails { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
-        public virtual DbSet<Good> Goods { get; set; }
+        public virtual DbSet<Goods.ShopGoods> Goods { get; set; }
         public virtual DbSet<Delivery> Deliverys { get; set; }
         public virtual DbSet<Category> Categorys { get; set; }
         public virtual DbSet<Exchange> Exchanges { get; set; }
