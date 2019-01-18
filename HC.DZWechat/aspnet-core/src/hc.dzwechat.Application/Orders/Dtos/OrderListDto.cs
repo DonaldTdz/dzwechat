@@ -120,6 +120,13 @@ namespace HC.DZWechat.Orders.Dtos
         public string DeliveryAddress { get; set; }
 
         public string UserName { get; set; }
+        public string TimeFormat
+        {
+            get
+            {
+                return CreationTime.ToString();
+            }
+        }
     }
     public class HomeInfo
     {

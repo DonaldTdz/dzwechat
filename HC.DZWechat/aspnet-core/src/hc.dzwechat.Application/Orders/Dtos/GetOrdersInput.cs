@@ -24,4 +24,11 @@ namespace HC.DZWechat.Orders.Dtos
         }
 
     }
+
+    public class GetWxOrderInput : WxPagedInputDto
+    {
+        public string WxOpenId { get; set; }
+        public Guid OrderId { get; set; }
+        public OrderStatus? status { get; set; }
+    }
 }

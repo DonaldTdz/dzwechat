@@ -23,6 +23,7 @@ using HC.DZWechat.OrderDetails.Dtos;
 using HC.DZWechat.OrderDetails.DomainService;
 using HC.DZWechat.Goods;
 using HC.DZWechat.DZEnums.DZCommonEnums;
+using Microsoft.Extensions.Configuration;
 
 namespace HC.DZWechat.OrderDetails
 {
@@ -34,8 +35,9 @@ namespace HC.DZWechat.OrderDetails
     {
         private readonly IRepository<OrderDetail, Guid> _entityRepository;
         private readonly IRepository<Good, Guid> _goodRepository;
-
         private readonly IOrderDetailManager _entityManager;
+        private readonly IConfigurationRoot _appConfiguration;
+        private string _hostUrl;
 
         /// <summary>
         /// 构造函数 
@@ -49,6 +51,8 @@ namespace HC.DZWechat.OrderDetails
             _entityRepository = entityRepository;
             _goodRepository = goodRepository;
              _entityManager =entityManager;
+            _hostUrl = _appConfiguration["App:ServerRootAddress"];
+
         }
 
 
@@ -57,7 +61,7 @@ namespace HC.DZWechat.OrderDetails
         ///</summary>
         /// <param name="input"></param>
         /// <returns></returns>
-		 
+
         public async Task<PagedResultDto<OrderDetailListDto>> GetPaged(GetOrderDetailsInput input)
 		{
 		    var query = _entityRepository.GetAll().Where(v=>v.OrderId == input.OrderId);
@@ -208,17 +212,33 @@ OrderDetailEditDto editDto;
 
 
         /// <summary>
-        /// 导出OrderDetail为excel表,等待开发。
+        /// 获取订单详情
         /// </summary>
+        /// <param name="input"></param>
         /// <returns></returns>
-        //public async Task<FileDto> GetToExcel()
-        //{
-        //	var users = await UserManager.Users.ToListAsync();
-        //	var userListDtos = ObjectMapper.Map<List<UserListDto>>(users);
-        //	await FillRoleNames(userListDtos);
-        //	return _userListExcelExporter.ExportToFile(userListDtos);
-        //}
+        [AbpAllowAnonymous]
+        public async Task<List<WXOrderDetailListDto>> GetOrderDetailListByIdAsync(GetOrderDetailsInput input)
+        {
+            var orderDetail =  _entityRepository.GetAll().Where(v => v.OrderId == input.OrderId);
+            var goods = _goodRepository.GetAll();
 
+            var result = await (from od in orderDetail
+                                join g in goods on od.GoodsId equals g.Id
+                                select new WXOrderDetailListDto()
+                                {
+                                    Id = od.Id,
+                                    Specification = od.Specification,
+                                    Unit = od.Unit,
+                                    Num = od.Num,
+                                    CreationTime = od.CreationTime,
+                                    ExchangeCode = od.ExchangeCode,
+                                    ExchangeTime = od.ExchangeTime,
+                                    Integral = od.Integral,
+                                    Status = od.Status,
+                                    PhotoUrl = _hostUrl + g.PhotoUrl
+                                }).OrderByDescending(v => v.CreationTime).AsNoTracking().ToListAsync();
+            return result;
+        }
     }
 }
 

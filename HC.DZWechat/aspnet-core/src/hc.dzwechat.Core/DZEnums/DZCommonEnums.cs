@@ -36,7 +36,7 @@ namespace HC.DZWechat.DZEnums.DZCommonEnums
 
     public enum OrderStatus
     {
-        待支付 = 1,
+        //待支付 = 1,
         已支付 = 2,
         已完成 = 3,
         已取消 = 4

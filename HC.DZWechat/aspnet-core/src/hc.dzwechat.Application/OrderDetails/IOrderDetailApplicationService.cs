@@ -70,13 +70,6 @@ namespace HC.DZWechat.OrderDetails
         /// 批量删除OrderDetail
         /// </summary>
         Task BatchDelete(List<Guid> input);
-
-
-		/// <summary>
-        /// 导出OrderDetail为excel表
-        /// </summary>
-        /// <returns></returns>
-		//Task<FileDto> GetToExcel();
-
+        Task<List<WXOrderDetailListDto>> GetOrderDetailListByIdAsync(GetOrderDetailsInput input);
     }
 }

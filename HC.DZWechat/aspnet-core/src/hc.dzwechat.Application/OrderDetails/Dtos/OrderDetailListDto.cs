@@ -100,4 +100,66 @@ namespace HC.DZWechat.OrderDetails.Dtos
             }
         }
     }
+
+    public class WXOrderDetailListDto : EntityDto<Guid>, IHasCreationTime
+    {
+
+        public Guid OrderId { get; set; }
+
+        public string Specification { get; set; }
+
+        public decimal? Integral { get; set; }
+
+        public string Unit { get; set; }
+
+
+
+        /// <summary>
+        /// Num
+        /// </summary>
+        public decimal? Num { get; set; }
+
+
+
+        /// <summary>
+        /// Status
+        /// </summary>
+        public ExchangeStatus? Status { get; set; }
+        public string StatusName
+        {
+            get
+            {
+                return Status.ToString();
+            }
+        }
+
+
+        /// <summary>
+        /// ExchangeTime
+        /// </summary>
+        public DateTime? ExchangeTime { get; set; }
+
+
+
+        /// <summary>
+        /// CreationTime
+        /// </summary>
+        public DateTime CreationTime { get; set; }
+
+
+
+        /// <summary>
+        /// UserChooseType
+        /// </summary>
+        public ExchangeCodeEnum ExchangeCode { get; set; }
+        public string ExchangeCodeName
+        {
+            get
+            {
+                return ExchangeCode.ToString();
+            }
+        }
+
+        public string PhotoUrl { get; set; }
+    }
 }

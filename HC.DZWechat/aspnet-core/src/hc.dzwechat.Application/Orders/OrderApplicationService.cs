@@ -25,6 +25,7 @@ using HC.DZWechat.WechatUsers;
 using HC.DZWechat.IntegralDetails;
 using HC.DZWechat.DZEnums.DZCommonEnums;
 using HC.DZWechat.OrderDetails;
+using HC.DZWechat.Dtos;
 
 namespace HC.DZWechat.Orders
 {
@@ -267,6 +268,45 @@ namespace HC.DZWechat.Orders
             result.Orders = list.MapTo<List<OrderListDto>>();
             result.Count = await query.CountAsync();
             return result;
+        }
+
+
+        /// <summary>
+        /// 订单列表
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [AbpAllowAnonymous]
+        public async Task<WxPagedResultDto<OrderListDto>> GetOrderListAsync(GetWxOrderInput input)
+        {
+            Guid userId = await _wechatUserRepository.GetAll().Where(v => v.WxOpenId == input.WxOpenId).Select(v => v.Id).FirstOrDefaultAsync();
+            var query = _entityRepository.GetAll().Where(e => e.UserId == userId).WhereIf(input.status.HasValue,v=>v.Status ==input.status).Select(e => new OrderListDto()
+            {
+                Id = e.Id,
+                CreationTime = e.CreationTime,
+                Integral = e.Integral,
+                Number =e.Number,
+                Status =e.Status         
+            });
+            var count = await query.CountAsync();
+            var dataList = await query.OrderByDescending(o => o.CreationTime)
+                        .PageBy(input)
+                        .ToListAsync();
+            var result = new WxPagedResultDto<OrderListDto>(count, dataList);
+            result.PageSize = input.Size;
+            return result;
+        }
+
+        /// <summary>
+        /// 通过Id获取订单信息
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [AbpAllowAnonymous]
+        public async Task<OrderListDto> GetOrderByIdAsync(GetWxOrderInput input)
+        {
+            var result = await _entityRepository.GetAsync(input.OrderId);
+            return result.MapTo<OrderListDto>();
         }
     }
 }
