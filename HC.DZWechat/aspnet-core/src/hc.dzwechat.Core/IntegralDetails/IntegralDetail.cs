@@ -13,7 +13,7 @@ namespace HC.DZWechat.IntegralDetails
     public class IntegralDetail : Entity<Guid>, IHasCreationTime //注意修改主键Id数据类型
     {
         /// <summary>
-        /// 微信openId
+        /// 用户ID
         /// </summary>
         [StringLength(50)]
         [ForeignKey("UserId")]
