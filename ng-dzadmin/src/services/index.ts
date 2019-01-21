@@ -9,3 +9,4 @@ export * from './wechat-subscribe/wechat-subscribe.service';
 export * from './shop/shop.sercive';
 export * from './home/home.service';
 export * from './exchange/exchange.service';
+export * from './vip-user/vip-user.service';

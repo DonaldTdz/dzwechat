@@ -1,12 +1,12 @@
 
 using Abp.Runtime.Validation;
 using HC.DZWechat.Dtos;
-using HC.DZWechat.DZEnums.DZCommonEnums;
-using HC.DZWechat.WechatUsers;
+using HC.DZWechat.VipPurchases;
+using System;
 
-namespace HC.DZWechat.WechatUsers.Dtos
+namespace HC.DZWechat.VipPurchases.Dtos
 {
-    public class GetWechatUsersInput : PagedSortedAndFilteredInputDto, IShouldNormalize
+    public class GetVipPurchasesInput : PagedSortedAndFilteredInputDto, IShouldNormalize
     {
 
         /// <summary>
@@ -20,6 +20,7 @@ namespace HC.DZWechat.WechatUsers.Dtos
             }
         }
 
-        public UserType? Status { get; set; }
+        public Guid VipUserId { get; set; }
+
     }
 }

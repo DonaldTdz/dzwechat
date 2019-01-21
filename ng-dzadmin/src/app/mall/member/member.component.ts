@@ -10,6 +10,12 @@ import { Router } from '@angular/router';
 })
 export class MemberComponent extends PagedListingComponentBase<WechatUser> {
     keyWord: string;
+    serchType: number = 0;
+    statusTypes = [
+        { value: 0, text: '全部' },
+        { value: 1, text: '普通会员' },
+        { value: 2, text: 'Vip会员' }
+    ];
     constructor(injector: Injector
         , private router: Router
         , private wechatService: WechatUserService) {
@@ -28,6 +34,7 @@ export class MemberComponent extends PagedListingComponentBase<WechatUser> {
     resetSearch() {
         this.pageNumber = 1;
         this.keyWord = null;
+        this.serchType = 0;
         this.refresh();
     }
 
@@ -40,6 +47,7 @@ export class MemberComponent extends PagedListingComponentBase<WechatUser> {
         params.SkipCount = request.skipCount;
         params.MaxResultCount = request.maxResultCount;
         params.FilterText = this.keyWord;
+        params.Status = this.serchType;
         this.wechatService.getAll(params)
             .finally(() => {
                 finishedCallback();

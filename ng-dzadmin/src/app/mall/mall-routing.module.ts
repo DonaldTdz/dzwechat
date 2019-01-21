@@ -12,6 +12,7 @@ import { GoodsDetailComponent } from './goods/goods-detail/goods-detail.componen
 import { OrderDetailComponent } from './order/order-detail/order-detail.component';
 import { ShopDetailComponent } from './shop/shop-detail/shop-detail.component';
 import { ExchangeComponent } from '@app/mall/exchange/exchange.component';
+import { VipDetailComponent } from './vip/vip-detail/vip-detail.component';
 
 const routes: Routes = [
     {
@@ -67,6 +68,11 @@ const routes: Routes = [
     {
         path: 'vip',
         component: VipComponent,
+        canActivate: [AppRouteGuard],
+    },
+    {
+        path: 'vip-detail/:id',
+        component: VipDetailComponent,
         canActivate: [AppRouteGuard],
     },
     {

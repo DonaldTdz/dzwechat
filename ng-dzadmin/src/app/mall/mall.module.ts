@@ -10,7 +10,7 @@ import { OrderComponent } from './order/order.component';
 import { ShopComponent } from './shop/shop.component';
 import { VipComponent } from './vip/vip.component';
 import { MallRoutingModule } from './mall-routing.module';
-import { WechatUserService, IntegralDetailService, OrderService, GoodsService, ShopService, ExchangeService } from 'services';
+import { WechatUserService, IntegralDetailService, OrderService, GoodsService, ShopService, ExchangeService, VipUserService } from 'services';
 import { MemberDetailComponent } from './member/member-detail/member-detail.component';
 import { CategoryComponent } from './goods/category/category.component';
 import { CategoryDetailComponent } from './goods/category/category-detail/category-detail.component';
@@ -22,6 +22,7 @@ import { ImageCropperComponent } from 'ngx-img-cropper';
 import { CropperComponent } from './goods/goods-detail/cropper/cropper.component';
 import { BannerCropperComponent } from './goods/goods-detail/banner-cropper/banner-cropper.component';
 import { ExchangeComponent } from '@app/mall/exchange/exchange.component';
+import { VipDetailComponent } from './vip/vip-detail/vip-detail.component';
 
 @NgModule({
     imports: [
@@ -50,6 +51,7 @@ import { ExchangeComponent } from '@app/mall/exchange/exchange.component';
         CropperComponent,
         BannerCropperComponent,
         ExchangeComponent,
+        VipDetailComponent,
     ],
     entryComponents: [
         GoodsComponent,
@@ -68,7 +70,8 @@ import { ExchangeComponent } from '@app/mall/exchange/exchange.component';
         CropperComponent,
         BannerCropperComponent,
         ExchangeComponent,
+        VipDetailComponent,
     ],
-    providers: [WechatUserService, IntegralDetailService, OrderService, GoodsService, ShopService, ExchangeService]
+    providers: [WechatUserService, IntegralDetailService, OrderService, GoodsService, ShopService, ExchangeService, VipUserService]
 })
 export class MallModule { }

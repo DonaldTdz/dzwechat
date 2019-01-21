@@ -65,7 +65,8 @@ namespace HC.DZWechat.WechatUsers
 
             var query = _entityRepository.GetAll()
                     .WhereIf(!string.IsNullOrEmpty(input.FilterText), u => u.UserName.Contains(input.FilterText)
-                    || u.Phone.Contains(input.FilterText));
+                    || u.Phone.Contains(input.FilterText))
+                    .WhereIf(input.Status.HasValue, v => v.UserType == input.Status.Value);
 
             // TODO:根据传入的参数添加过滤条件
 
