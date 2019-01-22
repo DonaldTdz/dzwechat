@@ -210,6 +210,7 @@ namespace HC.DZWechat.Goods
 
         protected virtual async Task<GoodListDto> Update(GoodEditDto input)
         {
+            input.CreationTime = DateTime.Now;
             if (input.IsAction == true)
             {
                 input.OnlineTime = DateTime.Now;
@@ -378,7 +379,7 @@ namespace HC.DZWechat.Goods
         /// </summary>
         public async Task<List<IntegralStatisDto>> GetIntegralStatisByGoods()
         {
-            var result = await _entityRepository.GetAll().Where(g=>g.SellCount>0).GroupBy(g => g.Specification).Select(g => new IntegralStatisDto
+            var result = await _entityRepository.GetAll().Where(g => g.SellCount > 0).GroupBy(g => g.Specification).Select(g => new IntegralStatisDto
             {
                 GroupName = g.Key,
                 IntegralTotal = g.Sum(i => i.SellCount * i.Integral)
@@ -405,10 +406,10 @@ namespace HC.DZWechat.Goods
             //    GroupName = ig.Key.Specification,
             //    Total = ig.Count()
             //}).Where(i => i.Total > 0).OrderByDescending(i => i.Total).Take(10).ToListAsync();
-            var result = await  _entityRepository.GetAll().Where(o => o.SellCount > 0).GroupBy(g => g.Specification).Select(g => new IntegralStatisDto
+            var result = await _entityRepository.GetAll().Where(o => o.SellCount > 0).GroupBy(g => g.Specification).Select(g => new IntegralStatisDto
             {
                 GroupName = g.Key,
-                Total = g.Sum(i => i.SellCount*1)
+                Total = g.Sum(i => i.SellCount * 1)
             }).OrderByDescending(i => i.Total).Take(10).ToListAsync();
             return result;
         }
@@ -421,6 +422,22 @@ namespace HC.DZWechat.Goods
             var result = query.MapTo<GoodsDetailDto>();
             result.Host = _hostUrl;
             result.CategoryName = cat.Name;
+            return result;
+        }
+
+        /// <summary>
+        /// 获取banner图
+        /// </summary>
+        /// <returns></returns>
+        [AbpAllowAnonymous]
+        public async Task<List<GoodListDto>> GetGoodsBanner()
+        {
+            var result = await _entityRepository.GetAll().Where(v=>v.BannerUrl!=null).Select(v => new GoodListDto()
+            {
+                Id = v.Id,
+                BannerUrl = _hostUrl + v.BannerUrl,
+                CreationTime = v.CreationTime
+            }).OrderByDescending(v => v.CreationTime).Take(5).ToListAsync();
             return result;
         }
     }

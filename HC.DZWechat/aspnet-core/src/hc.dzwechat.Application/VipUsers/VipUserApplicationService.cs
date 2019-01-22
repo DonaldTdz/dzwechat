@@ -200,19 +200,40 @@ VipUserEditDto editDto;
 			await _entityRepository.DeleteAsync(s => input.Contains(s.Id));
 		}
 
+        /// <summary>
+        /// VIP认证
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [AbpAllowAnonymous]
+        public async Task<bool> BindVipUser(GetWXVipUserInput input)
+        {
+            var vipUser =await _entityRepository.GetAll().Where(v => v.Phone == input.Phone && v.IdNumber == input.IdNumber).FirstOrDefaultAsync();
+            if(vipUser != null)
+            {
+               Guid userId = await _wechatUserRepository.GetAll().Where(v => v.WxOpenId == input.WxOpenId).Select(v => v.Id).FirstAsync();
+               var entity = await _wechatUserRepository.GetAsync(userId);
+                entity.AuthTime = DateTime.Now;
+                entity.UserType = DZEnums.DZCommonEnums.UserType.Vip会员;
+                entity.VipUserId = vipUser.Id;
+                await _wechatUserRepository.UpdateAsync(entity);
+                return true;
+            }
+            return false;
+        }
 
-		/// <summary>
-		/// 导出VipUser为excel表,等待开发。
-		/// </summary>
-		/// <returns></returns>
-		//public async Task<FileDto> GetToExcel()
-		//{
-		//	var users = await UserManager.Users.ToListAsync();
-		//	var userListDtos = ObjectMapper.Map<List<UserListDto>>(users);
-		//	await FillRoleNames(userListDtos);
-		//	return _userListExcelExporter.ExportToFile(userListDtos);
-		//}
-
+        /// <summary>
+        /// 查询vip信息
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [AbpAllowAnonymous]
+        public async Task<VipUserListDto> GetVipUserById(GetWXVipUserInput input)
+        {
+            Guid? vipId = await _wechatUserRepository.GetAll().Where(v => v.WxOpenId == input.WxOpenId).Select(v => v.VipUserId).FirstAsync();
+            var entity = await _entityRepository.GetAsync(vipId.Value);
+            return entity.MapTo<VipUserListDto>();
+        }
     }
 }
 

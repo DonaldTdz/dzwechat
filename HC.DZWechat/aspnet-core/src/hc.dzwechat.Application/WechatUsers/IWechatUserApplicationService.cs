@@ -76,5 +76,6 @@ namespace HC.DZWechat.WechatUsers
         Task<APIResultDto> BindWeChatUserAsync(UserBindDto input);
         Task RegisterUserAsync(UserBindDto input);
         Task<string> GetUserPhoneAsync(UserBindDto input);
+        Task<WechatUserListDto> GetUserTypeNameAsync(UserBindDto input);
     }
 }

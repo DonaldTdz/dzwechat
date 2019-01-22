@@ -10,6 +10,8 @@ using Abp.AutoMapper;
 
 namespace HC.DZWechat.WechatUsers.Dtos
 {
+    [AutoMapFrom(typeof(WechatUser))]
+
     public class WechatUserListDto : EntityDto<Guid> 
     {
 

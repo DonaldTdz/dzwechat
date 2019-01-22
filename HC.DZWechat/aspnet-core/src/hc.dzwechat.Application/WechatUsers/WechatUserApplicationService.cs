@@ -267,5 +267,17 @@ namespace HC.DZWechat.WechatUsers
             var phone = await _entityRepository.GetAll().Where(v => v.WxOpenId == input.WxOpenId).Select(v=>v.Phone).FirstOrDefaultAsync();
             return phone;
         }
+
+        /// <summary>
+        /// 获取用户类型
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [AbpAllowAnonymous]
+        public async Task<WechatUserListDto> GetUserTypeNameAsync(UserBindDto input)
+        {
+            var type = await _entityRepository.GetAll().Where(v => v.WxOpenId == input.WxOpenId).FirstOrDefaultAsync();
+            return type.MapTo<WechatUserListDto>();
+        }
     }
 }

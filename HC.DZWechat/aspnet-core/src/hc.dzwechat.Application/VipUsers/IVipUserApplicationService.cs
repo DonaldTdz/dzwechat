@@ -71,12 +71,7 @@ namespace HC.DZWechat.VipUsers
         /// </summary>
         Task BatchDelete(List<Guid> input);
 
-
-		/// <summary>
-        /// 导出VipUser为excel表
-        /// </summary>
-        /// <returns></returns>
-		//Task<FileDto> GetToExcel();
-
+        Task<bool> BindVipUser(GetWXVipUserInput input);
+        Task<VipUserListDto> GetVipUserById(GetWXVipUserInput input);
     }
 }

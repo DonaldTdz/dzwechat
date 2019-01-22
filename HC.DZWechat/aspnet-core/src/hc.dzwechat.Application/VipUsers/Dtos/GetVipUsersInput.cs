@@ -20,4 +20,10 @@ namespace HC.DZWechat.VipUsers.Dtos
         }
 
     }
+    public class GetWXVipUserInput
+    {
+        public string Phone { get; set; }
+        public string IdNumber { get; set; }
+        public string WxOpenId { get; set; }
+    }
 }
