@@ -41,11 +41,11 @@ namespace HC.DZWechat.VipPurchases
         ///</summary>
         public VipPurchaseAppService(
         IRepository<VipPurchase, Guid> entityRepository
-        ,IVipPurchaseManager entityManager
+        , IVipPurchaseManager entityManager
         )
         {
-            _entityRepository = entityRepository; 
-             _entityManager=entityManager;
+            _entityRepository = entityRepository;
+            _entityManager = entityManager;
         }
 
 
@@ -54,157 +54,150 @@ namespace HC.DZWechat.VipPurchases
         ///</summary>
         /// <param name="input"></param>
         /// <returns></returns>
-		 
+
         public async Task<PagedResultDto<VipPurchaseListDto>> GetPaged(GetVipPurchasesInput input)
-		{
+        {
+            var query = _entityRepository.GetAll().Where(v => v.VipUserId == input.VipUserId);
+            var count = await query.CountAsync();
 
-		    var query = _entityRepository.GetAll().Where(v=>v.Id ==input.VipUserId);
-			// TODO:根据传入的参数添加过滤条件
-            
-
-			var count = await query.CountAsync();
-
-			var entityList = await query
-					.OrderBy(input.Sorting).AsNoTracking()
-					.PageBy(input)
-					.ToListAsync();
-
-			// var entityListDtos = ObjectMapper.Map<List<VipPurchaseListDto>>(entityList);
-			var entityListDtos =entityList.MapTo<List<VipPurchaseListDto>>();
-
-			return new PagedResultDto<VipPurchaseListDto>(count,entityListDtos);
-		}
+            var entityList = await query
+                    .OrderBy(input.Sorting).AsNoTracking()
+                    .PageBy(input)
+                    .ToListAsync();
+            var entityListDtos = entityList.MapTo<List<VipPurchaseListDto>>();
+            return new PagedResultDto<VipPurchaseListDto>(count, entityListDtos);
+        }
 
 
-		/// <summary>
-		/// 通过指定id获取VipPurchaseListDto信息
-		/// </summary>
-		 
-		public async Task<VipPurchaseListDto> GetById(EntityDto<Guid> input)
-		{
-			var entity = await _entityRepository.GetAsync(input.Id);
+        /// <summary>
+        /// 通过指定id获取VipPurchaseListDto信息
+        /// </summary>
 
-		    return entity.MapTo<VipPurchaseListDto>();
-		}
+        public async Task<VipPurchaseListDto> GetById(EntityDto<Guid> input)
+        {
+            var entity = await _entityRepository.GetAsync(input.Id);
 
-		/// <summary>
-		/// 获取编辑 VipPurchase
-		/// </summary>
-		/// <param name="input"></param>
-		/// <returns></returns>
-		
-		public async Task<GetVipPurchaseForEditOutput> GetForEdit(NullableIdDto<Guid> input)
-		{
-			var output = new GetVipPurchaseForEditOutput();
-VipPurchaseEditDto editDto;
+            return entity.MapTo<VipPurchaseListDto>();
+        }
 
-			if (input.Id.HasValue)
-			{
-				var entity = await _entityRepository.GetAsync(input.Id.Value);
+        /// <summary>
+        /// 获取编辑 VipPurchase
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
 
-				editDto = entity.MapTo<VipPurchaseEditDto>();
+        public async Task<GetVipPurchaseForEditOutput> GetForEdit(NullableIdDto<Guid> input)
+        {
+            var output = new GetVipPurchaseForEditOutput();
+            VipPurchaseEditDto editDto;
 
-				//vipPurchaseEditDto = ObjectMapper.Map<List<vipPurchaseEditDto>>(entity);
-			}
-			else
-			{
-				editDto = new VipPurchaseEditDto();
-			}
+            if (input.Id.HasValue)
+            {
+                var entity = await _entityRepository.GetAsync(input.Id.Value);
 
-			output.VipPurchase = editDto;
-			return output;
-		}
+                editDto = entity.MapTo<VipPurchaseEditDto>();
 
+                //vipPurchaseEditDto = ObjectMapper.Map<List<vipPurchaseEditDto>>(entity);
+            }
+            else
+            {
+                editDto = new VipPurchaseEditDto();
+            }
 
-		/// <summary>
-		/// 添加或者修改VipPurchase的公共方法
-		/// </summary>
-		/// <param name="input"></param>
-		/// <returns></returns>
-		
-		public async Task CreateOrUpdate(CreateOrUpdateVipPurchaseInput input)
-		{
-
-			if (input.VipPurchase.Id.HasValue)
-			{
-				await Update(input.VipPurchase);
-			}
-			else
-			{
-				await Create(input.VipPurchase);
-			}
-		}
+            output.VipPurchase = editDto;
+            return output;
+        }
 
 
-		/// <summary>
-		/// 新增VipPurchase
-		/// </summary>
-		
-		protected virtual async Task<VipPurchaseEditDto> Create(VipPurchaseEditDto input)
-		{
-			//TODO:新增前的逻辑判断，是否允许新增
+        /// <summary>
+        /// 添加或者修改VipPurchase的公共方法
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+
+        public async Task CreateOrUpdate(CreateOrUpdateVipPurchaseInput input)
+        {
+
+            if (input.VipPurchase.Id.HasValue)
+            {
+                await Update(input.VipPurchase);
+            }
+            else
+            {
+                await Create(input.VipPurchase);
+            }
+        }
+
+
+        /// <summary>
+        /// 新增VipPurchase
+        /// </summary>
+
+        protected virtual async Task<VipPurchaseEditDto> Create(VipPurchaseEditDto input)
+        {
+            //TODO:新增前的逻辑判断，是否允许新增
 
             // var entity = ObjectMapper.Map <VipPurchase>(input);
-            var entity=input.MapTo<VipPurchase>();
-			
-
-			entity = await _entityRepository.InsertAsync(entity);
-			return entity.MapTo<VipPurchaseEditDto>();
-		}
-
-		/// <summary>
-		/// 编辑VipPurchase
-		/// </summary>
-		
-		protected virtual async Task Update(VipPurchaseEditDto input)
-		{
-			//TODO:更新前的逻辑判断，是否允许更新
-
-			var entity = await _entityRepository.GetAsync(input.Id.Value);
-			input.MapTo(entity);
-
-			// ObjectMapper.Map(input, entity);
-		    await _entityRepository.UpdateAsync(entity);
-		}
+            var entity = input.MapTo<VipPurchase>();
 
 
+            entity = await _entityRepository.InsertAsync(entity);
+            return entity.MapTo<VipPurchaseEditDto>();
+        }
 
-		/// <summary>
-		/// 删除VipPurchase信息的方法
-		/// </summary>
-		/// <param name="input"></param>
-		/// <returns></returns>
-		
-		public async Task Delete(EntityDto<Guid> input)
-		{
-			//TODO:删除前的逻辑判断，是否允许删除
-			await _entityRepository.DeleteAsync(input.Id);
-		}
+        /// <summary>
+        /// 编辑VipPurchase
+        /// </summary>
+
+        protected virtual async Task Update(VipPurchaseEditDto input)
+        {
+            //TODO:更新前的逻辑判断，是否允许更新
+
+            var entity = await _entityRepository.GetAsync(input.Id.Value);
+            input.MapTo(entity);
+
+            // ObjectMapper.Map(input, entity);
+            await _entityRepository.UpdateAsync(entity);
+        }
 
 
 
-		/// <summary>
-		/// 批量删除VipPurchase的方法
-		/// </summary>
-		
-		public async Task BatchDelete(List<Guid> input)
-		{
-			// TODO:批量删除前的逻辑判断，是否允许删除
-			await _entityRepository.DeleteAsync(s => input.Contains(s.Id));
-		}
+        /// <summary>
+        /// 删除VipPurchase信息的方法
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+
+        public async Task Delete(EntityDto<Guid> input)
+        {
+            //TODO:删除前的逻辑判断，是否允许删除
+            await _entityRepository.DeleteAsync(input.Id);
+        }
 
 
-		/// <summary>
-		/// 导出VipPurchase为excel表,等待开发。
-		/// </summary>
-		/// <returns></returns>
-		//public async Task<FileDto> GetToExcel()
-		//{
-		//	var users = await UserManager.Users.ToListAsync();
-		//	var userListDtos = ObjectMapper.Map<List<UserListDto>>(users);
-		//	await FillRoleNames(userListDtos);
-		//	return _userListExcelExporter.ExportToFile(userListDtos);
-		//}
+
+        /// <summary>
+        /// 批量删除VipPurchase的方法
+        /// </summary>
+
+        public async Task BatchDelete(List<Guid> input)
+        {
+            // TODO:批量删除前的逻辑判断，是否允许删除
+            await _entityRepository.DeleteAsync(s => input.Contains(s.Id));
+        }
+
+
+        /// <summary>
+        /// 导出VipPurchase为excel表,等待开发。
+        /// </summary>
+        /// <returns></returns>
+        //public async Task<FileDto> GetToExcel()
+        //{
+        //	var users = await UserManager.Users.ToListAsync();
+        //	var userListDtos = ObjectMapper.Map<List<UserListDto>>(users);
+        //	await FillRoleNames(userListDtos);
+        //	return _userListExcelExporter.ExportToFile(userListDtos);
+        //}
 
     }
 }

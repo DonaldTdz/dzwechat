@@ -5,9 +5,11 @@ using Abp.Application.Services.Dto;
 using Abp.Domain.Entities.Auditing;
 using System.ComponentModel.DataAnnotations;
 using HC.DZWechat.VipUsers;
+using Abp.AutoMapper;
 
 namespace HC.DZWechat.VipUsers.Dtos
 {
+    [AutoMapFrom(typeof(VipUser))]
     public class VipUserListDto : EntityDto<Guid>,IHasCreationTime 
     {
 

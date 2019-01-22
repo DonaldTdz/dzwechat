@@ -1,1 +1,46 @@
-<!--component html goes here -->
+<nz-card [nzBordered]="false" *ngIf="user">
+    <div nz-row nzGutter="16" style="margin-bottom: 16px;">
+        <!-- <div nz-col nzXs="24" nzMd="3" *ngIf="user.headImgUrl">
+            <img class="img ng-star-inserted" src="{{user.headImgUrl}}">
+        </div> -->
+        <div nz-col nzXs="24" nzSm="18">
+            <sv-container size="small" col="3" class="mb-md">
+                <sv label="用户名">{{user.name}}</sv>
+                <sv label="电话">{{user.phone}}</sv>
+                <sv label="身份证">{{user.idNumber}}</sv>
+                <sv label="购买金额">{{user.PurchaseAmount}}</sv>
+                <sv label="创建时间">{{user.creationTime | _date}}</sv>
+            </sv-container>
+        </div>
+    </div>
+    <nz-tabset>
+        <nz-tab nzTitle="购买记录">
+            <ng-template #totalTemplate let-total>共 {{totalItems}} 条</ng-template>
+            <nz-table #ajaxTable nzShowSizeChanger [nzData]="dataList" [nzShowTotal]="totalTemplate" [nzTotal]="totalItems"
+                [(nzPageIndex)]="pageNumber" [(nzPageSize)]="pageSize" [nzLoading]="isTableLoading" (nzPageIndexChange)="refresh()"
+                (nzPageSizeChange)="refresh()" [nzFrontPagination]="false">
+                <thead>
+                    <tr>
+                        <th>购买金额</th>
+                        <th>是否已转换</th>
+                        <th>转换时间</th>
+                        <th>创建时间</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of ajaxTable.data">
+                        <td>{{data.purchaseAmount}}</td>
+                        <td>{{data.isConvert ==true?'是':'否'}}</td>
+                        <td>{{data.convertTime | _date}}</td>
+                        <td>{{data.creationTime | _date}}</td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </nz-tab>
+    </nz-tabset>
+</nz-card>
+<footer-toolbar>
+    <button nz-button [nzType]="'default'" (click)="return()">
+        返回
+    </button>
+</footer-toolbar>

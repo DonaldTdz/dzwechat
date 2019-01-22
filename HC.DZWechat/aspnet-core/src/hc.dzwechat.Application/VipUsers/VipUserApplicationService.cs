@@ -91,7 +91,6 @@ namespace HC.DZWechat.VipUsers
 		public async Task<VipUserListDto> GetById(EntityDto<Guid> input)
 		{
 			var entity = await _entityRepository.GetAsync(input.Id);
-
 		    return entity.MapTo<VipUserListDto>();
 		}
 
