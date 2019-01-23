@@ -147,6 +147,7 @@ namespace HC.DZWechat.WechatUsers.Dtos
 		/// UnBindTime
 		/// </summary>
 		public DateTime? UnBindTime { get; set; }
+        public string IsVip { get; set; }
     }
 
     [AutoMapTo(typeof(WechatUser))]

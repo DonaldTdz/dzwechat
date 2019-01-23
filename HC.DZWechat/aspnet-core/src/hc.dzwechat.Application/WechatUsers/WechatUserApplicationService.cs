@@ -276,8 +276,18 @@ namespace HC.DZWechat.WechatUsers
         [AbpAllowAnonymous]
         public async Task<WechatUserListDto> GetUserTypeNameAsync(UserBindDto input)
         {
-            var type = await _entityRepository.GetAll().Where(v => v.WxOpenId == input.WxOpenId).FirstOrDefaultAsync();
-            return type.MapTo<WechatUserListDto>();
+            var result = await _entityRepository.GetAll().Where(v => v.WxOpenId == input.WxOpenId).FirstOrDefaultAsync();
+            var entity = result.MapTo<WechatUserListDto>();
+            if (!string.IsNullOrEmpty(entity.Phone))
+            {
+                string tempPhone = entity.Phone;
+                entity.Phone = tempPhone.Substring(0, 3) + "****" + entity.Phone.Substring(7,4);
+            }
+            if (entity.VipUserId.HasValue)
+            {
+                entity.IsVip = "已认证";
+            }
+            return entity;
         }
     }
 }

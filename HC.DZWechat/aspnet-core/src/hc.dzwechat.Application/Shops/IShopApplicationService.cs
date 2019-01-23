@@ -81,5 +81,6 @@ namespace HC.DZWechat.Shops
         Task<List<ShopListDto>> GetShopListForDropDown();
         Task<ShopListDto> GetShopInfoById(Guid shopId);
         Task<List<OrderDetailDto>> GetExchangeGoodsByIdAsync(Guid orderId, string openId);
+        Task<List<ShopListDto>> GetShopAddressAsync();
     }
 }

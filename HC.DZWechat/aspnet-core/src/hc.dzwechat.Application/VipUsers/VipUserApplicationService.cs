@@ -232,7 +232,13 @@ VipUserEditDto editDto;
         {
             Guid? vipId = await _wechatUserRepository.GetAll().Where(v => v.WxOpenId == input.WxOpenId).Select(v => v.VipUserId).FirstAsync();
             var entity = await _entityRepository.GetAsync(vipId.Value);
-            return entity.MapTo<VipUserListDto>();
+            var result = entity.MapTo<VipUserListDto>();
+            if (!string.IsNullOrEmpty(result.Phone))
+            {
+                string tempPhone = result.Phone;
+                result.Phone = tempPhone.Substring(0, 3) + "****" + result.Phone.Substring(7, 4);
+            }
+            return result;
         }
     }
 }

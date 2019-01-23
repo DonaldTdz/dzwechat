@@ -249,6 +249,18 @@ ShopEditDto editDto;
             var result = await _scanExchangeManager.GetExchangeGoodsByIdAsync(orderId,openId);
             return result;
         }
+
+
+        /// <summary>
+        /// 获取直营店信息
+        /// </summary>
+        /// <returns></returns>
+        [AbpAllowAnonymous]
+        public async Task<List<ShopListDto>> GetShopAddressAsync()
+        {
+            var result = await _entityRepository.GetAll().ToListAsync();
+            return result.MapTo<List<ShopListDto>>();
+        }
     }
 }
 

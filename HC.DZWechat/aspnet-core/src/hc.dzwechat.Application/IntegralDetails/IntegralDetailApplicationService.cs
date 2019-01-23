@@ -261,7 +261,7 @@ namespace HC.DZWechat.IntegralDetails
                 UserId = v.Id,
                 Integral = v.Integral.Value
             }).FirstOrDefaultAsync();
-            var count = await _entityRepository.GetAll().Where(v => v.UserId == user.UserId && v.CreationTime >= DateTime.Today && v.CreationTime <= DateTime.Today.AddDays(86399F / 86400)).CountAsync();
+            var count = await _entityRepository.GetAll().Where(v =>v.Type == DZEnums.DZCommonEnums.IntegralType.每日签到 && v.UserId == user.UserId && v.CreationTime >= DateTime.Today && v.CreationTime <= DateTime.Today.AddDays(86399F / 86400)).CountAsync();
             if(count != 0)
             {
                 return new SignInDto()
