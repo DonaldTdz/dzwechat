@@ -24,11 +24,13 @@ const routes: Routes = [
         path: 'goods-detail/:id',
         component: GoodsDetailComponent,
         canActivate: [AppRouteGuard],
+        data: { title: '商品信息' }
     },
     {
         path: 'goods-detail',
         component: GoodsDetailComponent,
         canActivate: [AppRouteGuard],
+        data: { title: '商品新增' }
     },
     {
         path: 'member',
@@ -39,6 +41,7 @@ const routes: Routes = [
         path: 'member-detail/:id',
         component: MemberDetailComponent,
         canActivate: [AppRouteGuard],
+        data: { title: '会员信息' }
     },
     {
         path: 'order',
@@ -49,6 +52,7 @@ const routes: Routes = [
         path: 'order-detail/:id',
         component: OrderDetailComponent,
         canActivate: [AppRouteGuard],
+        data: { title: '订单信息' }
     },
     {
         path: 'shop',
@@ -59,11 +63,13 @@ const routes: Routes = [
         path: 'shop-detail',
         component: ShopDetailComponent,
         canActivate: [AppRouteGuard],
+        data: { title: '店铺新增' }
     },
     {
         path: 'shop-detail/:id',
         component: ShopDetailComponent,
         canActivate: [AppRouteGuard],
+        data: { title: '店铺信息' }
     },
     {
         path: 'vip',
@@ -74,6 +80,7 @@ const routes: Routes = [
         path: 'vip-detail/:id',
         component: VipDetailComponent,
         canActivate: [AppRouteGuard],
+        data: { title: 'VIP会员信息' }
     },
     {
         path: 'exchange',

@@ -18,7 +18,7 @@
     <div nz-row nzType="flex" nzAlign="middle" class="bg-success rounded-md">
       <div nz-col nzSpan="24" class="p-md text-white">
         <div class="h2 mt0">{{homeInfo.integralTotal}}积分</div>
-        <p class="text-nowrap mb0">积分总数</p>
+        <p class="text-nowrap mb0">积分剩余总数</p>
       </div>
     </div>
   </div>
@@ -43,7 +43,7 @@
 <div nz-row nzGutter="16">
 
   <!-- <div nz-col nzXs="24" nzMd="12"> -->
-  <div nz-col nzXs="24" nzMd="12">
+  <div nz-col nzXs="24" nzMd="24">
     <nz-card [nzBordered]="false" [nzTitle]="title1">
       <ng-template #title1>
         商品兑换数量前十
@@ -74,7 +74,7 @@
       </nz-table>
     </nz-card>
   </div>
-  <div nz-col nzXs="24" nzMd="12">
+  <div nz-col nzXs="24" nzMd="24">
     <nz-card [nzBordered]="false" [nzTitle]="title2">
       <ng-template #title2>
         商品兑换积分前十
@@ -108,7 +108,7 @@
     </nz-card>
   </div>
   <div nz-col nzXs="24" nzMd="24">
-    <nz-card [nzTitle]="'积分统计（按月）'" [nzExtra]="title3" [nzBordered]="false">
+    <nz-card [nzTitle]="'积分增加消耗统计（按月）'" [nzExtra]="title3" [nzBordered]="false">
       <ng-template #title3>
         <nz-radio-group [(ngModel)]="searchMoth" (ngModelChange)="changeCategory()">
           <label nz-radio-button *ngFor="let item of tags" [nzValue]="item.value">{{item.text}}</label>
@@ -120,7 +120,7 @@
         <thead>
           <tr>
             <th>
-              <span>单位</span>
+              <span>月份</span>
             </th>
             <th *ngFor="let intMoth of nzTablew.data">
               <span>{{intMoth.groupName}}</span>

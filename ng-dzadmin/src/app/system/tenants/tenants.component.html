@@ -1,4 +1,4 @@
-<page-header [title]="l('Tenants')"></page-header>
+<page-header [title]="''"></page-header>
 
 
 <nz-card [nzExtra]="extraTpl">
@@ -13,8 +13,9 @@
   </ng-template>
 
 
-  <nz-table #ajaxTable nzShowSizeChanger [nzData]="dataList" [nzTotal]="totalItems" [(nzPageIndex)]="pageNumber" [(nzPageSize)]="pageSize"
-    [nzLoading]="isTableLoading" (nzPageIndexChange)="refresh()" (nzPageSizeChange)="refresh()" [nzFrontPagination]="false">
+  <nz-table #ajaxTable nzShowSizeChanger [nzData]="dataList" [nzTotal]="totalItems" [(nzPageIndex)]="pageNumber"
+    [(nzPageSize)]="pageSize" [nzLoading]="isTableLoading" (nzPageIndexChange)="refresh()" (nzPageSizeChange)="refresh()"
+    [nzFrontPagination]="false">
     <thead>
       <tr>
         <th>{{l("TenancyName")}}</th>

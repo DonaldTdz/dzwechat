@@ -69,7 +69,7 @@ export class LoginService {
     } else {
       // Unexpected result!
 
-      this._logService.warn('Unexpected authenticateResult!');
+      this._logService.warn('授权异常!');
       this._router.navigate(['account/login']);
     }
   }

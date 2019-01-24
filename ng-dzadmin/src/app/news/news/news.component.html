@@ -1,4 +1,4 @@
-<page-header [title]="'资讯配置'"></page-header>
+<page-header [title]="''"></page-header>
 <nz-card>
     <div nz-row>
         <div nz-col [nzSm]="4" [nzSpan]="4">
@@ -20,9 +20,9 @@
             </div>
             <!-- </ng-template> -->
             <ng-template #totalTemplate>共 {{totalItems}} 条</ng-template>
-            <nz-table #ajaxTable nzShowSizeChanger [nzData]="dataList" [nzShowTotal]="totalTemplate" [nzTotal]="totalItems" [(nzPageIndex)]="pageNumber"
-                [(nzPageSize)]="pageSize" [nzLoading]="isTableLoading" (nzPageIndexChange)="refresh()" (nzPageSizeChange)="refresh()"
-                [nzFrontPagination]="false">
+            <nz-table #ajaxTable nzShowSizeChanger [nzData]="dataList" [nzShowTotal]="totalTemplate" [nzTotal]="totalItems"
+                [(nzPageIndex)]="pageNumber" [(nzPageSize)]="pageSize" [nzLoading]="isTableLoading" (nzPageIndexChange)="refresh()"
+                (nzPageSizeChange)="refresh()" [nzFrontPagination]="false">
                 <thead>
                     <tr>
                         <th>封面图片</th>
