@@ -42,9 +42,7 @@ export class OrderService {
     getAddressById(params: any): Observable<Delivery[]> {
         let url_ = "/api/services/app/Delivery/GetNoPaged";
         return this._commonhttp.get(url_, params).pipe(map(data => {
-            let result: Delivery[] = [];
-            result = data.items;
-            return result;
+            return Delivery.fromJSArray(data);
         }));
     }
 

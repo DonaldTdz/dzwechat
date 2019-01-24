@@ -5,6 +5,9 @@ export class Delivery {
     address: string;
     isDefault: boolean;
     creationTime: Date;
+    province: string;
+    city: string;
+    area: string;
     constructor(data?: any) {
         if (data) {
             for (var property in data) {
@@ -21,6 +24,9 @@ export class Delivery {
             this.address = data["address"];
             this.isDefault = data["isDefault"];
             this.creationTime = data["creationTime"];
+            this.province = data["province"];
+            this.city = data["city"];
+            this.area = data["area"];
         }
     }
     toJSON(data?: any) {

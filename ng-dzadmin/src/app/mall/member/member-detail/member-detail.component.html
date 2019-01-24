@@ -21,9 +21,9 @@
     </div>
     <nz-tabset>
         <nz-tab nzTitle="订单">
-            <ng-template #totalTemplate let-total>共 {{queryO.totalO}} 条</ng-template>
+            <ng-template #totalTemplateO let-total>共 {{queryO.totalO}} 条</ng-template>
             <nz-table #nzTableO [nzData]="orderList" [nzFrontPagination]="false" [nzTotal]="queryO.totalO"
-                [nzShowTotal]="totalTemplate" [(nzPageIndex)]="queryO.pageIndexO" [(nzPageSize)]="queryO.pageSizeO"
+                [nzShowTotal]="totalTemplateO" [(nzPageIndex)]="queryO.pageIndexO" [(nzPageSize)]="queryO.pageSizeO"
                 [nzLoading]="loadingO" [nzShowSizeChanger]="true" (nzPageIndexChange)="getOrderList()"
                 (nzPageSizeChange)="getOrderList()">
                 <thead>
@@ -55,9 +55,9 @@
             </nz-table>
         </nz-tab>
         <nz-tab nzTitle="积分明细">
-            <ng-template #totalTemplate let-total>共 {{queryI.totalI}} 条</ng-template>
+            <ng-template #totalTemplateI let-total>共 {{queryI.totalI}} 条</ng-template>
             <nz-table #nzTable [nzData]="integralList" [nzFrontPagination]="false" [nzTotal]="queryI.totalI"
-                [nzShowTotal]="totalTemplate" [(nzPageIndex)]="queryI.pageIndexI" [(nzPageSize)]="queryI.pageSizeI"
+                [nzShowTotal]="totalTemplateI" [(nzPageIndex)]="queryI.pageIndexI" [(nzPageSize)]="queryI.pageSizeI"
                 [nzLoading]="loadingI" [nzShowSizeChanger]="true" (nzPageIndexChange)="getIntegralList()"
                 (nzPageSizeChange)="getIntegralList()">
                 <thead>
@@ -66,6 +66,7 @@
                         <th>初始积分</th>
                         <th>发生积分</th>
                         <th>结束积分</th>
+                        <th>备注</th>
                         <th>时间</th>
                     </tr>
                 </thead>
@@ -75,6 +76,7 @@
                         <td>{{data.initialIntegral}}</td>
                         <td>{{data.integral}}</td>
                         <td>{{data.finalIntegral}}</td>
+                        <td>{{data.desc}}</td>
                         <td>{{data.creationTime | _date}}</td>
                     </tr>
                 </tbody>
@@ -95,8 +97,8 @@
                     <tr *ngFor="let data of nzTableAd.data">
                         <td>{{data.name}}</td>
                         <td>{{data.phone}}</td>
-                        <td>{{data.address}}</td>
-                        <td>{{data.isDefault}}</td>
+                        <td>{{data.province}}{{data.city}}{{data.area}}{{data.address}}</td>
+                        <td>{{data.isDefault == true?'是':'否'}}</td>
                     </tr>
                 </tbody>
             </nz-table>

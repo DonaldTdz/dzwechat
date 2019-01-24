@@ -60,21 +60,19 @@ export class MemberDetailComponent implements OnInit {
     }
 
     getIntegralList(search?: boolean) {
-        if (this.user.unionId) {
-            if (search) {
-                this.queryI.pageIndexI = 1;
-            }
-            this.loadingI = true;
-            let params: any = {};
-            params.SkipCount = this.queryI.skipCountI();
-            params.MaxResultCount = this.queryI.pageSizeI;
-            params.UserId = this.id;
-            this.integralService.getIntegralDetailById(params).subscribe((result: PagedResultDto) => {
-                this.loadingI = false;
-                this.integralList = result.items;
-                this.queryI.totalI = result.totalCount;
-            });
+        if (search) {
+            this.queryI.pageIndexI = 1;
         }
+        this.loadingI = true;
+        let params: any = {};
+        params.SkipCount = this.queryI.skipCountI();
+        params.MaxResultCount = this.queryI.pageSizeI;
+        params.UserId = this.id;
+        this.integralService.getIntegralDetailById(params).subscribe((result: PagedResultDto) => {
+            this.loadingI = false;
+            this.integralList = result.items;
+            this.queryI.totalI = result.totalCount;
+        });
     }
 
     getOrderList(search?: boolean) {
@@ -89,7 +87,7 @@ export class MemberDetailComponent implements OnInit {
         this.orderService.getOrderById(params).subscribe((result: PagedResultDto) => {
             this.loadingO = false;
             this.orderList = result.items;
-            this.queryO.total = result.totalCount;
+            this.queryO.totalO = result.totalCount;
         });
     }
 
