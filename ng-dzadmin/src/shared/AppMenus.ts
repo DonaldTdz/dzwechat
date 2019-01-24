@@ -55,7 +55,7 @@ export class AppMenus {
                     reuse: false
                 },
                 {
-                    text: "兑换明细",
+                    text: "兑换统计",
                     link: "/app/mall/exchange",
                     reuse: false
                 },

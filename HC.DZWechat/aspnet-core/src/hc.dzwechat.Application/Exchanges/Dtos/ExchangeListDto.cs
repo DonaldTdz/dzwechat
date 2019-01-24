@@ -56,7 +56,7 @@ namespace HC.DZWechat.Exchanges.Dtos
         public string LogisticsCompany { get; set; }
 
 
-        public string WechatUserId { get; set; }
+        public Guid? WechatUserId { get; set; }
 
         /// <summary>
         /// LogisticsNo
@@ -93,5 +93,19 @@ namespace HC.DZWechat.Exchanges.Dtos
 
         public string DeliveryName { get; set; }
         public string DeliveryPhone { get; set; }
+    }
+
+    public class ExchangeSummary
+    {
+        public string ShopName { get; set; }
+        public string Specification { get; set; }
+        
+        public int? ExchangeNum { get; set; }
+    }
+
+    public class SelectGroups
+    {
+        public string text { get; set; }
+        public string value { get; set; }
     }
 }

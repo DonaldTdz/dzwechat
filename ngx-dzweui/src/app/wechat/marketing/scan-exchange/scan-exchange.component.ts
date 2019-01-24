@@ -143,12 +143,12 @@ export class ScanExchangeComponent extends AppComponentBase implements OnInit {
      * 扫码
      */
     setOrderBarCode(res: string) {
-        if (res.indexOf('&') != -1) {
-            this.orderBarCode = res.split('&')[1].split('=')[1];
-            this.getOrderInfo();
-        }
-        // this.orderBarCode = res;
-        // this.getOrderInfo();
+        // if (res.indexOf('&') != -1) {
+        //     this.orderBarCode = res.split('&')[1].split('=')[1];
+        //     this.getOrderInfo();
+        // }
+        this.orderBarCode = res;
+        this.getOrderInfo();
     }
 
     getOrderInfo() {

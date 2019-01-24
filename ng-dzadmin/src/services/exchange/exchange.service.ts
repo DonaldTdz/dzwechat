@@ -4,6 +4,7 @@ import { CommonHttpClient } from "services/common-httpclient";
 import { map } from "rxjs/operators";
 import { PagedResultDto } from "@shared/component-base";
 import { ApiResult } from "entities/api-result";
+import { SelectGroup } from "entities";
 
 @Injectable()
 export class ExchangeService {
@@ -27,6 +28,16 @@ export class ExchangeService {
         }));
     }
 
+    getExchangeSummary(param: any): Observable<PagedResultDto> {
+        let _url = "/api/services/app/Exchange/GetExchangeSummary";
+        return this._commonhttp.get(_url, param).pipe(map(data => {
+            var result = new PagedResultDto();
+            result.items = data;
+            result.totalCount = data.length - 1 <= 0 ? 0 : data.length - 1;
+            // result.items = data;
+            return result;
+        }));
+    }
 
     /**
      * 导出兑换明细
@@ -40,7 +51,14 @@ export class ExchangeService {
         }));
 
     }
+    exportSummaryExchange(param: any): Observable<ApiResult> {
+        var _url = '/api/services/app/Exchange/ExportExchangeSummary';
+        return this._commonhttp.post(_url, param).pipe(map(data => {
+            return ApiResult.fromJS(data);
 
+        }));
+
+    }
     getExchangeByShopId(param: any): Observable<PagedResultDto> {
         let _url = "/api/services/app/Exchange/GetPagedByShopId";
         return this._commonhttp.get(_url, param).pipe(map(data => {
@@ -48,6 +66,13 @@ export class ExchangeService {
             result.items = data.items;
             result.totalCount = data.totalCount;
             return result;
+        }));
+    }
+
+    getShopTypeAsync(): Observable<SelectGroup[]> {
+        let url_ = "/api/services/app/Exchange/GetShopTypeAsync";
+        return this._commonhttp.get(url_).pipe(map(data => {
+            return SelectGroup.fromJSArray(data);
         }));
     }
 }

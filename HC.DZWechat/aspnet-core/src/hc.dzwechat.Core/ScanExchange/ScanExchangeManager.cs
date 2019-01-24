@@ -112,7 +112,7 @@ namespace HC.DZWechat.ScanExchange
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        protected virtual async Task<bool> CheckedOrderStatus(Guid orderId)
+        public async Task<bool> CheckedOrderStatus(Guid orderId)
         {
             var list = await _orderDetailRepository.GetAll().Where(v => v.OrderId == orderId).ToListAsync();
             foreach (var item in list)

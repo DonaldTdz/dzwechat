@@ -29,7 +29,7 @@ namespace HC.DZWechat.Exchanges.Dtos
         public int? ExchangeCode { get; set; }
 
 
-        public string WechatUserId { get; set; }
+        public Guid? WechatUserId { get; set; }
         /// <summary>
         /// ShopId
         /// </summary>

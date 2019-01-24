@@ -34,7 +34,7 @@ namespace HC.DZWechat.Exchanges
         public virtual DateTime CreationTime { get; set; }
         public virtual string LogisticsCompany { get; set; }
         public virtual string LogisticsNo { get; set; }
-        public virtual Guid WechatUserId { get; set; }
+        public virtual Guid? WechatUserId { get; set; }
 
     }
 

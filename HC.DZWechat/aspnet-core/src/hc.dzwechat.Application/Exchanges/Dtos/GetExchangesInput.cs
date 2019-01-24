@@ -10,6 +10,7 @@ namespace HC.DZWechat.Exchanges.Dtos
     public class GetExchangesInput : PagedSortedAndFilteredInputDto, IShouldNormalize
     {
         public Guid ShopId { get; set; }
+        public string ShopType { get; set; }
         public DateTime? StartTime { get; set; }
         public DateTime? EndTime { get; set; }
 

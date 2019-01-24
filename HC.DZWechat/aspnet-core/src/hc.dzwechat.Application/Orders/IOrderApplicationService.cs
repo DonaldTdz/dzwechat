@@ -90,6 +90,6 @@ namespace HC.DZWechat.Orders
         Task<OrderListDto> GetOrderByIdAsync(GetWxOrderInput input);
 
         Task<CommonDto.APIResultDto> SaveOrderAsync(SaveOrderInput input);
-        Task CancelOrderByIdAsync(SaveOrderInput input);
+        Task<CommonDto.APIResultDto> CancelOrderByIdAsync(SaveOrderInput input);
     }
 }

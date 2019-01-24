@@ -289,11 +289,10 @@ namespace HC.DZWechat.Exchanges
                                                   .WhereIf(input.ExchangeStyle.HasValue, e => e.ExchangeCode == input.ExchangeStyle)
                                                   .WhereIf(input.StartTime.HasValue, e => e.CreationTime >= input.StartTime)
                                                   .WhereIf(input.EndTime.HasValue, e => e.CreationTime <= input.EndTimeAddOne);
-            var aa = queryE.ToList();
+
             var queryOD = _orderDetailRepository.GetAll().WhereIf(!string.IsNullOrEmpty(input.GoodsName), o => o.Specification.Contains(input.GoodsName));
             var queryO = _orderRepository.GetAll().WhereIf(!string.IsNullOrEmpty(input.OrderId), o => o.Number.Contains(input.OrderId));
-            var bb = queryOD.ToList();
-            var cc = queryO.ToList();
+
             var query = from e in queryE
                         join od in queryOD on e.OrderDetailId equals od.Id
                         join o in queryO on od.OrderId equals o.Id
@@ -332,7 +331,7 @@ namespace HC.DZWechat.Exchanges
         [AbpAllowAnonymous]
         public async Task<APIResultDto> ExchangeGoods(ExchangeDtoInput input)
         {
-            var result = await _scanExchangeManager.ExchangeGoods(input.OrderId,input.OpenId,input.ShopId);
+            var result = await _scanExchangeManager.ExchangeGoods(input.OrderId, input.OpenId, input.ShopId);
             return result;
         }
         [AbpAllowAnonymous]
@@ -354,11 +353,8 @@ namespace HC.DZWechat.Exchanges
                                                  .WhereIf(input.ExchangeStyle.HasValue, e => e.ExchangeCode == input.ExchangeStyle)
                                                  .WhereIf(input.StartTime.HasValue, e => e.CreationTime >= input.StartTime)
                                                  .WhereIf(input.EndTime.HasValue, e => e.CreationTime <= input.EndTimeAddOne);
-            var aa = queryE.ToList();
             var queryOD = _orderDetailRepository.GetAll().WhereIf(!string.IsNullOrEmpty(input.GoodsName), o => o.Specification.Contains(input.GoodsName));
             var queryO = _orderRepository.GetAll().WhereIf(!string.IsNullOrEmpty(input.OrderId), o => o.Number.Contains(input.OrderId));
-            var bb = queryOD.ToList();
-            var cc = queryO.ToList();
             var query = from e in queryE
                         join od in queryOD on e.OrderDetailId equals od.Id
                         join o in queryO on od.OrderId equals o.Id
@@ -442,7 +438,7 @@ namespace HC.DZWechat.Exchanges
                 result.Data = CreateExchangeDetailExcel("兑换明细.xlsx", exportData);
                 return result;
 
-            }   
+            }
             catch (Exception ex)
             {
                 Logger.ErrorFormat("ExportExchangeDetail errormsg{0} Exception{1}", ex.Message, ex);
@@ -465,21 +461,21 @@ namespace HC.DZWechat.Exchanges
             var order = _orderRepository.GetAll();
 
             var result = (from e in exchange
-                         join od in orderDetails on e.OrderDetailId equals od.Id
-                         join o in order on od.OrderId equals o.Id
-                         select new ExchangeListDto()
-                         {
-                             Id = e.Id,
-                             OrderId = o.Id,
-                             Specification = od.Specification,
-                             OrderNumber = o.Number,
-                             DeliveryName = o.DeliveryName,
-                             DeliveryPhone = o.Phone,
-                             CreationTime = e.CreationTime,
-                             LogisticsCompany = e.LogisticsCompany,
-                             LogisticsNo = e.LogisticsNo,
-                             ExchangeCode = e.ExchangeCode
-                         }).WhereIf(!string.IsNullOrEmpty(input.FilterText), v => v.Specification.Contains(input.FilterText)|| v.DeliveryName.Contains(input.FilterText) || v.DeliveryPhone.Contains(input.FilterText) || v.OrderNumber.Contains(input.FilterText));
+                          join od in orderDetails on e.OrderDetailId equals od.Id
+                          join o in order on od.OrderId equals o.Id
+                          select new ExchangeListDto()
+                          {
+                              Id = e.Id,
+                              OrderId = o.Id,
+                              Specification = od.Specification,
+                              OrderNumber = o.Number,
+                              DeliveryName = o.DeliveryName,
+                              DeliveryPhone = o.Phone,
+                              CreationTime = e.CreationTime,
+                              LogisticsCompany = e.LogisticsCompany,
+                              LogisticsNo = e.LogisticsNo,
+                              ExchangeCode = e.ExchangeCode
+                          }).WhereIf(!string.IsNullOrEmpty(input.FilterText), v => v.Specification.Contains(input.FilterText) || v.DeliveryName.Contains(input.FilterText) || v.DeliveryPhone.Contains(input.FilterText) || v.OrderNumber.Contains(input.FilterText));
 
             var count = await result.CountAsync();
             var entityList = await result
@@ -488,6 +484,149 @@ namespace HC.DZWechat.Exchanges
                     .ToListAsync();
 
             return new PagedResultDto<ExchangeListDto>(count, entityList);
+        }
+
+        /// <summary>
+        /// 汇总下拉列表
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<SelectGroups>> GetShopTypeAsync()
+        {
+            var entity = await (from c in _shopRepository.GetAll()
+                                select new
+                                {
+                                    text = c.Name,
+                                    value = c.Id,
+                                }).OrderBy(v => v.text).AsNoTracking().ToListAsync();
+            var YingXiao = new SelectGroups();
+            YingXiao.text = "营销中心";
+            YingXiao.value = "9999";
+            var result = entity.MapTo<List<SelectGroups>>();
+            result.Add(YingXiao);
+            return result;
+        }
+
+        /// <summary>
+        /// 兑换统计
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task<List<ExchangeSummary>> GetExchangeSummary(GetExchangesInput input)
+        {         
+            var exchange = _entityRepository.GetAll().WhereIf(input.StartTime.HasValue,v => v.CreationTime >= input.StartTime && v.CreationTime <= input.EndTime).AsNoTracking();
+            var orderDetail = _orderDetailRepository.GetAll().WhereIf(!string.IsNullOrEmpty(input.FilterText),v=>v.Specification.Contains(input.FilterText)).AsNoTracking();
+            var shop = _shopRepository.GetAll().WhereIf(!string.IsNullOrEmpty(input.ShopType)&&input.ShopType!="9999",v=>v.Id == new Guid(input.ShopType)).AsNoTracking();
+
+            var resultC =new List<ExchangeSummary>();
+            var resultS = new List<ExchangeSummary>();
+            if (input.ShopType == "9999" || string.IsNullOrEmpty(input.ShopType))
+            {
+                //营销中心兑换记录
+                 resultC = (from e in exchange
+                               where e.ShopId.HasValue == false
+                               join od in orderDetail on e.OrderDetailId equals od.Id
+                               group new { od.Specification, od.Num } by new { od.Specification } into g
+                               select new ExchangeSummary()
+                               {
+                                   ShopName = "营销中心",
+                                   Specification = g.Key.Specification,
+                                   ExchangeNum = (int)g.Sum(v => v.Num)
+                               }).AsNoTracking().ToList();
+            }
+            if (input.ShopType != "9999" || string.IsNullOrEmpty(input.ShopType))
+            {
+                //直营店兑换记录
+                resultS = (from e in exchange
+                               join s in shop on e.ShopId equals s.Id
+                               join od in orderDetail on e.OrderDetailId equals od.Id
+                               group new { od.Specification, s.Name, od.Num } by new { od.Specification, s.Name } into g
+                               select new ExchangeSummary()
+                               {
+                                   ShopName = g.Key.Name,
+                                   Specification = g.Key.Specification,
+                                   ExchangeNum = (int)g.Sum(v => v.Num)
+                               }).AsNoTracking().OrderBy(v => v.ShopName).ToList();
+            }
+            var list = new List<ExchangeSummary>();
+            if(resultS.Count > 0)
+            {
+                list.AddRange(resultS);
+            }
+            if(resultC.Count> 0)
+            {
+                list.AddRange(resultC);
+            }
+            var sum = new ExchangeSummary();
+            sum.ShopName = "汇总";
+            sum.Specification = "/";
+            sum.ExchangeNum = list.Sum(v => v.ExchangeNum ?? 0);
+            list.Add(sum);
+            //var count = list.Count();
+            return list;
+        }
+
+        /// <summary>
+        /// 兑换明细汇总
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task<APIResultDto> ExportExchangeSummary(GetExchangesInput input)
+        {
+            try
+            {
+                var exportData = await GetExchangeSummary(input);
+                var result = new APIResultDto();
+                result.Code = 0;
+                result.Data = CreateExchangeSummaryExcel("兑换汇总.xlsx", exportData);
+                return result;
+
+            }
+            catch (Exception ex)
+            {
+                Logger.ErrorFormat("ExportExchangeSummary errormsg{0} Exception{1}", ex.Message, ex);
+                return new APIResultDto() { Code = 901, Msg = "网络忙...请待会儿再试！" };
+
+            }
+        }
+
+        /// <summary>
+        /// 创建兑换汇总
+        /// </summary>
+        /// <param name="fileName">表名</param>
+        /// <param name="data">表数据</param>
+        /// <returns></returns>
+        public string CreateExchangeSummaryExcel(string fileName, List<ExchangeSummary> data)
+        {
+            var fullPath = ExcelHelper.GetSavePath(_hostingEnvironment.WebRootPath) + fileName;
+            using (var fs = new FileStream(fullPath, FileMode.Create, FileAccess.Write))
+            {
+                IWorkbook workbook = new XSSFWorkbook();
+                ISheet sheet = workbook.CreateSheet("ExchangeSum");
+                var rowIndex = 0;
+                IRow titleRow = sheet.CreateRow(rowIndex);
+                string[] titles = {"店铺名称", "商品名称", "兑换数量" };
+                var fontTitle = workbook.CreateFont();
+                fontTitle.IsBold = true;
+                for (int i = 0; i < titles.Length; i++)
+                {
+                    var cell = titleRow.CreateCell(i);
+                    cell.CellStyle.SetFont(fontTitle);
+                    cell.SetCellValue(titles[i]);
+                    //ExcelHelper.SetCell(titleRow.CreateCell(i), fontTitle, titles[i]);
+                }
+                var font = workbook.CreateFont();
+                foreach (var item in data)
+                {
+
+                    rowIndex++;
+                    IRow row = sheet.CreateRow(rowIndex);
+                    ExcelHelper.SetCell(row.CreateCell(0), font, item.ShopName);
+                    ExcelHelper.SetCell(row.CreateCell(1), font, item.Specification);
+                    ExcelHelper.SetCell(row.CreateCell(2), font, item.ExchangeNum.ToString());
+                }
+                workbook.Write(fs);
+            }
+            return "/files/downloadtemp/" + fileName;
         }
     }
 }

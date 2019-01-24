@@ -31,6 +31,7 @@ using HC.DZWechat.ShopCarts;
 using HC.DZWechat.Deliverys;
 using HC.DZWechat.Goods;
 using HC.DZWechat.GenerateCodes;
+using HC.DZWechat.ScanExchange;
 
 namespace HC.DZWechat.Orders
 {
@@ -50,6 +51,7 @@ namespace HC.DZWechat.Orders
         private readonly IRepository<ShopGoods, Guid> _goodsRepository;
 
         private readonly IOrderManager _entityManager;
+        private readonly IScanExchangeManager _scanExchangeManager;
 
 
         /// <summary>
@@ -57,12 +59,14 @@ namespace HC.DZWechat.Orders
         ///</summary>
         public OrderAppService(
         IRepository<Order, Guid> entityRepository
-        , IOrderManager entityManager, IRepository<WechatUser, Guid> wechatUserRepository
+        , IOrderManager entityManager
+        , IRepository<WechatUser, Guid> wechatUserRepository
         , IRepository<IntegralDetail, Guid> integralRepository
         , IRepository<OrderDetail, Guid> orderdetailRepository
         , IRepository<ShopCart, Guid> shopCartRepository
         , IRepository<Delivery, Guid> deliveryRepository
         , IRepository<ShopGoods, Guid> goodsRepository
+                    , IScanExchangeManager scanExchangeManager
         )
         {
             _entityRepository = entityRepository;
@@ -73,6 +77,7 @@ namespace HC.DZWechat.Orders
             _shopCartRepository = shopCartRepository;
             _deliveryRepository = deliveryRepository;
             _goodsRepository = goodsRepository;
+            _scanExchangeManager = scanExchangeManager;
         }
 
 
@@ -90,11 +95,11 @@ namespace HC.DZWechat.Orders
             || u.DeliveryName.Contains(input.FilterText)
             || u.DeliveryPhone.Contains(input.FilterText))
                 .WhereIf(input.Status.HasValue, v => v.Status == input.Status.Value)
-                .WhereIf(input.IsUnMailing, u => _orderdetailRepository.GetAll().Any(d => d.OrderId == u.Id && d.Status == ExchangeStatus.未兑换 && d.ExchangeCode == ExchangeCodeEnum.邮寄兑换));
+                .WhereIf(input.IsUnMailing, u => _orderdetailRepository.GetAll().Any(d => d.OrderId == u.Id &&u.Status!= OrderStatus.已取消 && d.Status == ExchangeStatus.未兑换 && d.ExchangeCode == ExchangeCodeEnum.邮寄兑换));
 
             var count = await query.CountAsync();
             var entityList = await query
-                    .OrderBy(input.Sorting).AsNoTracking()
+                    .OrderByDescending(v=>v.CreationTime).AsNoTracking()
                     .PageBy(input)
                     .ToListAsync();
 
@@ -448,43 +453,56 @@ namespace HC.DZWechat.Orders
         /// <param name="input"></param>
         /// <returns></returns>
         [AbpAllowAnonymous]
-        public async Task CancelOrderByIdAsync(SaveOrderInput input)
+        public async Task<CommonDto.APIResultDto> CancelOrderByIdAsync(SaveOrderInput input)
         {
-            var user = await _wechatUserRepository.GetAll().Where(w => w.WxOpenId == input.WxOpenId).FirstAsync();
-            var order = await _entityRepository.GetAsync(input.OrderId);
-            var orderDetail = await _orderdetailRepository.GetAll().Where(v => v.OrderId == input.OrderId).ToListAsync();
-            //更新订单状态
-            order.CancelTime = DateTime.Now;
-            order.Remark = "用户取消订单";
-            order.Status = OrderStatus.已取消;
-            await _entityRepository.UpdateAsync(order);
-            //返回用户积分
-            user.Integral += order.Integral;
-            await _wechatUserRepository.UpdateAsync(user);
-            //新增积分明细
-            var integralDetail = new IntegralDetail();
-            integralDetail.RefId = order.Id.ToString();
-            integralDetail.UserId = user.Id;
-            integralDetail.InitialIntegral = 0;
-            integralDetail.Integral = order.Integral;
-            integralDetail.FinalIntegral = order.Integral;
-            integralDetail.Type = IntegralType.取消订单;
-            integralDetail.Desc = $"取消订单返回积分*{order.Integral}";
-            await _integralRepository.InsertAsync(integralDetail);
-            //修改商品库存,销量
-            foreach (var item in orderDetail)
+            bool hasExchanged =await _scanExchangeManager.CheckedOrderStatus(input.OrderId);
+            if (hasExchanged == true)
             {
-              var entity = await _goodsRepository.GetAsync(item.GoodsId);
-                if (entity.Stock.HasValue)
+                return new CommonDto.APIResultDto() { Code = 1, Msg = "商品已邮寄无法取消" };
+            }
+            else
+            {
+                var user = await _wechatUserRepository.GetAll().Where(w => w.WxOpenId == input.WxOpenId).FirstAsync();
+                var order = await _entityRepository.GetAsync(input.OrderId);
+                if(order.Status == OrderStatus.已支付)
                 {
-                    entity.Stock += item.Num;
+                    var orderDetail = await _orderdetailRepository.GetAll().Where(v => v.OrderId == input.OrderId).ToListAsync();
+                    //更新订单状态
+                    order.CancelTime = DateTime.Now;
+                    order.Remark = "用户取消订单";
+                    order.Status = OrderStatus.已取消;
+                    await _entityRepository.UpdateAsync(order);
+                    //返回用户积分
+                    user.Integral += order.Integral;
+                    await _wechatUserRepository.UpdateAsync(user);
+                    //新增积分明细
+                    var integralDetail = new IntegralDetail();
+                    integralDetail.RefId = order.Id.ToString();
+                    integralDetail.UserId = user.Id;
+                    integralDetail.InitialIntegral = 0;
+                    integralDetail.Integral = order.Integral;
+                    integralDetail.FinalIntegral = order.Integral;
+                    integralDetail.Type = IntegralType.取消订单;
+                    integralDetail.Desc = $"取消订单返回积分*{order.Integral}";
+                    await _integralRepository.InsertAsync(integralDetail);
+                    //修改商品库存,销量
+                    foreach (var item in orderDetail)
+                    {
+                        var entity = await _goodsRepository.GetAsync(item.GoodsId);
+                        if (entity.Stock.HasValue)
+                        {
+                            entity.Stock += item.Num;
+                        }
+                        if (!entity.SellCount.HasValue)
+                        {
+                            entity.SellCount = 0;
+                        }
+                        entity.SellCount -= item.Num;
+                        await _goodsRepository.UpdateAsync(entity);
+                    }
+                    return new CommonDto.APIResultDto() { Code = 0, Msg = "订单取消成功" };
                 }
-                if (!entity.SellCount.HasValue)
-                {
-                    entity.SellCount = 0;
-                }
-                entity.SellCount -= item.Num;
-                await _goodsRepository.UpdateAsync(entity);
+                return new CommonDto.APIResultDto() { Code = 3, Msg = "订单已取消" };
             }
         }
     }
