@@ -1,4 +1,4 @@
-<nz-card [nzBordered]="false" *ngIf="user">
+<nz-card [nzBordered]="false" *ngIf="user" class="info_card_margin">
     <div nz-row nzGutter="16" style="margin-bottom: 16px;">
         <div nz-col nzXs="24" nzMd="3" *ngIf="user.headImgUrl">
             <!-- <nz-card [nzBordered]="false" class="ant-card__img" style="padding:0px;"> -->
@@ -22,7 +22,9 @@
     <nz-tabset>
         <nz-tab nzTitle="订单">
             <ng-template #totalTemplate let-total>共 {{queryO.totalO}} 条</ng-template>
-            <nz-table #nzTableO [nzData]="orderList" [nzFrontPagination]="false" [nzTotal]="queryO.totalO" [nzShowTotal]="totalTemplate" [(nzPageIndex)]="queryO.pageIndexO" [(nzPageSize)]="queryO.pageSizeO" [nzLoading]="loadingO" [nzShowSizeChanger]="true" (nzPageIndexChange)="getOrderList()"
+            <nz-table #nzTableO [nzData]="orderList" [nzFrontPagination]="false" [nzTotal]="queryO.totalO"
+                [nzShowTotal]="totalTemplate" [(nzPageIndex)]="queryO.pageIndexO" [(nzPageSize)]="queryO.pageSizeO"
+                [nzLoading]="loadingO" [nzShowSizeChanger]="true" (nzPageIndexChange)="getOrderList()"
                 (nzPageSizeChange)="getOrderList()">
                 <thead>
                     <tr>
@@ -54,7 +56,9 @@
         </nz-tab>
         <nz-tab nzTitle="积分明细">
             <ng-template #totalTemplate let-total>共 {{queryI.totalI}} 条</ng-template>
-            <nz-table #nzTable [nzData]="integralList" [nzFrontPagination]="false" [nzTotal]="queryI.totalI" [nzShowTotal]="totalTemplate" [(nzPageIndex)]="queryI.pageIndexI" [(nzPageSize)]="queryI.pageSizeI" [nzLoading]="loadingI" [nzShowSizeChanger]="true" (nzPageIndexChange)="getIntegralList()"
+            <nz-table #nzTable [nzData]="integralList" [nzFrontPagination]="false" [nzTotal]="queryI.totalI"
+                [nzShowTotal]="totalTemplate" [(nzPageIndex)]="queryI.pageIndexI" [(nzPageSize)]="queryI.pageSizeI"
+                [nzLoading]="loadingI" [nzShowSizeChanger]="true" (nzPageIndexChange)="getIntegralList()"
                 (nzPageSizeChange)="getIntegralList()">
                 <thead>
                     <tr>
@@ -77,7 +81,8 @@
             </nz-table>
         </nz-tab>
         <nz-tab nzTitle="收货地址">
-            <nz-table #nzTableAd [nzData]="addressList" [nzShowPagination]="false" [nzFrontPagination]="false" [nzLoading]="loadingA">
+            <nz-table #nzTableAd [nzData]="addressList" [nzShowPagination]="false" [nzFrontPagination]="false"
+                [nzLoading]="loadingA">
                 <thead>
                     <tr>
                         <th>联系人姓名</th>

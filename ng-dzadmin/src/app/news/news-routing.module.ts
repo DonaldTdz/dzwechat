@@ -15,6 +15,7 @@ const routes: Routes = [
         component: NewsDetailComponent,
         // data: { translate: 'news-detail', permission: 'Pages', title: '新增资讯' },
         canActivate: [AppRouteGuard],
+        data: { title: '咨讯新增' }
     },
 
     {
@@ -22,6 +23,7 @@ const routes: Routes = [
         component: NewsDetailComponent,
         // data: { translate: 'news-detail', permission: 'Pages', title: '编辑资讯' },
         canActivate: [AppRouteGuard],
+        data: { title: '咨讯信息' }
     }
 ];
 

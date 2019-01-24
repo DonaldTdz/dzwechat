@@ -40,7 +40,7 @@
       <!-- 角色介绍 -->
       <nz-form-item>
         <nz-form-control>
-          <input nz-input name="description" [(ngModel)]="role.description" [placeholder]="l('RoleDescription')">
+          <input nz-input name="description" [(ngModel)]="role.description" [placeholder]="'角色描述'">
         </nz-form-control>
       </nz-form-item>
 
@@ -55,10 +55,10 @@
           {{l("Cancel")}}
         </button>
         <button nz-button [nzType]="'primary'" type="submit" [disabled]="!validateForm.valid||saving">
-          {{l("Save")}}
+          保存
         </button>
       </div>
-    
+
     </form>
   </nz-spin>
 </div>
