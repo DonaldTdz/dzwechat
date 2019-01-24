@@ -1,10 +1,10 @@
 //
-@sidebar-nav-bg: #fff;
-@sidebar-nav-sub-bg: #fff;
+@sidebar-nav-bg: #fff; //#404040;
+@sidebar-nav-sub-bg: #fff; //#404040;
 @sidebar-nav-logo: #0b467e;
-@sidebar-nav-selected-bg: #e6f7ff;
+@sidebar-nav-selected-bg: #e6f7ff; //#333;
 @sidebar-nav-selected-border-right: none;
-@sidebar-nav-content-color: rgba(0, 0, 0, .65);
+@sidebar-nav-content-color: rgba(0, 0, 0, .65);//rgba(255,255,255,.67);
 @sidebar-nav-content-hover-color: #0b467e;
 @sidebar-nav-box-shadow: none;
 @sidebar-nav-overflow-x: hidde;
@@ -19,8 +19,11 @@
     margin-top: 0px;
     min-height: 100vh;
     box-shadow: @sidebar-nav-box-shadow;
-    position: relative;
+    //position: relative;
     z-index: 10;
+    position: fixed;
+    top: 0;
+    left: 0;
 }
 
 .alain-default__aside-inner {
@@ -97,6 +100,10 @@
 
 // 顶部菜单栏容器
 .ant-layout-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
     padding: 0px;
     background: @sidebar-nav-bg;
     z-index: 1;
@@ -128,6 +135,9 @@
         background: @content-bg;
         min-height: 0;
     }
+    .alain-default__aside {
+        width: 80px;
+    }
 }
 
 // 菜单和内容响应式
@@ -152,6 +162,9 @@
         .ant-pro-content {
             transform: translateZ(0);
             min-height: 100vh;
+        }
+        .alain-default__aside {
+            width: 80px;
         }
     }
 }

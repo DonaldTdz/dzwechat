@@ -18,7 +18,7 @@
     <div nz-row nzType="flex" nzAlign="middle" class="bg-success rounded-md">
       <div nz-col nzSpan="24" class="p-md text-white">
         <div class="h2 mt0">{{homeInfo.integralTotal}}积分</div>
-        <p class="text-nowrap mb0">积分总数</p>
+        <p class="text-nowrap mb0">积分剩余总数</p>
       </div>
     </div>
   </div>
@@ -120,7 +120,7 @@
         <thead>
           <tr>
             <th>
-              <span>单位</span>
+              <span>月份</span>
             </th>
             <th *ngFor="let intMoth of nzTablew.data">
               <span>{{intMoth.groupName}}</span>

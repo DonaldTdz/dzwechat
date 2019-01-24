@@ -5,7 +5,7 @@ import { HttpModule, JsonpModule } from '@angular/http';
 
 import { AccountRoutingModule } from './account-routing.module';
 
-import { ServiceProxyModule } from '@shared/service-proxies/service-proxy.module';
+//import { ServiceProxyModule } from '@shared/service-proxies/service-proxy.module';
 
 import { SharedModule } from '@shared/shared.module';
 
@@ -33,7 +33,7 @@ import { TenantRegisterComponent } from './tenant-register/tenant-register.compo
     NgZorroAntdModule,
     AbpModule,
     SharedModule,
-    ServiceProxyModule,
+    //ServiceProxyModule,
     AccountRoutingModule,
   ],
   declarations: [
