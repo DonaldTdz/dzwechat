@@ -27,6 +27,7 @@ using Microsoft.Extensions.Configuration;
 using HC.DZWechat.Configuration;
 using Microsoft.AspNetCore.Hosting;
 using HC.DZWechat.Exchanges;
+using HC.DZWechat.Shops;
 
 namespace HC.DZWechat.OrderDetails
 {
@@ -39,6 +40,7 @@ namespace HC.DZWechat.OrderDetails
         private readonly IRepository<OrderDetail, Guid> _entityRepository;
         private readonly IRepository<Goods.ShopGoods, Guid> _goodRepository;
         private readonly IRepository<Exchange, Guid> _exchangeRepository;
+        private readonly IRepository<Shop, Guid> _shopRepository;
         private readonly IOrderDetailManager _entityManager;
         private readonly IConfigurationRoot _appConfiguration;
         private string _hostUrl;
@@ -50,6 +52,7 @@ namespace HC.DZWechat.OrderDetails
         IRepository<OrderDetail, Guid> entityRepository
         , IRepository<Goods.ShopGoods, Guid> goodRepository
         , IOrderDetailManager entityManager
+            , IRepository<Shop, Guid> shopRepository
             , IRepository<Exchange, Guid> exchangeRepository
              , IHostingEnvironment env
         )
@@ -58,6 +61,7 @@ namespace HC.DZWechat.OrderDetails
             _goodRepository = goodRepository;
             _entityManager = entityManager;
             _exchangeRepository = exchangeRepository;
+            _shopRepository = shopRepository;
             _appConfiguration = AppConfigurations.Get(env.ContentRootPath, env.EnvironmentName, env.IsDevelopment());
             _hostUrl = _appConfiguration["App:ServerRootAddress"];
 
@@ -72,32 +76,42 @@ namespace HC.DZWechat.OrderDetails
 
         public async Task<PagedResultDto<OrderDetailListDto>> GetPaged(GetOrderDetailsInput input)
         {
-            var query = _entityRepository.GetAll().Where(v => v.OrderId == input.OrderId);
-            //var goods = _goodRepository.GetAll();
-            //var query = from o in orderDetails
-            //            join g in goods on o.GoodsId equals g.Id
-            //            select new OrderDetailListDto()
-            //            {
-            //                Id = o.Id,
-            //                ProductName = g.Specification,
-            //                Specification = o.Specification,
-            //                Integral = o.Integral,
-            //                Unit = o.Unit,
-            //                UserChooseType = o.UserChooseType,
-            //                Num = o.Num,
-            //                ExchangeTime = o.ExchangeTime,
-            //                CreationTime = o.CreationTime,
-            //                Status = o.Status
-            //            };
-            var count = await query.CountAsync();
-            var entityList = await query
+            var exchange = _exchangeRepository.GetAll();
+            var orderDetail = _entityRepository.GetAll().Where(v => v.OrderId == input.OrderId);
+            var shop = _shopRepository.GetAll();
+            var queryEO = from e in exchange
+                          join s in shop on e.ShopId equals s.Id
+                          select new OrderDetailListDto()
+                          {
+                              ShopName = s.Name,
+                              //ExchangeCode = e.ExchangeCode,
+                              OrderDetailId = e.OrderDetailId
+                          };
+            var result = from od in orderDetail
+                         join q in queryEO on od.Id equals q.OrderDetailId into table
+                         from t in table.DefaultIfEmpty()
+                         select new OrderDetailListDto()
+                         {
+                             Id = od.Id,
+                             ShopName = t.ShopName,
+                             ExchangeCode = od.ExchangeCode,
+                             CreationTime = od.CreationTime,
+                             ExchangeTime = od.ExchangeTime,
+                             Specification = od.Specification,
+                             Num = od.Num,
+                             Unit = od.Unit,
+                             Integral = od.Integral,
+                             Status = od.Status
+                         };
+            var count = await result.CountAsync();
+            var entityList = await result
                     .OrderByDescending(v => v.CreationTime).AsNoTracking()
                     .PageBy(input)
                     .ToListAsync();
             // var entityListDtos = ObjectMapper.Map<List<OrderDetailListDto>>(entityList);
-            var entityListDtos = entityList.MapTo<List<OrderDetailListDto>>();
+            //var entityListDtos = entityList.MapTo<List<OrderDetailListDto>>();
 
-            return new PagedResultDto<OrderDetailListDto>(count, entityListDtos);
+            return new PagedResultDto<OrderDetailListDto>(count, entityList);
         }
 
 
@@ -246,8 +260,8 @@ namespace HC.DZWechat.OrderDetails
                                     Integral = od.Integral,
                                     Status = od.Status,
                                     PhotoUrl = _hostUrl + g.PhotoUrl,
-                                    LogisticsCompany = t.LogisticsCompany??null,
-                                    LogisticsNo = t.LogisticsNo??null
+                                    LogisticsCompany = t.LogisticsCompany ?? null,
+                                    LogisticsNo = t.LogisticsNo ?? null
                                 }).OrderByDescending(v => v.CreationTime).AsNoTracking().ToListAsync();
             foreach (var item in result)
             {

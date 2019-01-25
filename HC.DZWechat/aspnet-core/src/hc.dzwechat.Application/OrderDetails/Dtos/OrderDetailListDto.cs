@@ -92,7 +92,7 @@ namespace HC.DZWechat.OrderDetails.Dtos
 		/// <summary>
 		/// UserChooseType
 		/// </summary>
-		public ExchangeCodeEnum ExchangeCode { get; set; }
+		public ExchangeCodeEnum? ExchangeCode { get; set; }
         public string ExchangeCodeName
         {
             get
@@ -100,6 +100,9 @@ namespace HC.DZWechat.OrderDetails.Dtos
                 return ExchangeCode.ToString();
             }
         }
+
+        public string ShopName { get; set; }
+        public Guid? OrderDetailId { get; set; }
     }
 
     public class WXOrderDetailListDto : EntityDto<Guid>, IHasCreationTime
