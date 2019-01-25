@@ -174,6 +174,10 @@ namespace HC.DZWechat.OrderDetails.Dtos
 
         public string LogisticsCompany { get; set; }
         public string LogisticsNo { get; set; }
+
+        public string ShopName { get; set; }
+
+        public string ShopAddress { get; set; }
     }
 
     public class WXOrderDetailListWitStatusDto

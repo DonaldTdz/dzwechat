@@ -19,6 +19,11 @@ namespace HC.DZWechat.Web.Host.Controllers
 
         public IActionResult Index()
         {
+            /*string word = "1088257684991377408,1544";
+            Helpers.RSAHelper rsa = new Helpers.RSAHelper(Helpers.RSAType.RSA2, System.Text.Encoding.ASCII, Helpers.RSAHelper.PrivateKeyRsa2, Helpers.RSAHelper.PublicKeyRsa2);
+            var mword = rsa.Encrypt(word);
+            var dword = rsa.Decrypt(mword);*/
+
             //return Redirect("/swagger");
             return Redirect("/dzadmin/index.html");
         }

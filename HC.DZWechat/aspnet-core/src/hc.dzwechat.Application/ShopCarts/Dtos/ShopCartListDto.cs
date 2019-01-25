@@ -120,7 +120,7 @@ namespace HC.DZWechat.ShopCarts.Dtos
         {
             get
             {
-                if (num > Stock)
+                if (Stock.HasValue && num > Stock)
                 {
                     return Stock;
                 }
@@ -183,7 +183,7 @@ namespace HC.DZWechat.ShopCarts.Dtos
         {
             get
             {
-                if (IsAction == false)
+                if (IsAction == false || Num == 0)
                 {
                     return false;
                 }

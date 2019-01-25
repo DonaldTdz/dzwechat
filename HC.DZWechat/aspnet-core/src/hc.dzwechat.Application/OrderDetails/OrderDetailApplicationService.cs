@@ -246,8 +246,8 @@ namespace HC.DZWechat.OrderDetails
             var exchanges = _exchangeRepository.GetAll();
             var result = await (from od in orderDetail
                                 join g in goods on od.GoodsId equals g.Id
-                                join e in exchanges on od.Id equals e.OrderDetailId into table
-                                from t in table.DefaultIfEmpty()
+                                join e in exchanges on od.Id equals e.OrderDetailId into table from t in table.DefaultIfEmpty()
+                                join s in _shopRepository.GetAll() on t.ShopId equals s.Id into stemp from st in stemp.DefaultIfEmpty()
                                 select new WXOrderDetailListDto()
                                 {
                                     Id = od.Id,
@@ -260,24 +260,16 @@ namespace HC.DZWechat.OrderDetails
                                     Integral = od.Integral,
                                     Status = od.Status,
                                     PhotoUrl = _hostUrl + g.PhotoUrl,
-                                    LogisticsCompany = t.LogisticsCompany ?? null,
-                                    LogisticsNo = t.LogisticsNo ?? null
+                                    LogisticsCompany = t.LogisticsCompany,
+                                    LogisticsNo = t.LogisticsNo,
+                                    ShopName = st.Name,
+                                    ShopAddress = st.Address
                                 }).OrderByDescending(v => v.CreationTime).AsNoTracking().ToListAsync();
-            foreach (var item in result)
-            {
-                if (item.Status == ExchangeStatus.已兑换)
-                {
-                    return new WXOrderDetailListWitStatusDto()
-                    {
-                        List = result,
-                        IsCancel = false
-                    };
-                }
-            }
+           
             return new WXOrderDetailListWitStatusDto()
             {
                 List = result,
-                IsCancel = true
+                IsCancel = !result.Any(r => r.Status == ExchangeStatus.已兑换)
             };
         }
     }
