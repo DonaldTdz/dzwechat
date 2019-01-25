@@ -58,4 +58,19 @@ namespace HC.DZWechat.VipUsers.Dtos
         public string BindWechatUser { get; set; }
         public Guid? WechatId { get; set; }
     }
+
+    public class WXVipUserListDto
+    {
+        /// <summary>
+        /// Phone
+        /// </summary>
+        public string Phone { get; set; }
+
+
+
+        /// <summary>
+        /// IdNumber
+        /// </summary>
+        public string IdNumber { get; set; }
+    }
 }

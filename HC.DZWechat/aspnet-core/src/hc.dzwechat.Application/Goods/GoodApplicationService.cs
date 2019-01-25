@@ -198,6 +198,15 @@ namespace HC.DZWechat.Goods
         protected virtual async Task<GoodListDto> Create(GoodEditDto input)
         {
             input.SellCount = 0;
+            if(input.IsAction == true)
+            {
+                input.IsAction = true;
+                input.OnlineTime = DateTime.Now;
+            }
+            else
+            {
+                input.IsAction = false;
+            }
             var entity = input.MapTo<ShopGoods>();
             entity = await _entityRepository.InsertAsync(entity);
             await CurrentUnitOfWork.SaveChangesAsync();
@@ -211,17 +220,19 @@ namespace HC.DZWechat.Goods
         protected virtual async Task<GoodListDto> Update(GoodEditDto input)
         {
             input.CreationTime = DateTime.Now;
-            if (input.IsAction == true)
-            {
-                input.OnlineTime = DateTime.Now;
-            }
-            else
-            {
-                input.OfflineTime = DateTime.Now;
-            }
+
+            //if (input.IsAction == true)
+            //{
+            //    input.OnlineTime = DateTime.Now;
+            //}
+            //else
+            //{
+            //    input.OfflineTime = DateTime.Now;
+            //}
             var entity = await _entityRepository.GetAsync(input.Id.Value);
             input.MapTo(entity);
             await _entityRepository.UpdateAsync(entity);
+            await CurrentUnitOfWork.SaveChangesAsync();
             return entity.MapTo<GoodListDto>();
         }
 
@@ -260,6 +271,14 @@ namespace HC.DZWechat.Goods
         {
             var entity = await _entityRepository.GetAsync(input.Id.Value);
             entity.IsAction = input.IsAction;
+            if(input.IsAction == true)
+            {
+                entity.OnlineTime = DateTime.Now;
+            }
+            else
+            {
+                entity.OfflineTime = DateTime.Now;
+            }
             await _entityRepository.UpdateAsync(entity);
             return entity.MapTo<GoodListDto>();
         }

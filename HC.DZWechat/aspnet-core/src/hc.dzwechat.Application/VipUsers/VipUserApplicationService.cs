@@ -228,11 +228,11 @@ VipUserEditDto editDto;
         /// <param name="input"></param>
         /// <returns></returns>
         [AbpAllowAnonymous]
-        public async Task<VipUserListDto> GetVipUserById(GetWXVipUserInput input)
+        public async Task<WXVipUserListDto> GetVipUserById(GetWXVipUserInput input)
         {
             Guid? vipId = await _wechatUserRepository.GetAll().Where(v => v.WxOpenId == input.WxOpenId).Select(v => v.VipUserId).FirstAsync();
             var entity = await _entityRepository.GetAsync(vipId.Value);
-            var result = entity.MapTo<VipUserListDto>();
+            var result = entity.MapTo<WXVipUserListDto>();
             if (!string.IsNullOrEmpty(result.Phone))
             {
                 string tempPhone = result.Phone;

@@ -8,6 +8,7 @@ import { AppConsts } from '@shared/AppConsts';
 import { ImageCropperComponent, CropperSettings, Bounds, CropPosition } from 'ngx-img-cropper';
 import { CropperComponent } from './cropper/cropper.component';
 import { log } from 'util';
+import { retry } from 'rxjs/operators';
 
 @Component({
     selector: 'goods-detail',
@@ -112,12 +113,15 @@ export class GoodsDetailComponent implements OnInit {
             });
         } else {
             this.cardTitle = "新建商品";
-            this.goods.isAction = true;
+            this.goods.isAction = false;
             this.goods.categoryId = 1;
             this.goods.isBanner = false;
         }
     }
-    save() {
+    save(isAction?: boolean) {
+        if (isAction) {
+            this.goods.isAction = true;
+        }
         // save(isOnline: boolean) {
         this.loading = true;
         // if (!isOnline) {
@@ -149,9 +153,13 @@ export class GoodsDetailComponent implements OnInit {
                 this.goods.isBanner = false;
             }
         }
+        if (this.goods.exchangeCode == null) {
+            this.notify.warn('兑换方式不能为空', '');
+            this.loading = false;
+            return;
+        }
         // console.log(this.fileList);
         // console.log(this.photoList);
-
         // console.log(this.goods.photoUrl);
 
         this.goodsService.updateGoods(this.goods).subscribe((result: Goods) => {
@@ -174,6 +182,8 @@ export class GoodsDetailComponent implements OnInit {
                 this.goods.isAction = true;
                 this.goodsService.updateGoodsStatus(this.goods).subscribe((result: Goods) => {
                     this.goods.isAction = result.isAction;
+                    this.goods.offlineTime = result.offlineTime;
+                    this.goods.onlineTime = result.onlineTime;
                     if (result.isAction) {
                         this.isOnline = true;
                     } else {
@@ -194,6 +204,8 @@ export class GoodsDetailComponent implements OnInit {
                 this.goods.isAction = false;
                 this.goodsService.updateGoodsStatus(this.goods).subscribe((result: Goods) => {
                     this.goods.isAction = result.isAction;
+                    this.goods.offlineTime = result.offlineTime;
+                    this.goods.onlineTime = result.onlineTime;
                     if (result.isAction) {
                         this.isOnline = true;
                     } else {

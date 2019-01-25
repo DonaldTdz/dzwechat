@@ -68,8 +68,8 @@ namespace HC.DZWechat.Goods
         /// </summary>
         [Required]
         public virtual DateTime CreationTime { get; set; }
-        public virtual DateTime OnlineTime { get; set; }
-        public virtual DateTime OfflineTime { get; set; }
+        public virtual DateTime? OnlineTime { get; set; }
+        public virtual DateTime? OfflineTime { get; set; }
         /// <summary>
         /// 创建人
         /// </summary>

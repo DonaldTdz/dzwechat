@@ -40,6 +40,12 @@
                     </nz-form-control>
                 </nz-form-item>
                 <nz-form-item nz-row>
+                    <nz-form-label nz-col [nzSm]="4" nzRequired>兑换方式</nz-form-label>
+                    <nz-form-control nz-col [nzSm]="20">
+                        <nz-checkbox-group name="exchangeType" [(ngModel)]="exchangeTypes"></nz-checkbox-group>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
                     <nz-form-label nz-col [nzSm]="4" nzRequired>商品图片</nz-form-label>
                     <nz-form-control [nzSm]="20" nzHasFeedback>
                         <div class="clearfix">
@@ -89,12 +95,6 @@
                         <nz-form-explain *ngIf="barCode.control.dirty&&barCode.control.errors">
                             <ng-container *ngIf="barCode.control.hasError('pattern')">请输入正确的数字</ng-container>
                         </nz-form-explain>
-                    </nz-form-control>
-                </nz-form-item>
-                <nz-form-item nz-row>
-                    <nz-form-label nz-col [nzSm]="4">兑换方式</nz-form-label>
-                    <nz-form-control nz-col [nzSm]="20">
-                        <nz-checkbox-group name="exchangeType" [(ngModel)]="exchangeTypes"></nz-checkbox-group>
                     </nz-form-control>
                 </nz-form-item>
                 <nz-form-item nz-row>
@@ -148,6 +148,10 @@
             </button>
             <button nz-button [nzType]="'primary'" type="submit" [nzLoading]="loading" [disabled]="!validateForm.valid || loading">
                 保存
+            </button>
+            <button nz-button *ngIf="!goods.id" (click)="save(true)" [nzType]="'primary'" type="button" [nzLoading]="loading"
+                [disabled]="!validateForm.valid || loading">
+                保存并上架
             </button>
         </footer-toolbar>
     </nz-card>

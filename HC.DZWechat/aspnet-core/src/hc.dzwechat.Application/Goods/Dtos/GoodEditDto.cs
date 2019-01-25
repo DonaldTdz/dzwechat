@@ -100,8 +100,8 @@ namespace  HC.DZWechat.Goods.Dtos
 		[Required(ErrorMessage="CreationTime不能为空")]
 		public DateTime CreationTime { get; set; }
 
-        public DateTime OnlineTime { get; set; }
-        public DateTime OfflineTime { get; set; }
+        public DateTime? OnlineTime { get; set; }
+        public DateTime? OfflineTime { get; set; }
 
         /// <summary>
         /// CreatorUserId

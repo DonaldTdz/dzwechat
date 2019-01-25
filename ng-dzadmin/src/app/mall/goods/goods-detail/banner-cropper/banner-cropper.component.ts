@@ -35,12 +35,16 @@ export class BannerCropperComponent {
 
     handleCancel = (e) => {
         this.isVisible = false;
-
+        this.clear();
     }
 
     upload(e: any) {
         this.modalSelect.emit(e);
         this.isVisible = false;
+    }
+
+    clear() {
+        this.banner.reset();
     }
 
     beforeUpload = (file: File): boolean => {

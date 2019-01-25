@@ -72,6 +72,6 @@ namespace HC.DZWechat.VipUsers
         Task BatchDelete(List<Guid> input);
 
         Task<bool> BindVipUser(GetWXVipUserInput input);
-        Task<VipUserListDto> GetVipUserById(GetWXVipUserInput input);
+        Task<WXVipUserListDto> GetVipUserById(GetWXVipUserInput input);
     }
 }

@@ -33,9 +33,20 @@ export class CropperComponent {
         this.data = {};
     }
 
+    ngOnDestroy() {
+        console.log('onDestroy');
+    }
+
+
     handleCancel = (e) => {
         this.isVisible = false;
+        // let { } = this.cropperSettings;
+        // this.data = {};
+        this.clear();
+    }
 
+    clear() {
+        this.cropper.reset();
     }
 
     upload(e: any) {
