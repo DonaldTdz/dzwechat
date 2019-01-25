@@ -30,6 +30,7 @@
                 <th>所需积分</th>
                 <th>兑换状态</th>
                 <th>兑换方式</th>
+                <th>兑换店铺</th>
                 <th>兑换时间</th>
                 <th>创建时间</th>
                 <th>操作</th>
@@ -47,10 +48,11 @@
                     <nz-badge *ngIf="data.status == 2" [nzStatus]="'success'" [nzText]="'已兑换'"></nz-badge>
                 </td>
                 <td>{{data.exchangeCodeName}}</td>
+                <td>{{data.shopName}}</td>
                 <td>{{data.exchangeTime | _date}}</td>
                 <td>{{data.creationTime | _date}}</td>
                 <td>
-                    <a *ngIf="data.exchangeCode ==2" (click)="goExchange(data.id)">修改邮寄信息</a>
+                    <a *ngIf="data.exchangeCode ==2&&order.status!=4" (click)="goExchange(data.id)">{{data.status==1?'添加邮寄信息':'修改邮寄信息'}}</a>
                 </td>
             </tr>
         </tbody>

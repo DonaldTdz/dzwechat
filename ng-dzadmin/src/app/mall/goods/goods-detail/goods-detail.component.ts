@@ -158,6 +158,11 @@ export class GoodsDetailComponent implements OnInit {
             this.loading = false;
             return;
         }
+        if (this.goods.photoUrl == null) {
+            this.notify.warn('商品图片不能为空', '');
+            this.loading = false;
+            return;
+        }
         // console.log(this.fileList);
         // console.log(this.photoList);
         // console.log(this.goods.photoUrl);

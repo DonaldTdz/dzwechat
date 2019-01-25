@@ -231,14 +231,18 @@ VipUserEditDto editDto;
         public async Task<WXVipUserListDto> GetVipUserById(GetWXVipUserInput input)
         {
             Guid? vipId = await _wechatUserRepository.GetAll().Where(v => v.WxOpenId == input.WxOpenId).Select(v => v.VipUserId).FirstAsync();
-            var entity = await _entityRepository.GetAsync(vipId.Value);
-            var result = entity.MapTo<WXVipUserListDto>();
-            if (!string.IsNullOrEmpty(result.Phone))
+            if (vipId.HasValue)
             {
-                string tempPhone = result.Phone;
-                result.Phone = tempPhone.Substring(0, 3) + "****" + result.Phone.Substring(7, 4);
+                var entity = await _entityRepository.GetAsync(vipId.Value);
+                var result = entity.MapTo<WXVipUserListDto>();
+                if (!string.IsNullOrEmpty(result.Phone))
+                {
+                    string tempPhone = result.Phone;
+                    result.Phone = tempPhone.Substring(0, 3) + "****" + result.Phone.Substring(7, 4);
+                }
+                return result;
             }
-            return result;
+            return new WXVipUserListDto();
         }
     }
 }
