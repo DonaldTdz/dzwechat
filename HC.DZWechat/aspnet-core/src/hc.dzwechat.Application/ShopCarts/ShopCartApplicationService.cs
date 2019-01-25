@@ -288,7 +288,7 @@ ShopCartEditDto editDto;
                             Unit = c.Unit
                         };
             var dataList = await query.ToListAsync();
-            var totalPrice = dataList.Sum(d => d.Integral * d.Num);
+            var totalPrice = dataList.Where(d => d.Ischecked == true).Sum(d => d.Integral * d.Num);
             return new UserCart() { Items = dataList, TotalPrice = totalPrice };
         }
 

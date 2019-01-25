@@ -57,7 +57,10 @@
                         <td>{{data.categoryName}}</td>
                         <td>{{data.integral}}</td>
                         <td>{{data.sellCount}}</td>
-                        <td>{{data.isAction == true?"上架":"下架"}}</td>
+                        <td>
+                            <nz-badge *ngIf="data.isAction" [nzStatus]="'success'" [nzText]="'上架'"></nz-badge>
+                            <nz-badge *ngIf="!data.isAction" [nzStatus]="'error'" [nzText]="'下架'"></nz-badge>
+                        </td>
                         <td>{{data.onlineTime | _date}}</td>
                         <td>
                             <a (click)="goDetail(data.id)">详情</a>
