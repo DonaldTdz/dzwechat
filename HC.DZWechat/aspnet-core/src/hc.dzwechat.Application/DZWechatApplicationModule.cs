@@ -1,7 +1,9 @@
 ﻿using Abp.AutoMapper;
+using Abp.Dependency;
 using Abp.Modules;
 using Abp.Reflection.Extensions;
 using HC.DZWechat.Authorization;
+using HC.DZWechat.GoodsWechat;
 
 namespace HC.DZWechat
 {
@@ -13,6 +15,7 @@ namespace HC.DZWechat
         public override void PreInitialize()
         {
             Configuration.Authorization.Providers.Add<DZWechatAuthorizationProvider>();
+            //IocManager.Register<IGoodsWechatAppService, GoodsWechatAppService>(DependencyLifeStyle.Transient);
         }
 
         public override void Initialize()

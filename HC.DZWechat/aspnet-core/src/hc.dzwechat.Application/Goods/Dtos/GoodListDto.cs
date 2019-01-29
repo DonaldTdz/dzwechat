@@ -6,6 +6,7 @@ using Abp.Domain.Entities.Auditing;
 using System.ComponentModel.DataAnnotations;
 using HC.DZWechat.Goods;
 using Abp.AutoMapper;
+using HC.DZWechat.GoodsWechat.Dtos;
 
 namespace HC.DZWechat.Goods.Dtos
 {
@@ -177,7 +178,7 @@ namespace HC.DZWechat.Goods.Dtos
         public decimal? Total { get; set; }
     }
 
-    [AutoMapFrom(typeof(ShopGoods))]
+    [AutoMapFrom(typeof(ShopGoods), typeof(GoodsCacheItem))]
     public class GoodsDetailDto : EntityDto<Guid>
     {
         public GoodsDetailDto() { }

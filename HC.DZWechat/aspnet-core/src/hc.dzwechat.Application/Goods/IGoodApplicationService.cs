@@ -75,7 +75,7 @@ namespace HC.DZWechat.Goods
         Task<GoodListDto> ChangeStatus(GoodEditDto input);
 
         
-        Task<WxPagedResultDto<GoodsGridDto>> GetHeatGoodsAsync(WxPagedInputDto input);
+       //Task<WxPagedResultDto<GoodsGridDto>> GetHeatGoodsAsync(WxPagedInputDto input);
 
         /// <summary>
         /// 按规格统计积分销售
@@ -85,14 +85,13 @@ namespace HC.DZWechat.Goods
         /// <summary>
         /// 按规格统计销售
         /// </summary>
-        /// <returns></returns>
         Task<List<IntegralStatisDto>> GetGoodsStatis();
         
-        Task<WxPagedResultDto<GoodsGridDto>> GetSearchGoodsAsync(GoodsSearchInputDto input);
+        //Task<WxPagedResultDto<GoodsGridDto>> GetSearchGoodsAsync(GoodsSearchInputDto input);
 
-        Task<List<GoodsGridDto>> GetGroupGoodsAsync(int groupId, int top);
+        //Task<List<GoodsGridDto>> GetGroupGoodsAsync(int groupId, int top);
 
-        Task<GoodsDetailDto> GetGoodsDetailAsync(Guid id);
-        Task<List<GoodListDto>> GetGoodsBanner();
+        //Task<GoodsDetailDto> GetGoodsDetailAsync(Guid id);
+        //Task<List<GoodListDto>> GetGoodsBanner();
     }
 }

@@ -287,7 +287,7 @@ namespace HC.DZWechat.Goods
         /// <summary>
         /// 热卖商品
         /// </summary>
-        [AbpAllowAnonymous]
+       /* [AbpAllowAnonymous]
         public async Task<WxPagedResultDto<GoodsGridDto>> GetHeatGoodsAsync(WxPagedInputDto input)
         {
             var query = _entityRepository.GetAll().Where(e => e.IsAction == true && e.Stock != 0).Select(e => new GoodsGridDto(_hostUrl)
@@ -306,12 +306,12 @@ namespace HC.DZWechat.Goods
             var result = new WxPagedResultDto<GoodsGridDto>(count, dataList);
             result.PageSize = input.Size;
             return result;
-        }
+        }*/
 
         /// <summary>
         /// 商品搜索
         /// </summary>
-        [AbpAllowAnonymous]
+        /*[AbpAllowAnonymous]
         public async Task<WxPagedResultDto<GoodsGridDto>> GetSearchGoodsAsync(GoodsSearchInputDto input)
         {
             var newData = DateTime.Today.AddDays(-60);//近60天上新的产品
@@ -371,9 +371,9 @@ namespace HC.DZWechat.Goods
             var result = new WxPagedResultDto<GoodsGridDto>(count, dataList);
             result.PageSize = input.Size;
             return result;
-        }
+        }*/
 
-        [AbpAllowAnonymous]
+        /*[AbpAllowAnonymous]
         public async Task<List<GoodsGridDto>> GetGroupGoodsAsync(int groupId, int top)
         {
             top = top == 0 ? 50 : top;
@@ -391,7 +391,7 @@ namespace HC.DZWechat.Goods
                     unit = e.Unit
                 }).ToListAsync();
             return goodsList;
-        }
+        }*/
 
         /// <summary>
         /// 按规格统计积分销售
@@ -433,7 +433,7 @@ namespace HC.DZWechat.Goods
             return result;
         }
 
-        [AbpAllowAnonymous]
+        /*[AbpAllowAnonymous]
         public async Task<GoodsDetailDto> GetGoodsDetailAsync(Guid id)
         {
             var query = await _entityRepository.GetAsync(id);
@@ -442,13 +442,13 @@ namespace HC.DZWechat.Goods
             result.Host = _hostUrl;
             result.CategoryName = cat.Name;
             return result;
-        }
+        }*/
 
         /// <summary>
         /// 获取banner图
         /// </summary>
         /// <returns></returns>
-        [AbpAllowAnonymous]
+        /*[AbpAllowAnonymous]
         public async Task<List<GoodListDto>> GetGoodsBanner()
         {
             var result = await _entityRepository.GetAll().Where(v=>v.BannerUrl!=null).Select(v => new GoodListDto()
@@ -458,7 +458,7 @@ namespace HC.DZWechat.Goods
                 CreationTime = v.CreationTime
             }).OrderByDescending(v => v.CreationTime).Take(5).ToListAsync();
             return result;
-        }
+        }*/
     }
 }
 
