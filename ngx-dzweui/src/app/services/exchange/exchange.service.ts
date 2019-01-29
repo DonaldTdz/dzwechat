@@ -31,10 +31,11 @@ export class ExchangeService {
         }));
     }
 
-    getOrderInfo(params: any): Observable<Order> {
+    getOrderInfo(params: any): Observable<any> {
         let url_ = "/api/services/app/Exchange/GetOrderByIdAsync";
         return this.commonHttpClient.get(url_, params).pipe(map(data => {
-            return Order.fromJS(data.result);
+            console.log(data.result);
+            return data.result;
         }));
     }
 

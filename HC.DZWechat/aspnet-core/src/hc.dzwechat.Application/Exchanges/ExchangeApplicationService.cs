@@ -361,10 +361,37 @@ namespace HC.DZWechat.Exchanges
             return result;
         }
         [AbpAllowAnonymous]
-        public async Task<OrderDto> GetOrderByIdAsync(Guid orderId)
+        public async Task<APIResultDto> GetOrderByIdAsync(string param)
         {
-            var result = await _scanExchangeManager.GetOrderByIdAsync(orderId);
-            return result;
+            Helpers.RSAHelper rsa = new Helpers.RSAHelper(Helpers.RSAType.RSA2, System.Text.Encoding.ASCII, Helpers.RSAHelper.PrivateKeyRsa2, Helpers.RSAHelper.PublicKeyRsa2);
+            var key = rsa.Decrypt(param);
+            string h = "";
+            if (DateTime.Now.Hour <= 9)
+            {
+                h = "0" + DateTime.Now.Hour.ToString();
+            }
+            else
+            {
+                h = DateTime.Now.Hour.ToString();
+            }
+            var m = DateTime.Now.Minute; //获取分钟
+            var isCurH = key.Split(',')[1].Substring(0, 2);
+            var isCurM = key.Split(',')[1].Substring(2);
+            if (h == isCurH && Convert.ToInt32(isCurM).IsBetween(m - 5, m + 5))
+            {
+                var id = key.Split(',')[0].Split('.')[0];
+                Guid orderId = new Guid(id);
+                var result = await _scanExchangeManager.GetOrderByIdAsync(orderId);
+                return new APIResultDto() {
+                    Code = 0,
+                    Data = result                 
+                };
+            }
+            return new APIResultDto() {
+                Code = 999,
+                Msg = "对话码已过期，请重新生成"
+            };
+       
         }
         #region 导出兑换明细
 
@@ -596,7 +623,7 @@ namespace HC.DZWechat.Exchanges
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public async Task<APIResultDto> ExportExchangeSummary(GetExchangesInput input)
+        public APIResultDto ExportExchangeSummary(GetExchangesInput input)
         {
             try
             {
@@ -688,6 +715,29 @@ namespace HC.DZWechat.Exchanges
 
                 Logger.ErrorFormat("订单物流通知发送消息通知失败 error：{0} Exception：{1}", ex.Message, ex);
             }
+        }
+
+        public bool Encrypt(string param)
+        {
+            Helpers.RSAHelper rsa = new Helpers.RSAHelper(Helpers.RSAType.RSA2, System.Text.Encoding.ASCII, Helpers.RSAHelper.PrivateKeyRsa2, Helpers.RSAHelper.PublicKeyRsa2);
+            var key = rsa.Decrypt(param);
+            string h = "";
+            if (DateTime.Now.Hour <= 9)
+            {
+                h = "0" + DateTime.Now.Hour.ToString();
+            }
+            else
+            {
+                h = DateTime.Now.Hour.ToString();
+            }
+            var m = DateTime.Now.Minute; //获取分钟
+            var isCurH = key.Split(',')[1].Substring(0, 2);
+            var isCurM = key.Split(',')[1].Substring(2);
+            if (h == isCurH && Convert.ToInt32(isCurM).IsBetween(m-5,m+5))
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

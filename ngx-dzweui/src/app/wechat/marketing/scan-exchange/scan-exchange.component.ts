@@ -16,6 +16,7 @@ export class ScanExchangeComponent extends AppComponentBase implements OnInit {
     orderDetailList: OrderDetail[] = [];
     order: Order = new Order();
     orderBarCode: string;// 订单码
+    passCode: string;//加密字符
     public DEFCONFIG: DialogConfig = <DialogConfig>{
         skin: 'ios',
         backdrop: true,
@@ -48,7 +49,7 @@ export class ScanExchangeComponent extends AppComponentBase implements OnInit {
         private srv: ToptipsService) {
         super(injector);
         this.activatedRoute.params.subscribe((params: Params) => {
-            this.orderBarCode = params['orderId'];
+            this.passCode = params['orderId'];
         });
     }
 
@@ -97,8 +98,9 @@ export class ScanExchangeComponent extends AppComponentBase implements OnInit {
                     this.exchangeService.getShopInfo(params)
                         .subscribe(result => {
                             this.shop = result;
-                            if (this.orderBarCode) {
-                                this.getOrderInfo();
+                            if (this.passCode) {
+                                this.passCode = encodeURIComponent(this.passCode);
+                                this.getOrderInfo(this.passCode);
                             }
                         });
                 }
@@ -143,23 +145,29 @@ export class ScanExchangeComponent extends AppComponentBase implements OnInit {
      * 扫码
      */
     setOrderBarCode(res: string) {
+        // alert(res);
         // if (res.indexOf('&') != -1) {
         //     this.orderBarCode = res.split('&')[1].split('=')[1];
         //     this.getOrderInfo();
         // }
-        this.orderBarCode = res;
-        this.getOrderInfo();
+        res = encodeURIComponent(res);
+        // this.orderBarCode = res;
+        this.getOrderInfo(res);
     }
 
-    getOrderInfo() {
+    getOrderInfo(res) {
         let param: any = {};
-        param.orderId = this.orderBarCode;
+        // param.param = this.orderBarCode;
+        param.param = res;
         this.exchangeService.getOrderInfo(param).subscribe(result => {
-            if (result) {
-                this.order = result;
+            if (result.code == 0) {
+                this.order = Order.fromJS(result.data);
+                this.orderBarCode = this.order.id;
                 if (this.order) {
                     this.getOrderDetail();
                 }
+            } else if (result.code == 999) {
+                this.srv['warn']('兑换码已过期，请重新生成');
             } else {
                 this.srv['warn']('没找到匹配订单');
             }
@@ -173,6 +181,7 @@ export class ScanExchangeComponent extends AppComponentBase implements OnInit {
         this.exchangeService.getOrderDetailInfo(params).subscribe(result => {
             if (result) {
                 this.orderDetailList = result;
+
             } else {
                 this.srv['warn']('没找到匹配商品');
             }

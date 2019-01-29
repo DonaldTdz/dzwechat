@@ -36,6 +36,9 @@ using Senparc.Weixin;
 using Senparc.Weixin.MP.AdvancedAPIs.TemplateMessage;
 using Senparc.Weixin.WxOpen.AdvancedAPIs.Template;
 using HC.DZWechat.WechatConfigs;
+using HC.DZWechat.Helpers;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace HC.DZWechat.Orders
 {
@@ -57,6 +60,7 @@ namespace HC.DZWechat.Orders
 
         private readonly IOrderManager _entityManager;
         private readonly IScanExchangeManager _scanExchangeManager;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
 
         /// <summary>
@@ -73,6 +77,7 @@ namespace HC.DZWechat.Orders
         , IRepository<ShopGoods, Guid> goodsRepository
         , IRepository<WechatConfig, Guid> configRepository
         , IScanExchangeManager scanExchangeManager
+        , IHostingEnvironment hostingEnvironment
         )
         {
             _entityRepository = entityRepository;
@@ -85,6 +90,7 @@ namespace HC.DZWechat.Orders
             _goodsRepository = goodsRepository;
             _scanExchangeManager = scanExchangeManager;
             _configRepository = configRepository;
+            _hostingEnvironment = hostingEnvironment;
         }
 
 
@@ -102,11 +108,11 @@ namespace HC.DZWechat.Orders
             || u.DeliveryName.Contains(input.FilterText)
             || u.DeliveryPhone.Contains(input.FilterText))
                 .WhereIf(input.Status.HasValue, v => v.Status == input.Status.Value)
-                .WhereIf(input.IsUnMailing, u => _orderdetailRepository.GetAll().Any(d => d.OrderId == u.Id &&u.Status!= OrderStatus.已取消 && d.Status == ExchangeStatus.未兑换 && d.ExchangeCode == ExchangeCodeEnum.邮寄兑换));
+                .WhereIf(input.IsUnMailing, u => _orderdetailRepository.GetAll().Any(d => d.OrderId == u.Id && u.Status != OrderStatus.已取消 && d.Status == ExchangeStatus.未兑换 && d.ExchangeCode == ExchangeCodeEnum.邮寄兑换));
 
             var count = await query.CountAsync();
             var entityList = await query
-                    .OrderByDescending(v=>v.CreationTime).AsNoTracking()
+                    .OrderByDescending(v => v.CreationTime).AsNoTracking()
                     .PageBy(input)
                     .ToListAsync();
 
@@ -463,7 +469,7 @@ namespace HC.DZWechat.Orders
         [AbpAllowAnonymous]
         public async Task<CommonDto.APIResultDto> CancelOrderByIdAsync(SaveOrderInput input)
         {
-            bool hasExchanged =await _scanExchangeManager.CheckedOrderStatus(input.OrderId);
+            bool hasExchanged = await _scanExchangeManager.CheckedOrderStatus(input.OrderId);
             if (hasExchanged == true)
             {
                 return new CommonDto.APIResultDto() { Code = 1, Msg = "商品已邮寄无法取消" };
@@ -472,7 +478,7 @@ namespace HC.DZWechat.Orders
             {
                 var user = await _wechatUserRepository.GetAll().Where(w => w.WxOpenId == input.WxOpenId).FirstAsync();
                 var order = await _entityRepository.GetAsync(input.OrderId);
-                if(order.Status == OrderStatus.已支付)
+                if (order.Status == OrderStatus.已支付)
                 {
                     var orderDetail = await _orderdetailRepository.GetAll().Where(v => v.OrderId == input.OrderId).ToListAsync();
                     //更新订单状态
@@ -531,7 +537,7 @@ namespace HC.DZWechat.Orders
                 string templateId = config.TemplateIds;
                 //string templateId = "JyUx6iCfySINYi7WjjzDSnWUqbkS6NCH1CUlTv3tgSs";
                 string[] openIds = config.ManagerWxOpenId.Split(',');
-                
+
                 if (!string.IsNullOrEmpty(templateId))
                 {
                     string[] ids = templateId.Split(',');
@@ -539,7 +545,7 @@ namespace HC.DZWechat.Orders
                     {
                         keyword1 = new TemplateDataItem(orderNo),//订单编号
                         keyword2 = new TemplateDataItem(DateTime.Now.ToString("yyyy-MM-dd HH:mm")),
-                        keyword3 = new TemplateDataItem(amount.ToString()+"积分"),//订单金额
+                        keyword3 = new TemplateDataItem(amount.ToString() + "积分"),//订单金额
                         keyword4 = new TemplateDataItem(orderType)//订单状态
                     };
                     foreach (var item in openIds)
@@ -552,6 +558,38 @@ namespace HC.DZWechat.Orders
             {
                 Logger.ErrorFormat("订单支付成功发送消息通知失败 error：{0} Exception：{1}", ex.Message, ex);
             }
+        }
+
+
+        [AbpAllowAnonymous]
+        public string GetExchangeQrCode(string orderNo)
+        {
+            //var no = orderNo.Split('R')[1] + ".jpg";
+            var no = orderNo + ".jpg";
+            string h = "";
+            if (DateTime.Now.Hour <= 9)
+            {
+                h = "0" + DateTime.Now.Hour.ToString();
+            }
+            else
+            {
+                h = DateTime.Now.Hour.ToString();
+            }
+            var m = DateTime.Now.Minute.ToString(); //获取分钟  
+            string word = $"{no},{h + m}";
+            Helpers.RSAHelper rsa = new Helpers.RSAHelper(Helpers.RSAType.RSA2, System.Text.Encoding.ASCII, Helpers.RSAHelper.PrivateKeyRsa2, Helpers.RSAHelper.PublicKeyRsa2);
+            var mword = rsa.Encrypt(word);
+            var x = rsa.Decrypt(mword);
+            //string filePath = _hostingEnvironment.WebRootPath + string.Format("/upload/orderQrCode/{0}", orderNo + ".jpg"); ;
+            //// 删除该文件
+            //if (File.Exists(filePath))
+            //{
+            //    System.IO.File.Delete(filePath);
+            //}
+            var fileDire = _hostingEnvironment.WebRootPath + string.Format("/upload/orderQrCode/{0}", orderNo + ".jpg");
+            QRCodeHelper.GenerateQRCode(mword, fileDire, QRCoder.QRCodeGenerator.ECCLevel.Q, 20);
+
+            return $"http://localhost:21021/upload/orderQrCode/{orderNo}.jpg";
         }
     }
 }

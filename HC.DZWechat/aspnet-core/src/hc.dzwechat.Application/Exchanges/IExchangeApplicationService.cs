@@ -89,7 +89,7 @@ namespace HC.DZWechat.Exchanges
         Task<PagedResultDto<ExchangeListDto>> GetExchangeDetail(ExchangeInput input);
 
         Task<APIResultDto> ExchangeGoods(ExchangeDtoInput input);
-        Task<OrderDto> GetOrderByIdAsync(Guid orderId);
+        Task<APIResultDto> GetOrderByIdAsync(string param);
 
         /// <summary>
         /// 导出兑换明细表
@@ -100,5 +100,6 @@ namespace HC.DZWechat.Exchanges
         Task<PagedResultDto<ExchangeListDto>> GetPagedByShopId(GetExchangesInput input);
         List<ExchangeSummary> GetExchangeSummary(GetExchangesInput input);
         Task<List<SelectGroups>> GetShopTypeAsync();
+        APIResultDto ExportExchangeSummary(GetExchangesInput input);
     }
 }

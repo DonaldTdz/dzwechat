@@ -91,5 +91,6 @@ namespace HC.DZWechat.Orders
 
         Task<CommonDto.APIResultDto> SaveOrderAsync(SaveOrderInput input);
         Task<CommonDto.APIResultDto> CancelOrderByIdAsync(SaveOrderInput input);
+        string GetExchangeQrCode(string orderNo);
     }
 }
