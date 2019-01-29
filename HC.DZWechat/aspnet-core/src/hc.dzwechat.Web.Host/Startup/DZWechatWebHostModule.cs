@@ -3,11 +3,13 @@ using Microsoft.Extensions.Configuration;
 using Abp.Modules;
 using Abp.Reflection.Extensions;
 using HC.DZWechat.Configuration;
+using Abp.Runtime.Caching.Redis;
 
 namespace HC.DZWechat.Web.Host.Startup
 {
     [DependsOn(
-       typeof(DZWechatWebCoreModule))]
+       typeof(DZWechatWebCoreModule),
+       typeof(AbpRedisCacheModule))]
     public class DZWechatWebHostModule: AbpModule
     {
         private readonly IHostingEnvironment _env;
@@ -22,6 +24,11 @@ namespace HC.DZWechat.Web.Host.Startup
         public override void Initialize()
         {
             IocManager.RegisterAssemblyByConvention(typeof(DZWechatWebHostModule).GetAssembly());
+        }
+
+        public override void PreInitialize()
+        {
+            Configuration.Caching.UseRedis();
         }
     }
 }
