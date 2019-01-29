@@ -34,6 +34,11 @@ using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
+using Senparc.Weixin.WxOpen.AdvancedAPIs.Template;
+using Senparc.Weixin.MP.AdvancedAPIs.TemplateMessage;
+using Senparc.Weixin;
+using HC.DZWechat.WechatUsers;
+using HC.DZWechat.WechatConfigs;
 
 namespace HC.DZWechat.Exchanges
 {
@@ -47,6 +52,8 @@ namespace HC.DZWechat.Exchanges
         private readonly IRepository<OrderDetail, Guid> _orderDetailRepository;
         private readonly IRepository<Order, Guid> _orderRepository;
         private readonly IRepository<Shop, Guid> _shopRepository;
+        private readonly IRepository<WechatUser, Guid> _wechatUserRepository;
+        private readonly IRepository<WechatConfig, Guid> _configRepository;
 
         private readonly IExchangeManager _entityManager;
         private readonly IScanExchangeManager _scanExchangeManager;
@@ -59,8 +66,10 @@ namespace HC.DZWechat.Exchanges
         IRepository<Exchange, Guid> entityRepository
         , IRepository<OrderDetail, Guid> orderDetailRepository
         , IRepository<Order, Guid> orderRepository, IRepository<Shop, Guid> shopRepository
-        , IExchangeManager entityManager, IScanExchangeManager scanExchangeManager,
-        IHostingEnvironment hostingEnvironment
+        , IRepository<WechatUser, Guid> wechatUserRepository
+        , IExchangeManager entityManager, IScanExchangeManager scanExchangeManager
+        , IHostingEnvironment hostingEnvironment
+        , IRepository<WechatConfig, Guid> configRepository
 
         )
         {
@@ -71,6 +80,8 @@ namespace HC.DZWechat.Exchanges
             _shopRepository = shopRepository;
             _scanExchangeManager = scanExchangeManager;
             _hostingEnvironment = hostingEnvironment;
+            _wechatUserRepository = wechatUserRepository;
+            _configRepository = configRepository;
         }
 
 
@@ -195,6 +206,10 @@ namespace HC.DZWechat.Exchanges
             {
                 await UpdateOrderStatus(orderId);
             }
+            //发送模板消息
+            var orderInfo = await GetOrderInfoAsync(orderId);
+            string wxOpenId =await _wechatUserRepository.GetAll().Where(v => v.Id == orderInfo.UserId).Select(v => v.WxOpenId).FirstOrDefaultAsync();
+            await LogisticsInfoMesssage(wxOpenId, orderInfo.Number, input.LogisticsCompany, input.LogisticsNo);
             return entity.MapTo<ExchangeListDto>();
         }
 
@@ -276,6 +291,17 @@ namespace HC.DZWechat.Exchanges
         {
             Guid orderId = await _orderDetailRepository.GetAll().Where(v => v.Id == id).Select(v => v.OrderId).FirstOrDefaultAsync();
             return orderId;
+        }
+
+        /// <summary>
+        /// 获取订单信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        protected virtual async Task<OrderListDto> GetOrderInfoAsync(Guid id)
+        {
+            var order = await _orderRepository.GetAsync(id);
+            return order.MapTo<OrderListDto>();
         }
 
         /// <summary>
@@ -511,48 +537,48 @@ namespace HC.DZWechat.Exchanges
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public async Task<List<ExchangeSummary>> GetExchangeSummary(GetExchangesInput input)
-        {         
-            var exchange = _entityRepository.GetAll().WhereIf(input.StartTime.HasValue,v => v.CreationTime >= input.StartTime && v.CreationTime <= input.EndTime).AsNoTracking();
-            var orderDetail = _orderDetailRepository.GetAll().WhereIf(!string.IsNullOrEmpty(input.FilterText),v=>v.Specification.Contains(input.FilterText)).AsNoTracking();
-            var shop = _shopRepository.GetAll().WhereIf(!string.IsNullOrEmpty(input.ShopType)&&input.ShopType!="9999",v=>v.Id == new Guid(input.ShopType)).AsNoTracking();
+        public List<ExchangeSummary> GetExchangeSummary(GetExchangesInput input)
+        {
+            var exchange = _entityRepository.GetAll().WhereIf(input.StartTime.HasValue, v => v.CreationTime >= input.StartTime && v.CreationTime <= input.EndTime).AsNoTracking();
+            var orderDetail = _orderDetailRepository.GetAll().WhereIf(!string.IsNullOrEmpty(input.FilterText), v => v.Specification.Contains(input.FilterText)).AsNoTracking();
+            var shop = _shopRepository.GetAll().WhereIf(!string.IsNullOrEmpty(input.ShopType) && input.ShopType != "9999", v => v.Id == new Guid(input.ShopType)).AsNoTracking();
 
-            var resultC =new List<ExchangeSummary>();
+            var resultC = new List<ExchangeSummary>();
             var resultS = new List<ExchangeSummary>();
             if (input.ShopType == "9999" || string.IsNullOrEmpty(input.ShopType))
             {
                 //营销中心兑换记录
-                 resultC = (from e in exchange
-                               where e.ShopId.HasValue == false
-                               join od in orderDetail on e.OrderDetailId equals od.Id
-                               group new { od.Specification, od.Num } by new { od.Specification } into g
-                               select new ExchangeSummary()
-                               {
-                                   ShopName = "营销中心",
-                                   Specification = g.Key.Specification,
-                                   ExchangeNum = (int)g.Sum(v => v.Num)
-                               }).AsNoTracking().ToList();
+                resultC = (from e in exchange
+                           where e.ShopId.HasValue == false
+                           join od in orderDetail on e.OrderDetailId equals od.Id
+                           group new { od.Specification, od.Num } by new { od.Specification } into g
+                           select new ExchangeSummary()
+                           {
+                               ShopName = "营销中心",
+                               Specification = g.Key.Specification,
+                               ExchangeNum = (int)g.Sum(v => v.Num)
+                           }).AsNoTracking().ToList();
             }
             if (input.ShopType != "9999" || string.IsNullOrEmpty(input.ShopType))
             {
                 //直营店兑换记录
                 resultS = (from e in exchange
-                               join s in shop on e.ShopId equals s.Id
-                               join od in orderDetail on e.OrderDetailId equals od.Id
-                               group new { od.Specification, s.Name, od.Num } by new { od.Specification, s.Name } into g
-                               select new ExchangeSummary()
-                               {
-                                   ShopName = g.Key.Name,
-                                   Specification = g.Key.Specification,
-                                   ExchangeNum = (int)g.Sum(v => v.Num)
-                               }).AsNoTracking().OrderBy(v => v.ShopName).ToList();
+                           join s in shop on e.ShopId equals s.Id
+                           join od in orderDetail on e.OrderDetailId equals od.Id
+                           group new { od.Specification, s.Name, od.Num } by new { od.Specification, s.Name } into g
+                           select new ExchangeSummary()
+                           {
+                               ShopName = g.Key.Name,
+                               Specification = g.Key.Specification,
+                               ExchangeNum = (int)g.Sum(v => v.Num)
+                           }).AsNoTracking().OrderBy(v => v.ShopName).ToList();
             }
             var list = new List<ExchangeSummary>();
-            if(resultS.Count > 0)
+            if (resultS.Count > 0)
             {
                 list.AddRange(resultS);
             }
-            if(resultC.Count> 0)
+            if (resultC.Count > 0)
             {
                 list.AddRange(resultC);
             }
@@ -574,7 +600,7 @@ namespace HC.DZWechat.Exchanges
         {
             try
             {
-                var exportData = await GetExchangeSummary(input);
+                var exportData = GetExchangeSummary(input);
                 var result = new APIResultDto();
                 result.Code = 0;
                 result.Data = CreateExchangeSummaryExcel("兑换汇总.xlsx", exportData);
@@ -604,7 +630,7 @@ namespace HC.DZWechat.Exchanges
                 ISheet sheet = workbook.CreateSheet("ExchangeSum");
                 var rowIndex = 0;
                 IRow titleRow = sheet.CreateRow(rowIndex);
-                string[] titles = {"店铺名称", "商品名称", "兑换数量" };
+                string[] titles = { "店铺名称", "商品名称", "兑换数量" };
                 var fontTitle = workbook.CreateFont();
                 fontTitle.IsBold = true;
                 for (int i = 0; i < titles.Length; i++)
@@ -627,6 +653,41 @@ namespace HC.DZWechat.Exchanges
                 workbook.Write(fs);
             }
             return "/files/downloadtemp/" + fileName;
+        }
+
+        /// <summary>
+        /// 发送物流通知
+        /// </summary>
+        /// <param name="wxOpenId"></param>
+        /// <param name="orderNo"></param>
+        /// <param name="logisticsCompany"></param>
+        /// <param name="logisticsNo"></param>
+        /// <returns></returns>
+        private async Task LogisticsInfoMesssage(string wxOpenId, string orderNo, string logisticsCompany, string logisticsNo)
+        {
+            try
+            {
+                string appId = Config.SenparcWeixinSetting.WxOpenAppId;//与微信公众账号后台的AppId设置保持一致，区分大小写。
+                string templateId = await _configRepository.GetAll().Select(v=>v.TemplateIds).FirstOrDefaultAsync();
+                //string templateId = "i8ME9xCmEXv1qqq3uNiCtEjuiYEVk4QYAi7zZuSt6t0";
+                if (!string.IsNullOrEmpty(templateId))
+                {
+                    string[] ids = templateId.Split(',');
+                    object data = new
+                    {
+                        keyword1 = new TemplateDataItem("尊敬的用户您好，您的订单已发货"),//温馨提示
+                        keyword2 = new TemplateDataItem(orderNo),//订单编号
+                        keyword3 = new TemplateDataItem(logisticsNo),//物流单号
+                        keyword4 = new TemplateDataItem(logisticsCompany)//物流公司
+                    };
+                    await TemplateApi.SendTemplateMessageAsync(appId, wxOpenId, ids[0], data, "formSubmit");
+                }
+            }
+            catch (Exception ex)
+            {
+
+                Logger.ErrorFormat("订单物流通知发送消息通知失败 error：{0} Exception：{1}", ex.Message, ex);
+            }
         }
     }
 }

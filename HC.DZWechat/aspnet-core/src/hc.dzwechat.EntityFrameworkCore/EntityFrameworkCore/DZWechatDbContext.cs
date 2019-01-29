@@ -18,6 +18,7 @@ using HC.DZWechat.Shops;
 using HC.DZWechat.ShopCarts;
 using HC.DZWechat.VipUsers;
 using HC.DZWechat.VipPurchases;
+using HC.DZWechat.WechatConfigs;
 
 namespace HC.DZWechat.EntityFrameworkCore
 {
@@ -47,6 +48,7 @@ namespace HC.DZWechat.EntityFrameworkCore
         public virtual DbSet<ShopCart> ShopCarts { get; set; }
         public virtual DbSet<VipUser> VipUsers { get; set; }
         public virtual DbSet<VipPurchase> VipPurchases { get; set; }
+        public virtual DbSet<WechatConfig> WechatConfigs { get; set; }
     }
 }
 

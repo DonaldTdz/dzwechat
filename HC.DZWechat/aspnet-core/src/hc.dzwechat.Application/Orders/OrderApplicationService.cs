@@ -32,6 +32,10 @@ using HC.DZWechat.Deliverys;
 using HC.DZWechat.Goods;
 using HC.DZWechat.GenerateCodes;
 using HC.DZWechat.ScanExchange;
+using Senparc.Weixin;
+using Senparc.Weixin.MP.AdvancedAPIs.TemplateMessage;
+using Senparc.Weixin.WxOpen.AdvancedAPIs.Template;
+using HC.DZWechat.WechatConfigs;
 
 namespace HC.DZWechat.Orders
 {
@@ -49,6 +53,7 @@ namespace HC.DZWechat.Orders
         private readonly IRepository<ShopCart, Guid> _shopCartRepository;
         private readonly IRepository<Delivery, Guid> _deliveryRepository;
         private readonly IRepository<ShopGoods, Guid> _goodsRepository;
+        private readonly IRepository<WechatConfig, Guid> _configRepository;
 
         private readonly IOrderManager _entityManager;
         private readonly IScanExchangeManager _scanExchangeManager;
@@ -66,7 +71,8 @@ namespace HC.DZWechat.Orders
         , IRepository<ShopCart, Guid> shopCartRepository
         , IRepository<Delivery, Guid> deliveryRepository
         , IRepository<ShopGoods, Guid> goodsRepository
-                    , IScanExchangeManager scanExchangeManager
+        , IRepository<WechatConfig, Guid> configRepository
+        , IScanExchangeManager scanExchangeManager
         )
         {
             _entityRepository = entityRepository;
@@ -78,6 +84,7 @@ namespace HC.DZWechat.Orders
             _deliveryRepository = deliveryRepository;
             _goodsRepository = goodsRepository;
             _scanExchangeManager = scanExchangeManager;
+            _configRepository = configRepository;
         }
 
 
@@ -441,7 +448,8 @@ namespace HC.DZWechat.Orders
             #endregion
 
             #region 消息通知 运营管理员 积分消耗通知用户
-
+            //string wxOpenId = await _wechatUserRepository.GetAll().Where(v => v.Id == order.UserId).Select(v => v.WxOpenId).FirstOrDefaultAsync();
+            await OrderInfoMesssage(order.Number, order.Integral.Value, order.Status.ToString());
             #endregion
 
             return new CommonDto.APIResultDto() { Code = 0, Msg = "支付成功", Data = new { OrderNo = orderId, TotalPrice = totalPrice } };
@@ -503,6 +511,46 @@ namespace HC.DZWechat.Orders
                     return new CommonDto.APIResultDto() { Code = 0, Msg = "订单取消成功" };
                 }
                 return new CommonDto.APIResultDto() { Code = 3, Msg = "订单已取消" };
+            }
+        }
+
+        /// <summary>
+        /// 支付成功通知
+        /// </summary>
+        /// <param name="wxOpenId"></param>
+        /// <param name="orderNo"></param>
+        /// <param name="amount"></param>
+        /// <param name="orderType"></param>
+        /// <returns></returns>
+        private async Task OrderInfoMesssage(string orderNo, decimal amount, string orderType)
+        {
+            try
+            {
+                string appId = Config.SenparcWeixinSetting.WxOpenAppId;//与微信公众账号后台的AppId设置保持一致，区分大小写。
+                var config = await _configRepository.GetAll().FirstOrDefaultAsync();
+                string templateId = config.TemplateIds;
+                //string templateId = "JyUx6iCfySINYi7WjjzDSnWUqbkS6NCH1CUlTv3tgSs";
+                string[] openIds = config.ManagerWxOpenId.Split(',');
+                
+                if (!string.IsNullOrEmpty(templateId))
+                {
+                    string[] ids = templateId.Split(',');
+                    object data = new
+                    {
+                        keyword1 = new TemplateDataItem(orderNo),//订单编号
+                        keyword2 = new TemplateDataItem(DateTime.Now.ToString("yyyy-MM-dd HH:mm")),
+                        keyword3 = new TemplateDataItem(amount.ToString()+"积分"),//订单金额
+                        keyword4 = new TemplateDataItem(orderType)//订单状态
+                    };
+                    foreach (var item in openIds)
+                    {
+                        await TemplateApi.SendTemplateMessageAsync(appId, item, ids[2], data, "formSubmit");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.ErrorFormat("订单支付成功发送消息通知失败 error：{0} Exception：{1}", ex.Message, ex);
             }
         }
     }
