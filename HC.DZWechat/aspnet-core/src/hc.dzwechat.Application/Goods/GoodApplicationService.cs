@@ -92,7 +92,7 @@ namespace HC.DZWechat.Goods
                             };
                 var count = await query.CountAsync();
                 var entityList = await query
-                        .OrderBy(input.Sorting).AsNoTracking()
+                        .OrderByDescending(v=>v.OnlineTime).AsNoTracking()
                         .PageBy(input)
                         .ToListAsync();
                 var entityListDtos = entityList.MapTo<List<GoodListDto>>();
@@ -124,7 +124,7 @@ namespace HC.DZWechat.Goods
                 var count = await query.CountAsync();
 
                 var entityList = await query
-                        .OrderBy(input.Sorting).AsNoTracking()
+                        .OrderByDescending(v => v.OnlineTime).AsNoTracking()
                         .PageBy(input)
                         .ToListAsync();
                 var entityListDtos = entityList.MapTo<List<GoodListDto>>();

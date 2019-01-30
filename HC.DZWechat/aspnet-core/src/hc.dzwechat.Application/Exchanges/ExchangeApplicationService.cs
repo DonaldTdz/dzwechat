@@ -356,7 +356,7 @@ namespace HC.DZWechat.Exchanges
         /// <returns></returns>
         [AbpAllowAnonymous]
         public async Task<APIResultDto> ExchangeGoods(ExchangeDtoInput input)
-        {
+        {   
             var result = await _scanExchangeManager.ExchangeGoods(input.OrderId, input.OpenId, input.ShopId);
             return result;
         }
