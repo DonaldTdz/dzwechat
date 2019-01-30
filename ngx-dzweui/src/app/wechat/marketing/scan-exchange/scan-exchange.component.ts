@@ -51,6 +51,7 @@ export class ScanExchangeComponent extends AppComponentBase implements OnInit {
         this.activatedRoute.params.subscribe((params: Params) => {
             this.passCode = params['orderId'];
         });
+        // alert(this.passCode);
     }
 
     ngOnInit() {
@@ -99,7 +100,7 @@ export class ScanExchangeComponent extends AppComponentBase implements OnInit {
                         .subscribe(result => {
                             this.shop = result;
                             if (this.passCode) {
-                                // this.passCode = encodeURIComponent(this.passCode);
+                                this.passCode = encodeURIComponent(this.passCode);
                                 this.getOrderInfo(this.passCode);
                             }
                         });
@@ -149,7 +150,9 @@ export class ScanExchangeComponent extends AppComponentBase implements OnInit {
         if (res.indexOf('&') != -1) {
             // this.orderBarCode = res.split('&')[1].split('=')[1];
             res = res.split('&')[1].substring(6);
-            res = encodeURIComponent(res);
+            // alert(res);
+            // res = encodeURIComponent(res);
+            // alert(res);
             this.getOrderInfo(res);
         }
         // res = encodeURIComponent(res);
@@ -169,9 +172,9 @@ export class ScanExchangeComponent extends AppComponentBase implements OnInit {
                     this.getOrderDetail();
                 }
             } else if (result.code == 999) {
-                this.srv['warn']('兑换码已过期，请重新生成');
+                this.srv['info']('兑换码已过期，请重新生成');
             } else {
-                this.srv['warn']('没找到匹配订单');
+                this.srv['info']('没找到匹配订单');
             }
         });
     }
@@ -185,7 +188,7 @@ export class ScanExchangeComponent extends AppComponentBase implements OnInit {
                 this.orderDetailList = result;
 
             } else {
-                this.srv['warn']('没找到匹配商品');
+                this.srv['info']('没找到匹配商品');
             }
         });
     }
@@ -209,8 +212,11 @@ export class ScanExchangeComponent extends AppComponentBase implements OnInit {
                 this.exchangeService.exchangeGoods(params).subscribe(result => {
                     if (result.code == 0) {
                         this.router.navigate(['/marketing-exchange/exchange-success']);
-                    } else {
-                        this.srv['warn']('兑换失败，请重试');
+                    } else if (result.code == 1) {
+                        this.srv['info']('兑换失败，订单已取消');
+                    }
+                    else {
+                        this.srv['info']('兑换失败，请重试');
                     }
                 });
             }

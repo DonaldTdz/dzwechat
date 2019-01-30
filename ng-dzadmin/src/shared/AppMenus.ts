@@ -17,11 +17,13 @@ export class AppMenus {
             text: "微信配置",
             icon: { type: "icon", value: "wechat" },
             link: "/app/wechat/config",
+            reuse: false
         },
         {
             text: "资讯管理",
             icon: { type: "icon", value: "laptop" },
             link: "/app/news/news",
+            reuse: false
         },
         {
             text: "积分商城",
@@ -70,10 +72,12 @@ export class AppMenus {
                 {
                     text: "用户管理",
                     link: "/app/system/users",
+                    reuse: false
                 },
                 {
                     text: "角色管理",
                     link: "/app/system/roles",
+                    reuse: false
                 },
             ]
         },

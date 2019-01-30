@@ -581,6 +581,9 @@ namespace HC.DZWechat.Orders
             string word = $"{no},{h + m}";
             Helpers.RSAHelper rsa = new Helpers.RSAHelper(Helpers.RSAType.RSA2, System.Text.Encoding.ASCII, Helpers.RSAHelper.PrivateKeyRsa2, Helpers.RSAHelper.PublicKeyRsa2);
             var mword = rsa.Encrypt(word);
+            //Logger.Info("加密参数" + mword);
+            mword = Uri.EscapeDataString(mword);
+            //Logger.Info("加密转义参数" + mword);
             string url = $"https://wx.hechuangcd.com/Wechat/Authorization?page=103&param={mword}";
             var fileDire = _hostingEnvironment.WebRootPath + string.Format("/upload/orderQrCode/{0}", orderNo + ".jpg");
             QRCodeHelper.GenerateQRCode(url, fileDire, QRCoder.QRCodeGenerator.ECCLevel.Q, 20);

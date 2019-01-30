@@ -173,6 +173,9 @@ namespace HC.DZWechat.Web.Host.Controllers
                             var result = _scanExchangeManager.GetIsAttentionByIdAsync(UserOpenId);
                             if(result == true)
                             {
+                                //Logger.Info("控制器参数"+param);
+                                param = Uri.EscapeDataString(param);
+                                //Logger.Info("编码参数" + param);
                                 return Redirect(string.Format(AuthorizationPageUrl.MarketingExchangeWithOrderIdUrl, param));
                             }
                             else

@@ -34,7 +34,6 @@ export class ExchangeService {
     getOrderInfo(params: any): Observable<any> {
         let url_ = "/api/services/app/Exchange/GetOrderByIdAsync";
         return this.commonHttpClient.get(url_, params).pipe(map(data => {
-            console.log(data.result);
             return data.result;
         }));
     }

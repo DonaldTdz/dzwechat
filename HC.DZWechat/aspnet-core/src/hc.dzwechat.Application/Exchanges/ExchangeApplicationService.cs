@@ -363,6 +363,7 @@ namespace HC.DZWechat.Exchanges
         [AbpAllowAnonymous]
         public async Task<APIResultDto> GetOrderByIdAsync(string param)
         {
+            //Logger.Info("第一次传参" + param);
             Helpers.RSAHelper rsa = new Helpers.RSAHelper(Helpers.RSAType.RSA2, System.Text.Encoding.ASCII, Helpers.RSAHelper.PrivateKeyRsa2, Helpers.RSAHelper.PublicKeyRsa2);
             var key = rsa.Decrypt(param);
             string h = "";
@@ -374,6 +375,7 @@ namespace HC.DZWechat.Exchanges
             {
                 h = DateTime.Now.Hour.ToString();
             }
+            Logger.Info("解码" + key);
             var m = DateTime.Now.Minute; //获取分钟
             var isCurH = key.Split(',')[1].Substring(0, 2);
             var isCurM = key.Split(',')[1].Substring(2);
@@ -566,7 +568,7 @@ namespace HC.DZWechat.Exchanges
         /// <returns></returns>
         public List<ExchangeSummary> GetExchangeSummary(GetExchangesInput input)
         {
-            var exchange = _entityRepository.GetAll().WhereIf(input.StartTime.HasValue, v => v.CreationTime >= input.StartTime && v.CreationTime <= input.EndTime).AsNoTracking();
+            var exchange = _entityRepository.GetAll().WhereIf(input.StartTime.HasValue, v => v.CreationTime >= input.StartTime && v.CreationTime <= input.EndTime.Value.AddDays(86399F / 86400)).AsNoTracking();
             var orderDetail = _orderDetailRepository.GetAll().WhereIf(!string.IsNullOrEmpty(input.FilterText), v => v.Specification.Contains(input.FilterText)).AsNoTracking();
             var shop = _shopRepository.GetAll().WhereIf(!string.IsNullOrEmpty(input.ShopType) && input.ShopType != "9999", v => v.Id == new Guid(input.ShopType)).AsNoTracking();
 

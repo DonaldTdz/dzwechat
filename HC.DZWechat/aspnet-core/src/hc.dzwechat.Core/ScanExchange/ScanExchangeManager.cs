@@ -102,6 +102,11 @@ namespace HC.DZWechat.ScanExchange
         /// <returns></returns>
         public async Task<APIResultDto> ExchangeGoods(Guid orderId, string openId, Guid shopId)
         {
+            bool hasExchanged = await BeforeExchangeCheckedOrderStatus(orderId);
+            if (hasExchanged == false)
+            {
+                return new CommonDto.APIResultDto() { Code = 1, Msg = "订单已取消" };
+            }
             Guid userId = await _wechatuserRepository.GetAll().Where(v => v.OpenId == openId).Select(v => v.Id).FirstOrDefaultAsync();
             var orderDetails = await _orderDetailRepository.GetAll().Where(v => v.OrderId == orderId && v.Status == DZEnums.DZCommonEnums.ExchangeStatus.未兑换).ToListAsync();
             foreach (var item in orderDetails)
@@ -130,15 +135,38 @@ namespace HC.DZWechat.ScanExchange
         /// <returns></returns>
         public async Task<bool> CheckedOrderStatus(Guid orderId)
         {
+            //var list = await _orderDetailRepository.GetAll().Where(v => v.OrderId == orderId).ToListAsync();
+            //foreach (var item in list)
+            //{
+            //    if (item.Status == DZEnums.DZCommonEnums.ExchangeStatus.已兑换)
+            //    {
+            //        return false;
+            //    }
+            //}
             var list = await _orderDetailRepository.GetAll().Where(v => v.OrderId == orderId).ToListAsync();
             foreach (var item in list)
             {
-                if (item.Status != DZEnums.DZCommonEnums.ExchangeStatus.已兑换)
+                if (item.Status == DZEnums.DZCommonEnums.ExchangeStatus.已兑换)
                 {
-                    return false;
+                    return true;
                 }
             }
-            return true;
+            return false;
+        }
+
+        /// <summary>
+        /// 确定兑换前检查订单是否取消或其他状态
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        protected async Task<bool> BeforeExchangeCheckedOrderStatus(Guid orderId)
+        {
+            var list = await _repository.GetAll().Where(v => v.Id == orderId).FirstOrDefaultAsync();
+            if(list.Status == DZEnums.DZCommonEnums.OrderStatus.已支付)
+            {
+                return true;
+            }
+            return false;
         }
 
         /// <summary>
