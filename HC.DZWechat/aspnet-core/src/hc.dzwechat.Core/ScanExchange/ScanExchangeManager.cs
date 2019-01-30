@@ -116,10 +116,10 @@ namespace HC.DZWechat.ScanExchange
                 await UpdateOrderStatus(orderId);
             }
             //发送模板消息
-            var orderInfo = await _repository.GetAsync(orderId);
-            string wxOpenId = await _wechatuserRepository.GetAll().Where(v => v.Id == orderInfo.UserId).Select(v => v.WxOpenId).FirstOrDefaultAsync();
-            string shopName = await _shopRepository.GetAll().Where(v => v.Id == shopId).Select(v => v.Name).FirstOrDefaultAsync();
-            await OrderInfoMesssage(wxOpenId, orderInfo.Number, shopName);
+            //var orderInfo = await _repository.GetAsync(orderId);
+            //string wxOpenId = await _wechatuserRepository.GetAll().Where(v => v.Id == orderInfo.UserId).Select(v => v.WxOpenId).FirstOrDefaultAsync();
+            //string shopName = await _shopRepository.GetAll().Where(v => v.Id == shopId).Select(v => v.Name).FirstOrDefaultAsync();
+            //await OrderInfoMesssage(wxOpenId, orderInfo.Number, shopName);
             return new APIResultDto() { Code = 0, Msg = "兑换成功" };
         }
 

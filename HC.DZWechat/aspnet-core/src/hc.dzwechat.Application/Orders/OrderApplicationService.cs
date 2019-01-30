@@ -454,8 +454,8 @@ namespace HC.DZWechat.Orders
             #endregion
 
             #region 消息通知 运营管理员 积分消耗通知用户
-            //string wxOpenId = await _wechatUserRepository.GetAll().Where(v => v.Id == order.UserId).Select(v => v.WxOpenId).FirstOrDefaultAsync();
-            await OrderInfoMesssage(order.Number, order.Integral.Value, order.Status.ToString());
+            string wxOpenId = await _wechatUserRepository.GetAll().Where(v => v.Id == order.UserId).Select(v => v.WxOpenId).FirstOrDefaultAsync();
+            await OrderInfoMesssage(order.Number, order.Integral.Value, order.Status.ToString(), input.FormId, wxOpenId);
             #endregion
 
             return new CommonDto.APIResultDto() { Code = 0, Msg = "支付成功", Data = new { OrderNo = orderId, TotalPrice = totalPrice } };
@@ -528,7 +528,7 @@ namespace HC.DZWechat.Orders
         /// <param name="amount"></param>
         /// <param name="orderType"></param>
         /// <returns></returns>
-        private async Task OrderInfoMesssage(string orderNo, decimal amount, string orderType)
+        private async Task OrderInfoMesssage(string orderNo, decimal amount, string orderType,string formId,string wxOpenId)
         {
             try
             {
@@ -536,7 +536,7 @@ namespace HC.DZWechat.Orders
                 var config = await _configRepository.GetAll().FirstOrDefaultAsync();
                 string templateId = config.TemplateIds;
                 //string templateId = "JyUx6iCfySINYi7WjjzDSnWUqbkS6NCH1CUlTv3tgSs";
-                string[] openIds = config.ManagerWxOpenId.Split(',');
+                //string[] openIds = config.ManagerWxOpenId.Split(',');
 
                 if (!string.IsNullOrEmpty(templateId))
                 {
@@ -545,13 +545,15 @@ namespace HC.DZWechat.Orders
                     {
                         keyword1 = new TemplateDataItem(orderNo),//订单编号
                         keyword2 = new TemplateDataItem(DateTime.Now.ToString("yyyy-MM-dd HH:mm")),
-                        keyword3 = new TemplateDataItem(amount.ToString() + "积分"),//订单金额
+                        keyword3 = new TemplateDataItem(amount.ToString("#0.00") + "积分"),//订单金额
                         keyword4 = new TemplateDataItem(orderType)//订单状态
                     };
-                    foreach (var item in openIds)
-                    {
-                        await TemplateApi.SendTemplateMessageAsync(appId, item, ids[2], data, "formSubmit");
-                    }
+                    await TemplateApi.SendTemplateMessageAsync(appId, wxOpenId, ids[2], data, formId);
+                    //Logger.Info(formId);
+                    //foreach (var item in openIds)
+                    //{
+                    //    await TemplateApi.SendTemplateMessageAsync(appId, item, ids[2], data, formId);
+                    //}
                 }
             }
             catch (Exception ex)
@@ -579,17 +581,11 @@ namespace HC.DZWechat.Orders
             string word = $"{no},{h + m}";
             Helpers.RSAHelper rsa = new Helpers.RSAHelper(Helpers.RSAType.RSA2, System.Text.Encoding.ASCII, Helpers.RSAHelper.PrivateKeyRsa2, Helpers.RSAHelper.PublicKeyRsa2);
             var mword = rsa.Encrypt(word);
-            var x = rsa.Decrypt(mword);
-            //string filePath = _hostingEnvironment.WebRootPath + string.Format("/upload/orderQrCode/{0}", orderNo + ".jpg"); ;
-            //// 删除该文件
-            //if (File.Exists(filePath))
-            //{
-            //    System.IO.File.Delete(filePath);
-            //}
+            string url = $"https://wx.hechuangcd.com/Wechat/Authorization?page=103&param={mword}";
             var fileDire = _hostingEnvironment.WebRootPath + string.Format("/upload/orderQrCode/{0}", orderNo + ".jpg");
-            QRCodeHelper.GenerateQRCode(mword, fileDire, QRCoder.QRCodeGenerator.ECCLevel.Q, 20);
+            QRCodeHelper.GenerateQRCode(url, fileDire, QRCoder.QRCodeGenerator.ECCLevel.Q, 20);
 
-            return $"http://localhost:21021/upload/orderQrCode/{orderNo}.jpg";
+            return $"https://wx.hechuangcd.com/upload/orderQrCode/{orderNo}.jpg";
         }
     }
 }

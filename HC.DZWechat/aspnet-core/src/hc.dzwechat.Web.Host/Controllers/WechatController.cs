@@ -24,8 +24,9 @@ namespace HC.DZWechat.Web.Host.Controllers
         public static readonly string EncodingAESKey = Config.SenparcWeixinSetting.EncodingAESKey;//与微信公众账号后台的EncodingAESKey设置保持一致，区分大小写。
         public static readonly string AppId = Config.SenparcWeixinSetting.WeixinAppId;//与微信公众账号后台的AppId设置保持一致，区分大小写。
         public static readonly string AppSecret = Config.SenparcWeixinSetting.WeixinAppSecret;//与微信公众账号后台的AppId设置保持一致，区分大小写。
-        private string host = "http://localhost:21021";
+        //private string host = "http://localhost:21021";
         //private string host = "http://hcwx.sayequ.me";
+        private string host = "https://wx.hechuangcd.com";
         private readonly IConfigurationRoot _appConfiguration;
         private IScanExchangeManager _scanExchangeManager;
 
@@ -97,7 +98,7 @@ namespace HC.DZWechat.Web.Host.Controllers
         public IActionResult GetCurrentUserOpenId()
         {
             APIResultDto result = new APIResultDto();
-            UserOpenId = "666666";
+            //UserOpenId = "666666";
             //UserOpenId = "oL5qB1m9WA2oNqtszJOJWrcpErzk";
             if (string.IsNullOrEmpty(UserOpenId))
             {
@@ -157,13 +158,14 @@ namespace HC.DZWechat.Web.Host.Controllers
                     }
                 case AuthorizationPageEnum.MarketingExchange: //扫码兑换
                     {
-                        //if (!string.IsNullOrEmpty(UserOpenId))
-                        //{
-                        //    return Redirect(AuthorizationPageUrl.MarketingExchangeUrl);
-                        //}
-                        //url = host + "/Wechat/MarketingStrategyAsync";
-                        return Redirect(AuthorizationPageUrl.MarketingExchangeUrl);
+                        if (!string.IsNullOrEmpty(UserOpenId))
+                        {
+                            return Redirect(AuthorizationPageUrl.MarketingExchangeUrl);
+                        }
+                        url = host + "/Wechat/MarketingExchange";
+                        //return Redirect(AuthorizationPageUrl.MarketingExchangeUrl);
                     }
+                    break;
                 case AuthorizationPageEnum.MarketingExchangeWithOrderId: //扫码兑换二维码
                     {
                         if (!string.IsNullOrEmpty(UserOpenId))
@@ -181,21 +183,21 @@ namespace HC.DZWechat.Web.Host.Controllers
                         else
                         {
                             url = host + "/Wechat/MarketingExchangeWithOrderId";
-                            param = param ?? "123";
-                            var pageUrl = OAuthApi.GetAuthorizeUrl(AppId, url, param, OAuthScope.snsapi_base, "code");
-                            return Redirect(pageUrl); 
+                            //param = param ?? "123";
+                            //var pageUrl = OAuthApi.GetAuthorizeUrl(AppId, url, param, OAuthScope.snsapi_base, "code");
+                            //return Redirect(pageUrl); 
                         }
                     }
-                //break;
+                    break;
                 default:
                     {
                         return Redirect("/dzwechat/index.html");
                     }
             }
 
-            //param = param ?? "123";
-            //var pageUrl = OAuthApi.GetAuthorizeUrl(AppId, url, param, OAuthScope.snsapi_base, "code");
-            //return Redirect(pageUrl);
+            param = param ?? "123";
+            var pageUrl = OAuthApi.GetAuthorizeUrl(AppId, url, param, OAuthScope.snsapi_base, "code");
+            return Redirect(pageUrl);
         }
 
         /// <summary>

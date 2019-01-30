@@ -148,7 +148,7 @@ namespace HC.DZWechat.WechatMessages
                 {
                     var user = await _wechatUserRepository.GetAll().Where(w => w.OpenId == e.FromUserName).FirstOrDefaultAsync();
                     var wxuser = await UserApi.InfoAsync(appId, e.FromUserName);//获取微信用户信息
-                    if (user == null)
+                    if (user == null && !string.IsNullOrEmpty(wxuser.unionid))
                     {
                         //如果小程序先授权
                         user = await _wechatUserRepository.GetAll().Where(w => w.UnionId == wxuser.unionid).FirstOrDefaultAsync();

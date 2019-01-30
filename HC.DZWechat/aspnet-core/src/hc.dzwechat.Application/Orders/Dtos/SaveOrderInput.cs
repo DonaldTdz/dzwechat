@@ -12,5 +12,6 @@ namespace HC.DZWechat.Orders.Dtos
 
         public string Remark { get; set; }
         public Guid OrderId { get; set; }
+        public string FormId { get; set; }
     }
 }

@@ -41,6 +41,7 @@ export class BannerCropperComponent {
     upload(e: any) {
         this.modalSelect.emit(e);
         this.isVisible = false;
+        this.clear();
     }
 
     clear() {

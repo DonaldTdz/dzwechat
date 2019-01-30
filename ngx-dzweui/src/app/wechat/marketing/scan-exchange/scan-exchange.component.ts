@@ -99,7 +99,7 @@ export class ScanExchangeComponent extends AppComponentBase implements OnInit {
                         .subscribe(result => {
                             this.shop = result;
                             if (this.passCode) {
-                                this.passCode = encodeURIComponent(this.passCode);
+                                // this.passCode = encodeURIComponent(this.passCode);
                                 this.getOrderInfo(this.passCode);
                             }
                         });
@@ -146,16 +146,18 @@ export class ScanExchangeComponent extends AppComponentBase implements OnInit {
      */
     setOrderBarCode(res: string) {
         // alert(res);
-        // if (res.indexOf('&') != -1) {
-        //     this.orderBarCode = res.split('&')[1].split('=')[1];
-        //     this.getOrderInfo();
-        // }
-        res = encodeURIComponent(res);
-        // this.orderBarCode = res;
-        this.getOrderInfo(res);
+        if (res.indexOf('&') != -1) {
+            // this.orderBarCode = res.split('&')[1].split('=')[1];
+            res = res.split('&')[1].substring(6);
+            res = encodeURIComponent(res);
+            this.getOrderInfo(res);
+        }
+        // res = encodeURIComponent(res);
+        // this.getOrderInfo(res);
     }
 
     getOrderInfo(res) {
+        // alert(res);
         let param: any = {};
         // param.param = this.orderBarCode;
         param.param = res;

@@ -52,6 +52,7 @@ export class CropperComponent {
     upload(e: any) {
         this.modalSelect.emit(e);
         this.isVisible = false;
+        this.clear();
     }
 
     beforeUpload = (file: File): boolean => {

@@ -49,7 +49,7 @@ namespace HC.DZWechat.Authorization.Wechats
             {
                 //是否已经绑定小程序
                 var user = await _wechatUserRepository.GetAll().Where(w => w.WxOpenId == result.openid).FirstOrDefaultAsync();
-                if (user == null)
+                if (user == null && !string.IsNullOrEmpty(result.unionid))
                 {
                     //是否绑定开放平台公众号
                     user = await _wechatUserRepository.GetAll().Where(w => w.UnionId == result.unionid).FirstOrDefaultAsync();

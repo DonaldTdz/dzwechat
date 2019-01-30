@@ -207,9 +207,9 @@ namespace HC.DZWechat.Exchanges
                 await UpdateOrderStatus(orderId);
             }
             //发送模板消息
-            var orderInfo = await GetOrderInfoAsync(orderId);
-            string wxOpenId =await _wechatUserRepository.GetAll().Where(v => v.Id == orderInfo.UserId).Select(v => v.WxOpenId).FirstOrDefaultAsync();
-            await LogisticsInfoMesssage(wxOpenId, orderInfo.Number, input.LogisticsCompany, input.LogisticsNo);
+            //var orderInfo = await GetOrderInfoAsync(orderId);
+            //string wxOpenId =await _wechatUserRepository.GetAll().Where(v => v.Id == orderInfo.UserId).Select(v => v.WxOpenId).FirstOrDefaultAsync();
+            //await LogisticsInfoMesssage(wxOpenId, orderInfo.Number, input.LogisticsCompany, input.LogisticsNo);
             return entity.MapTo<ExchangeListDto>();
         }
 
@@ -389,7 +389,7 @@ namespace HC.DZWechat.Exchanges
             }
             return new APIResultDto() {
                 Code = 999,
-                Msg = "对话码已过期，请重新生成"
+                Msg = "兑换码已过期，请重新生成"
             };
        
         }
@@ -707,6 +707,7 @@ namespace HC.DZWechat.Exchanges
                         keyword3 = new TemplateDataItem(logisticsNo),//物流单号
                         keyword4 = new TemplateDataItem(logisticsCompany)//物流公司
                     };
+                    Logger.Info(wxOpenId);
                     await TemplateApi.SendTemplateMessageAsync(appId, wxOpenId, ids[0], data, "formSubmit");
                 }
             }
@@ -715,29 +716,6 @@ namespace HC.DZWechat.Exchanges
 
                 Logger.ErrorFormat("订单物流通知发送消息通知失败 error：{0} Exception：{1}", ex.Message, ex);
             }
-        }
-
-        public bool Encrypt(string param)
-        {
-            Helpers.RSAHelper rsa = new Helpers.RSAHelper(Helpers.RSAType.RSA2, System.Text.Encoding.ASCII, Helpers.RSAHelper.PrivateKeyRsa2, Helpers.RSAHelper.PublicKeyRsa2);
-            var key = rsa.Decrypt(param);
-            string h = "";
-            if (DateTime.Now.Hour <= 9)
-            {
-                h = "0" + DateTime.Now.Hour.ToString();
-            }
-            else
-            {
-                h = DateTime.Now.Hour.ToString();
-            }
-            var m = DateTime.Now.Minute; //获取分钟
-            var isCurH = key.Split(',')[1].Substring(0, 2);
-            var isCurM = key.Split(',')[1].Substring(2);
-            if (h == isCurH && Convert.ToInt32(isCurM).IsBetween(m-5,m+5))
-            {
-                return true;
-            }
-            return false;
         }
     }
 }

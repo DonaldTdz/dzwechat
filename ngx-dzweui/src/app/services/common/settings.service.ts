@@ -14,6 +14,7 @@ export class SettingsService {
     constructor(private _commonhttp: CommonHttpClient) { }
 
     load(): Promise<any> {
+        // alert(this.openId);
         if (this.openId) {
             return new Promise<any>((resolve, reject) => {
                 resolve(null);
@@ -21,6 +22,7 @@ export class SettingsService {
         } else {
             return new Promise<any>((resolve, reject) => {
                 this._commonhttp.get('/Wechat/GetCurrentUserOpenId').subscribe(ret => {
+                    // alert(JSON.stringify(ret));
                     if (!ret.success) {
                         console.error('openid获取失败');
                         resolve(null);
@@ -56,6 +58,7 @@ export class SettingsService {
                 return this.user;
             }));
         }
+        // alert(JSON.stringify(this.user));
         return of(<WechatUser>null);
 
     }

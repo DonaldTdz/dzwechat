@@ -18,7 +18,7 @@ import { GoodsDetailComponent } from './goods/goods-detail/goods-detail.componen
 import { OrderDetailComponent } from './order/order-detail/order-detail.component';
 import { ExchangeDetailComponent } from './order/order-detail/exchange-detail/exchange-detail.component';
 import { ShopDetailComponent } from './shop/shop-detail/shop-detail.component';
-import { ImageCropperComponent } from 'ngx-img-cropper';
+import { ImageCropperModule } from 'ngx-img-cropper';
 import { CropperComponent } from './goods/goods-detail/cropper/cropper.component';
 import { BannerCropperComponent } from './goods/goods-detail/banner-cropper/banner-cropper.component';
 import { ExchangeComponent } from '@app/mall/exchange/exchange.component';
@@ -33,6 +33,7 @@ import { VipDetailComponent } from './vip/vip-detail/vip-detail.component';
         MallRoutingModule,
         LayoutModule,
         SharedModule,
+        ImageCropperModule,
     ],
     declarations: [
         GoodsComponent,
@@ -47,7 +48,7 @@ import { VipDetailComponent } from './vip/vip-detail/vip-detail.component';
         OrderDetailComponent,
         ExchangeDetailComponent,
         ShopDetailComponent,
-        ImageCropperComponent,
+        // ImageCropperComponent,
         CropperComponent,
         BannerCropperComponent,
         ExchangeComponent,
@@ -66,7 +67,8 @@ import { VipDetailComponent } from './vip/vip-detail/vip-detail.component';
         OrderDetailComponent,
         ExchangeDetailComponent,
         ShopDetailComponent,
-        ImageCropperComponent,
+        // ImageCropperComponent,
+        // ImageCropperModule,
         CropperComponent,
         BannerCropperComponent,
         ExchangeComponent,
