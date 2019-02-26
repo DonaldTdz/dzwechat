@@ -13,6 +13,7 @@ namespace HC.DZWechat.GoodsWechat.Dtos
 {
     public class GoodsCache : EntityCache<ShopGoods, GoodsCacheItem, Guid>, IGoodsCache, ITransientDependency
     {
+        private static string ALL_GOODS_KEY = "AllGoods";
         public GoodsCache(ICacheManager cacheManager, IRepository<ShopGoods, Guid> repository)
        : base(cacheManager, repository)
         {
@@ -21,8 +22,13 @@ namespace HC.DZWechat.GoodsWechat.Dtos
 
         public async Task<List<GoodsCacheItem>> GetAllAsync()
         {
-            var dataList = await CacheManager.GetCache(CacheName).GetAsync("AllGoods", () => Repository.GetAllListAsync());
+            var dataList = await CacheManager.GetCache(CacheName).GetAsync(ALL_GOODS_KEY, () => Repository.GetAllListAsync());
             return dataList.MapTo<List<GoodsCacheItem>>();
+        }
+
+        public async Task RemoveAllGoodsAsync()
+        {
+            await CacheManager.GetCache(CacheName).RemoveAsync(ALL_GOODS_KEY);
         }
     }
 }

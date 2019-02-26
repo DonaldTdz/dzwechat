@@ -9,5 +9,7 @@ namespace HC.DZWechat.GoodsWechat.Dtos
     public interface IGoodsCache : IEntityCache<GoodsCacheItem, Guid>
     {
         Task<List<GoodsCacheItem>> GetAllAsync();
+
+        Task RemoveAllGoodsAsync();
     }
 }
