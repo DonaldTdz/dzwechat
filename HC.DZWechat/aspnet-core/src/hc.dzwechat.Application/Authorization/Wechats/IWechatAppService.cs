@@ -10,6 +10,6 @@ namespace HC.DZWechat.Authorization.Wechats
 {
     public interface IWechatAppService : IApplicationService
     {
-        Task<JsCode2JsonResult> GetJsCode2Session(string jsCode, string nickName);
+        Task<JsCode2JsonResult> GetJsCode2Session(string jsCode, string nickName, string headimgurl);
     }
 }

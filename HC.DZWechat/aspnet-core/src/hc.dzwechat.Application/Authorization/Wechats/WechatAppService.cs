@@ -36,14 +36,14 @@ namespace HC.DZWechat.Authorization.Wechats
         }
 
         [AbpAllowAnonymous]
-        public async Task<JsCode2JsonResult> GetJsCode2Session(string jsCode, string nickName)
+        public async Task<JsCode2JsonResult> GetJsCode2Session(string jsCode, string nickName, string headimgurl)
         {
             var result = await SnsApi.JsCode2JsonAsync(wxappId, wxappSecret, jsCode);
-            await AddWxUser(result, nickName);
+            await AddWxUser(result, nickName, headimgurl);
             return result;
         }
 
-        private async Task AddWxUser(JsCode2JsonResult result, string nickName)
+        private async Task AddWxUser(JsCode2JsonResult result, string nickName, string headimgurl)
         {
             try
             {
@@ -60,7 +60,7 @@ namespace HC.DZWechat.Authorization.Wechats
                     WechatUser wechatUser = new WechatUser();
                     wechatUser.BindStatus = BindStatus.已关注;
                     wechatUser.BindTime = DateTime.Now;
-                    //wechatUser.HeadImgUrl = wxuser.headimgurl;
+                    wechatUser.HeadImgUrl = headimgurl;
                     wechatUser.Integral = 10;//首次关注获取10积分
                     wechatUser.IsShopManager = false;
                     wechatUser.NickName = nickName;
@@ -81,12 +81,13 @@ namespace HC.DZWechat.Authorization.Wechats
                     await _integralDetailRepository.InsertAsync(integralDetail);
                     await CurrentUnitOfWork.SaveChangesAsync();
                 }
-                else if(string.IsNullOrEmpty(user.WxOpenId))//更新
+                else //if(string.IsNullOrEmpty(user.WxOpenId))//更新
                 {
                     //user.BindStatus = BindStatus.已关注;
                     //user.HeadImgUrl = wxuser.headimgurl;
                     user.WxOpenId = result.openid;
                     user.NickName = nickName;
+                    user.HeadImgUrl = headimgurl;
                     //user.BindTime = DateTime.Now;
                     user.UnionId = result.unionid;
                     await _wechatUserRepository.UpdateAsync(user);
